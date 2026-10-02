@@ -14,11 +14,12 @@
 - Score: self-selected
 - Entry point: Phase 0: Setup & Tooling
 - Pace: ~10 hours/week
-- Execution environment: 用户约定今后相关课程代码统一在本地 WSL2（Ubuntu-24.04）中运行；命令使用 Linux shell、路径和 WSL 内的解释器及依赖。Windows .venv 保留为前序演示，不作为后续课程运行环境。
-- Verified WSL environment: /home/jeremyliew7/.venv，Python 3.12.14；2026-10-01 已通过课程 beginner --show-later 检查，Python/Git 2/2 必需项与 9 项后续工具均通过。Node.js 22.23.3 与 pnpm 12.8.1 由交互式 Bash 的 fnm 初始化，不能沿用 Windows 工具路径或把非交互式 PATH 缺失当作未安装。PyTorch 2.6.0+cu124 实测 CUDA 可用，RTX 4060 Laptop GPU 点积结果 14.0。
+- Execution environment: 用户约定相关课程代码统一在本地 WSL2（Ubuntu-24.04）中运行；使用 Linux shell、路径和 WSL 内的解释器及依赖。当前课程环境是学习者在仓库内重新创建的 .venv；前序 Windows .venv 与 .venv-wsl 已由学习者清理，主目录的既有环境未搬迁或复制。
+- Verified WSL environment: /mnt/d/JeremyLiew/Documents/ResHub/10-Projects/Code-Workspace/ai-engineering-from-scratch/.venv，Python 3.12.14；sys.executable 指向该环境的 bin/python，sys.prefix 指向该 .venv，sys.base_prefix 为 /home/jeremyliew7/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu。仓库环境已通过课程 beginner --show-later 检查，Python/Git 2/2 必需项与 9 项后续工具均通过。NumPy 2.5.3；Node.js 22.23.3、pnpm 12.8.1 由 WSL 交互式 Bash 的 fnm 初始化；Rust/Cargo 1.98.1、Julia 1.13.1。PyTorch 2.6.0+cu124 实测 CUDA 可用，RTX 4060 Laptop GPU 张量位于 cuda:0，点积结果 14.0。
+- Learning preferences: 中文分节讲解；环境操作由学习者按引导在 WSL 手动执行，助手可读取本聊天右侧终端核验输出。课后测验一次展示全部题目，学习者集中回答，再逐题反馈。
 - Restart: 用户明确选择重新开始全量学习；本轮不继承旧分级成绩、旧完成记录或旧断点。
-- Next lesson: phases/00-setup-and-tooling/01-dev-environment
-- Current checkpoint: 00/01 进行中。已讲四层环境、依赖版本隔离和解释器选择；用户说明已按课程安装 Python/uv、Node.js/pnpm、Rust、Julia 与 GPU 支持，WSL 实测通过。既有环境在用户主目录 /home/jeremyliew7/.venv，而非文件系统根目录；127 个包、约 5.2 GiB，46 个命令与激活脚本引用原绝对路径，建议原位复用，未搬迁或重建。下一步由学习者在 WSL 进入仓库并激活既有环境，亲自核验 sys.executable；随后完成 Use It 和课后测验。Progress log 仍为空，不因工具检查通过就记录整课完成。
+- Next lesson: phases/00-setup-and-tooling/02-git-and-collaboration
+- Current checkpoint: 2026-10-02，00/02 Git & Collaboration 进行中。上一课回忆两题均正确（不计分）；学习者理解工作区、暂存区、本地与远程仓库，能解释 add 后再修改文件，普通 commit 仍记录先前暂存的版本。已在 WSL 手动配置本仓库 core.autocrlf=input 和 user.name/user.email，并从终端核验生效。当前分支 codex/local-learning，仅 LEARNING.md 为未暂存修改；下一步查看该文件差异、手动 git add 并核验暂存状态，再完成 commit、分支、忽略规则与历史查看。00/01 的完成日志与 3/3 成绩保留，Phase 0 仍为 Do，00/02 尚未完成或计分。
 - Source snapshot: 1bafaa88bb4668356791150bec3a6d7df38387eb
 - Estimates: 下表采用 ROADMAP.md 各阶段标题的工时，合计 1,128 小时；与其开头及结尾总数不一致，仅作粗略参考，不承诺完课日期。
 
@@ -51,7 +52,8 @@
 
 | Date | Lesson | Quiz | Note |
 |------|--------|------|------|
+| 2026-10-02 | 00/01 | 3/3 (100%) | 在仓库内手动搭建 WSL .venv，完成 CUDA 点积、环境检查与四语言 Hello World；理解硬链接与依赖隔离，修正了 Python 命令的嵌套引号。 |
 
 ## Review queue
 
-暂无。00/01 正在学习，尚未完成课后测验。
+暂无。00/01 课后测验 3/3（100%），无需加入复习队列。
