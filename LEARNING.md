@@ -19,8 +19,8 @@
 - Learning preferences: 中文分节讲解；环境操作由学习者按引导在 WSL 手动执行，助手可读取本聊天右侧终端核验输出。课后测验一次展示全部题目，学习者集中回答，再逐题反馈。
 - Lesson-end Git workflow: 每学完一节课，集中保存学习记录后检查并提交本课相关变更，无需再次确认；仅暂存本课记录、练习产物及必要配置，排除虚拟环境、密钥和无关改动，遵循仓库提交与验证规则。默认仅本地提交，推送需用户明确要求。
 - Restart: 用户明确选择重新开始全量学习；本轮不继承旧分级成绩、旧完成记录或旧断点。
-- Next lesson: phases/00-setup-and-tooling/07-docker-for-ai
-- Current checkpoint: 2026-10-04，00/06 Python Environments 已完成；课后答案 C、B、A，3/3（100%，独立作答；第3题将原文的最可能原因改为合理的可能原因，避免未经排查断定）。00/05 暖身 A、C 均正确，隐藏依赖复查通过。学习者手动在 WSL 验证仓库 .venv 的解释器、sys.prefix、sys.base_prefix 和 NumPy 路径；纠正了未激活时显式调用环境 Python 会使用系统包的误解，并通过 cd ~ 后相对路径指向主目录环境的实际输出区分相对路径与绝对路径。创建 learning-artifacts/00-06-python-environments/.venv-numpy1，安装 NumPy 1.26.4，实测仓库环境仍为 2.5.3；编写 pyproject.toml（NumPy 基础依赖、torch/llm 可选依赖），用 uv pip compile 生成 requirements.lock（numpy==2.5.3），再创建 .venv-locked 按锁文件安装并确认版本和路径。理解依赖范围、间接依赖、声明与锁文件、Git 中保留配置而排除环境、虚拟环境不隔离显卡驱动。教材 env_setup.sh 因工作副本 CRLF 在第二行失败；学习者仅转换该脚本为 LF 后完整运行，All checks passed，仓库 Python 3.12.14、NumPy 2.5.3、matplotlib 3.11.2、scikit-learn 1.9.1、pandas 3.0.6、jupyter_core 5.9.1，3x3 矩阵乘法通过，PyTorch 2.6.0+cu124 / CUDA True；新增 scikit-learn 及相关共6包。硬链接警告自动回退复制，安装成功。已解释脚本直接安装未固定版本的包名，不读取锁文件，检查通过不证明跨机器版本一致。未故意安装或卸载系统包，用独立环境实践替代教材全局安装练习；未安装 conda，未实际安装可选依赖或生成 uv.lock。下次进入 00/07 Docker for AI，先做00/06两道回忆，优先复查解释器选择。Phase 0 仍为 Do。
+- Next lesson: phases/00-setup-and-tooling/08-editor-setup
+- Current checkpoint: 2026-10-08，00/07 Docker for AI 核心教学与实践完成；课后答案 D、C、B，3/3（100%，独立作答）。00/06 暖身 C、D 均正确。学习者手动安装 Docker Desktop 并启用 Ubuntu-24.04 WSL Integration，配置 docker 组、运行 hello-world 和 CUDA nvidia-smi；ai-dev 镜像构建成功，PyTorch 2.6.0+cu124 / CUDA True，cuda:0 点积 14.0。先测速再调整普通依赖为单次 USTC 源，PyTorch 官方 wheel 保留版本与 SHA-256；最终构建约 634 秒（复用前序缓存）。实际验证 bind mount 中 result.txt 在 --rm 删除容器后仍保留；Compose 两服务启动成功，ai-dev 通过 http://qdrant:6333/collections 返回 status ok、空集合，日志 HTTP 200。通过 Python 标准库 HTTP 服务替代 Flask 练习，宿主机 5000 映射容器 5000，浏览器 GET / 返回 200，Ctrl+C 正常退出；理解日志跟踪退出不停止后台服务。实测 ai-dev DISK USAGE 21.8GB、CONTENT SIZE 7.62GB；未实际重建 runtime 镜像对比大小，未执行新增依赖后的重建，作为后续扩展练习保留，不计作已验证。纠正 CMD 覆盖、挂载持久化；复习 runtime/devel、构建缓存、临时安装依赖与镜像重建，理解 down 与 down -v。容器停止不等于删除，原教材中停止即丢失数据的表述不准确。Compose 数据卷保留原理已理解，未实际执行数据库数据跨 down/up 保留实验。当前服务停止状态未另行核验。下次进入 00/08 Editor Setup，先做 00/07 两道回忆，优先复查 runtime/devel 和挂载。Phase 0 仍为 Do。
 - Source snapshot: 1bafaa88bb4668356791150bec3a6d7df38387eb
 - Estimates: 下表采用 ROADMAP.md 各阶段标题的工时，合计 1,128 小时；与其开头及结尾总数不一致，仅作粗略参考，不承诺完课日期。
 
@@ -59,6 +59,7 @@
 | 2026-10-03 | 00/04 | 3/3 (100%) | 在 WSL 手动完成 MiMo SDK 与原始 HTTP 调用及假密钥 401 实验；深入理解序列化、UTF-8 编码、反序列化和 Python 类型，区分密钥保存位置与请求头位置。 |
 | 2026-10-04 | 00/05 | 3/3 (100%, 第2题讲解后确认) | 完成 WSL JupyterLab Notebook、计时、CSV与绘图、重启从头运行及教材脚本；澄清行列标签和隐藏状态，处理 Agg 警告。 |
 | 2026-10-04 | 00/06 | 3/3 (100%) | 完成两环境 NumPy 版本隔离、项目依赖声明、锁文件生成与新环境重建；纠正解释器选择和相对路径误解，修正教材脚本 CRLF 后检查全通过。 |
+| 2026-10-08 | 00/07 | 3/3 (100%) | 完成 GPU 镜像构建、CUDA 点积、bind mount 持久化、Compose 服务名通信与 HTTP 端口映射；纠正 CMD 与持久化误解，复习 runtime/devel；未实际重建 runtime 对比大小或新增依赖。 |
 
 ## Review queue
 

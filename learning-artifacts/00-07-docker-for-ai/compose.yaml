@@ -1,0 +1,31 @@
+# Practice adaptation of phases/00-setup-and-tooling/07-docker-for-ai/code/docker-compose.yml.
+# Reuse the verified local image; keep lesson data in the practice directory.
+name: ai-course-00-07
+
+services:
+  ai-dev:
+    image: ai-dev:latest
+    pull_policy: never
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - ./mount-demo:/workspace
+    ports:
+      - "127.0.0.1:8888:8888"
+    command: jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root
+
+  qdrant:
+    image: qdrant/qdrant:v1.12.5
+    ports:
+      - "127.0.0.1:6333:6333"
+      - "127.0.0.1:6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+volumes:
+  qdrant_data:
