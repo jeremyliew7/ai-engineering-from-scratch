@@ -19,8 +19,8 @@
 - Learning preferences: 中文分节讲解；环境操作由学习者按引导在 WSL 手动执行，助手可读取本聊天右侧终端核验输出。课后测验一次展示全部题目，学习者集中回答，再逐题反馈。
 - Lesson-end Git workflow: 每学完一节课，集中保存学习记录后检查并提交本课相关变更，无需再次确认；仅暂存本课记录、练习产物及必要配置，排除虚拟环境、密钥和无关改动，遵循仓库提交与验证规则。默认仅本地提交，推送需用户明确要求。
 - Restart: 用户明确选择重新开始全量学习；本轮不继承旧分级成绩、旧完成记录或旧断点。
-- Next lesson: phases/00-setup-and-tooling/09-data-management
-- Current checkpoint: 2026-10-10，00/08 Editor Setup 完成，课后 D、D、D，3/3（100%，独立作答；第3题已纠正教材对张量形状检查的过度表述）。Docker 暖身 2/2。已验证 VS Code 1.139.1 的 WSL 连接、仓库 .venv/bin/python、NumPy 2.5.3；Notebook 内核相同，保存输出含 array([0, 1, 2, 3, 4])。理解类型提示不强制运行时检查：double("3") 得到字符串 "33"，double(3) 得到 6。Pylance basic 已启用；扫描多个虚拟环境且停止超时后，显式启用 useDefaultExcludes 并重载窗口，类型诊断恢复；具体根因未通过单变量实验确定。Black 保存时格式化、Ruff F401 删除未用导入和 I001 导入分组已由学习者验证。启用 Notebook 输出滚动、88/120 列参考线；自动保存未验证。Remote SSH 打开 /data0/liujie，终端和编辑器运行均确认主机 iipl-100、解释器 /data0/liujie/miniconda3/bin/python；仅用于验证，没有安装远程依赖或执行训练。服务器 GPU0 可查询，GPU1 为 Prohibited，GPU2 设备句柄异常，未验证 CUDA 运算、未修改驱动或计算模式。远程练习文件留在服务器，本地不冒充该文件实测。工作区 .vscode/ 被仓库忽略，本课配置快照保存于 learning-artifacts/00-08-editor-setup/settings.json；练习脚本收尾移除磁盘中残留的 math。下次进入 00/09 Data Management，先做 Editor Setup 两题回忆，注意分辨静态诊断、运行时行为和解释器/内核。Phase 0 仍为 Do。
+- Next lesson: phases/00-setup-and-tooling/10-terminal-and-shell
+- Current checkpoint: 2026-10-10，00/09 Data Management 完成；Editor Setup 暖身 2/2，课后 C、C、A，3/3（100%，独立作答）。学习者在 WSL 仓库 .venv 完成 IMDB 普通与流式读取、1,000 条样本 CSV/Parquet 大小比较（1,321,259 / 852,732 字节）、700/150/150 划分及可复现/无 ID 重叠/完整覆盖三项检查；下载 612 字节模型配置并验证 local_files_only 缓存读取。教材 data_utils.py 演示完成，500 条划分为 400/50/50 并从 Parquet 重载成功。过程曾误解第二次划分基数、local_files_only 缺失时联网和 git rm --cached 删除旧提交；经解释后纠正，其中缓存缺失未做实测。下次暖身优先复查这些概念。助手按另行授权完成 WSL 工具镜像和 Docker Desktop 镜像配置、备份与验证；机器配置不进入仓库。实测及验证范围见 learning-artifacts/00-09-data-management/README.md；导出数据位于 WSL /tmp，未永久保存。未做 GLUE/C4 扩展练习、DVC/Git LFS 操作或完整模型下载。下次进入 00/10 Terminal & Shell；Phase 0 仍为 Do。
 - Source snapshot: 1bafaa88bb4668356791150bec3a6d7df38387eb
 - Estimates: 下表采用 ROADMAP.md 各阶段标题的工时，合计 1,128 小时；与其开头及结尾总数不一致，仅作粗略参考，不承诺完课日期。
 
@@ -61,6 +61,7 @@
 | 2026-10-04 | 00/06 | 3/3 (100%) | 完成两环境 NumPy 版本隔离、项目依赖声明、锁文件生成与新环境重建；纠正解释器选择和相对路径误解，修正教材脚本 CRLF 后检查全通过。 |
 | 2026-10-08 | 00/07 | 3/3 (100%) | 完成 GPU 镜像构建、CUDA 点积、bind mount 持久化、Compose 服务名通信与 HTTP 端口映射；纠正 CMD 与持久化误解，复习 runtime/devel；未实际重建 runtime 对比大小或新增依赖。 |
 | 2026-10-10 | 00/08 | 3/3 (100%) | 验证 WSL Python 与 Notebook、Pylance 类型检查、Black 格式化、Ruff 修复及 Remote SSH；纠正类型提示运行时强制检查的误解，恢复默认排除后诊断恢复；远程 GPU 异常未作修复。 |
+| 2026-10-10 | 00/09 | 3/3 (100%) | 完成 WSL 数据加载/流式读取、格式转换、可复现划分、缓存与教材工具；纠正划分基数、仅本地缓存和 Git 历史保留误解；另行授权完成工具镜像配置。 |
 
 ## Review queue
 
