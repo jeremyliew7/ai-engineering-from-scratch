@@ -1,0 +1,12 @@
+{
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.useDefaultExcludes": true,
+    "editor.formatOnSave": true,
+    "python.analysis.excludeLibraryDiagnostics": true,
+    "notebook.output.scrolling": true,
+    "editor.rulers": [
+        88,
+        120
+    ]
+}

@@ -19,8 +19,8 @@
 - Learning preferences: 中文分节讲解；环境操作由学习者按引导在 WSL 手动执行，助手可读取本聊天右侧终端核验输出。课后测验一次展示全部题目，学习者集中回答，再逐题反馈。
 - Lesson-end Git workflow: 每学完一节课，集中保存学习记录后检查并提交本课相关变更，无需再次确认；仅暂存本课记录、练习产物及必要配置，排除虚拟环境、密钥和无关改动，遵循仓库提交与验证规则。默认仅本地提交，推送需用户明确要求。
 - Restart: 用户明确选择重新开始全量学习；本轮不继承旧分级成绩、旧完成记录或旧断点。
-- Next lesson: phases/00-setup-and-tooling/08-editor-setup
-- Current checkpoint: 2026-10-08，00/07 Docker for AI 核心教学与实践完成；课后答案 D、C、B，3/3（100%，独立作答）。00/06 暖身 C、D 均正确。学习者手动安装 Docker Desktop 并启用 Ubuntu-24.04 WSL Integration，配置 docker 组、运行 hello-world 和 CUDA nvidia-smi；ai-dev 镜像构建成功，PyTorch 2.6.0+cu124 / CUDA True，cuda:0 点积 14.0。先测速再调整普通依赖为单次 USTC 源，PyTorch 官方 wheel 保留版本与 SHA-256；最终构建约 634 秒（复用前序缓存）。实际验证 bind mount 中 result.txt 在 --rm 删除容器后仍保留；Compose 两服务启动成功，ai-dev 通过 http://qdrant:6333/collections 返回 status ok、空集合，日志 HTTP 200。通过 Python 标准库 HTTP 服务替代 Flask 练习，宿主机 5000 映射容器 5000，浏览器 GET / 返回 200，Ctrl+C 正常退出；理解日志跟踪退出不停止后台服务。实测 ai-dev DISK USAGE 21.8GB、CONTENT SIZE 7.62GB；未实际重建 runtime 镜像对比大小，未执行新增依赖后的重建，作为后续扩展练习保留，不计作已验证。纠正 CMD 覆盖、挂载持久化；复习 runtime/devel、构建缓存、临时安装依赖与镜像重建，理解 down 与 down -v。容器停止不等于删除，原教材中停止即丢失数据的表述不准确。Compose 数据卷保留原理已理解，未实际执行数据库数据跨 down/up 保留实验。当前服务停止状态未另行核验。下次进入 00/08 Editor Setup，先做 00/07 两道回忆，优先复查 runtime/devel 和挂载。Phase 0 仍为 Do。
+- Next lesson: phases/00-setup-and-tooling/09-data-management
+- Current checkpoint: 2026-10-10，00/08 Editor Setup 完成，课后 D、D、D，3/3（100%，独立作答；第3题已纠正教材对张量形状检查的过度表述）。Docker 暖身 2/2。已验证 VS Code 1.139.1 的 WSL 连接、仓库 .venv/bin/python、NumPy 2.5.3；Notebook 内核相同，保存输出含 array([0, 1, 2, 3, 4])。理解类型提示不强制运行时检查：double("3") 得到字符串 "33"，double(3) 得到 6。Pylance basic 已启用；扫描多个虚拟环境且停止超时后，显式启用 useDefaultExcludes 并重载窗口，类型诊断恢复；具体根因未通过单变量实验确定。Black 保存时格式化、Ruff F401 删除未用导入和 I001 导入分组已由学习者验证。启用 Notebook 输出滚动、88/120 列参考线；自动保存未验证。Remote SSH 打开 /data0/liujie，终端和编辑器运行均确认主机 iipl-100、解释器 /data0/liujie/miniconda3/bin/python；仅用于验证，没有安装远程依赖或执行训练。服务器 GPU0 可查询，GPU1 为 Prohibited，GPU2 设备句柄异常，未验证 CUDA 运算、未修改驱动或计算模式。远程练习文件留在服务器，本地不冒充该文件实测。工作区 .vscode/ 被仓库忽略，本课配置快照保存于 learning-artifacts/00-08-editor-setup/settings.json；练习脚本收尾移除磁盘中残留的 math。下次进入 00/09 Data Management，先做 Editor Setup 两题回忆，注意分辨静态诊断、运行时行为和解释器/内核。Phase 0 仍为 Do。
 - Source snapshot: 1bafaa88bb4668356791150bec3a6d7df38387eb
 - Estimates: 下表采用 ROADMAP.md 各阶段标题的工时，合计 1,128 小时；与其开头及结尾总数不一致，仅作粗略参考，不承诺完课日期。
 
@@ -60,6 +60,7 @@
 | 2026-10-04 | 00/05 | 3/3 (100%, 第2题讲解后确认) | 完成 WSL JupyterLab Notebook、计时、CSV与绘图、重启从头运行及教材脚本；澄清行列标签和隐藏状态，处理 Agg 警告。 |
 | 2026-10-04 | 00/06 | 3/3 (100%) | 完成两环境 NumPy 版本隔离、项目依赖声明、锁文件生成与新环境重建；纠正解释器选择和相对路径误解，修正教材脚本 CRLF 后检查全通过。 |
 | 2026-10-08 | 00/07 | 3/3 (100%) | 完成 GPU 镜像构建、CUDA 点积、bind mount 持久化、Compose 服务名通信与 HTTP 端口映射；纠正 CMD 与持久化误解，复习 runtime/devel；未实际重建 runtime 对比大小或新增依赖。 |
+| 2026-10-10 | 00/08 | 3/3 (100%) | 验证 WSL Python 与 Notebook、Pylance 类型检查、Black 格式化、Ruff 修复及 Remote SSH；纠正类型提示运行时强制检查的误解，恢复默认排除后诊断恢复；远程 GPU 异常未作修复。 |
 
 ## Review queue
 
