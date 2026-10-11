@@ -28,7 +28,19 @@
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="Website"></a>
 </p>
 
-## From the creator of [Agent Memory - #1 Persistent memory ⭐](https://github.com/rohitg00/agentmemory) <a href="https://github.com/rohitg00/agentmemory/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/agentmemory?style=flat-square&labelColor=fafaf5&color=3553ff" alt="GitHub stars"></a> which naturally works with any agents or chat assistants.
+### Спонсоры
+
+<a href="https://serpapi.com/ai-engineering-from-scratch">
+  <img align="left" src="../../assets/sponsors/serpapi-banner.png" alt="SerpApi. API веб-поиска для ваших приложений с ИИ. Доступен в форматах Markdown и JSON для любой интеграции." width="600">
+</a>
+
+<p><br><b>Спасибо нашим спонсорам.</b></p>
+<p>Ваша поддержка помогает сохранять все уроки бесплатными и открытыми.</p>
+<p>
+  <a href="#supporters">Посмотреть всех сторонников</a><br>
+  <a href="../../SPONSORS.md">Become a sponsor</a>
+  <br clear="all">
+</p>
 
 ```text
 ░░░▒▒▒░░░▒▒▒░░░▒▒▒░░░▒▒▒░░░▒▒▒░░░▒▒▒░░░▒▒▒░░░▒▒▒░░░▒▒▒░░░▒▒▒░░░▒▒▒░░░▒▒▒░░░▒▒▒░░░▒▒▒░░░▒▒▒
@@ -64,20 +76,6 @@
 Не знаете, что выбрать? Используйте [наставника `start-learning` для определения уровня](../../skills/start-learning/SKILL.md) или [руководство по предварительным требованиям на сайте](https://aiengineeringfromscratch.com/prereqs.html).
 
 Сравните четыре основных направления и шесть карьерных маршрутов в [учебных маршрутах по AI Engineering](https://aiengineeringfromscratch.com/learning-paths.html).
-
-### Спонсоры
-
-<a href="https://serpapi.com/ai-engineering-from-scratch">
-  <img align="left" src="../../assets/sponsors/serpapi-banner.png" alt="SerpApi. API веб-поиска для ваших приложений с ИИ. Доступен в форматах Markdown и JSON для любой интеграции." width="600">
-</a>
-
-<p><br><b>Спасибо нашим спонсорам.</b></p>
-<p>Ваша поддержка помогает сохранять все уроки бесплатными и открытыми.</p>
-<p>
-  <a href="#supporters">Посмотреть всех сторонников</a><br>
-  <a href="../../SPONSORS.md">Become a sponsor</a>
-  <br clear="all">
-</p>
 
 ### Проходите каждый урок одинаково
 
