@@ -1,0 +1,141 @@
+{
+  "translated_on": "2026-10-11",
+  "method": "direct-new-translation-from-current-source",
+  "scope": "00/01-00/11",
+  "source_commit": "68bf421db044a906121a3ef0a2eb8ec689d45045",
+  "verification": "Code blocks preserved exactly after text newline decoding; heading counts preserved; translator notes separate. Semantic quality assessed by translator, not automatically proven.",
+  "lessons": [
+    {
+      "lesson": "00/01",
+      "title": "开发环境",
+      "source": "phases/00-setup-and-tooling/01-dev-environment/docs/en.md",
+      "source_commit": "68bf421db044a906121a3ef0a2eb8ec689d45045",
+      "source_sha256": "a87c71203815f91f36b4f0da2dc3e6536ed1b958a0973d69a3e8dee6de6e12c6",
+      "translation": "00-01-dev-environment-zh.md",
+      "translation_sha256": "47ddacc8b151481e7553f60bc6277cf65bb704092864c734698780bec27b14df",
+      "code_blocks": 15,
+      "section_count": 14,
+      "status": "retranslated-structure-verified"
+    },
+    {
+      "lesson": "00/02",
+      "title": "Git 与协作",
+      "source": "phases/00-setup-and-tooling/02-git-and-collaboration/docs/en.md",
+      "source_commit": "68bf421db044a906121a3ef0a2eb8ec689d45045",
+      "source_sha256": "a9fb92eaad7d04949576a80f69a1d92f88d7255f291d5322eac18099a7fcf472",
+      "translation": "00-02-git-and-collaboration-zh.md",
+      "translation_sha256": "91635e05c857b736f9e20530d6ef00f7f9ed8c6abb8bfa3a84d27a657be96645",
+      "code_blocks": 6,
+      "section_count": 11,
+      "status": "retranslated-structure-verified"
+    },
+    {
+      "lesson": "00/03",
+      "title": "GPU 配置与云计算",
+      "source": "phases/00-setup-and-tooling/03-gpu-setup-and-cloud/docs/en.md",
+      "source_commit": "68bf421db044a906121a3ef0a2eb8ec689d45045",
+      "source_sha256": "586c344337ad138a6d3f09901ff727efc251a8352a323f8bd57531bfd193f457",
+      "translation": "00-03-gpu-setup-and-cloud-zh.md",
+      "translation_sha256": "cca7987c7c6e7bc6ceee83b93f683ae069a83dc972ca7c886043c9063858833f",
+      "code_blocks": 7,
+      "section_count": 11,
+      "status": "retranslated-structure-verified"
+    },
+    {
+      "lesson": "00/04",
+      "title": "API 与密钥",
+      "source": "phases/00-setup-and-tooling/04-apis-and-keys/docs/en.md",
+      "source_commit": "68bf421db044a906121a3ef0a2eb8ec689d45045",
+      "source_sha256": "df020a541489d51eb0f0530392d19346202e9ab8dcee93833f5e8fff365bc44a",
+      "translation": "00-04-apis-and-keys-zh.md",
+      "translation_sha256": "38a230cba9fdd29607c97c87d1ba5ee0a9a10bb0d86ebc2879dc0729490d45b2",
+      "code_blocks": 7,
+      "section_count": 12,
+      "status": "retranslated-structure-verified"
+    },
+    {
+      "lesson": "00/05",
+      "title": "Jupyter Notebook",
+      "source": "phases/00-setup-and-tooling/05-jupyter-notebooks/docs/en.md",
+      "source_commit": "68bf421db044a906121a3ef0a2eb8ec689d45045",
+      "source_sha256": "5480797ee77e5bdd8648149bf603c045a823376626df2665012c0029b5bb94a8",
+      "translation": "00-05-jupyter-notebooks-zh.md",
+      "translation_sha256": "c02f3ba2e634ddbcdb3b4d58f227f112369affd8de81a0c6001d3c5af054961c",
+      "code_blocks": 13,
+      "section_count": 17,
+      "status": "retranslated-structure-verified"
+    },
+    {
+      "lesson": "00/06",
+      "title": "Python 环境",
+      "source": "phases/00-setup-and-tooling/06-python-environments/docs/en.md",
+      "source_commit": "68bf421db044a906121a3ef0a2eb8ec689d45045",
+      "source_sha256": "db00956ed514c3ae3f81c15a8465ac2e21c2f8144c688b06c3405ce2fcc510c7",
+      "translation": "00-06-python-environments-zh.md",
+      "translation_sha256": "c304cab0b1fc5b74c1500cbc8bb14373751ba6e2c73ee8b0bf8af48e8892f850",
+      "code_blocks": 19,
+      "section_count": 19,
+      "status": "retranslated-structure-verified"
+    },
+    {
+      "lesson": "00/07",
+      "title": "面向 AI 的 Docker",
+      "source": "phases/00-setup-and-tooling/07-docker-for-ai/docs/en.md",
+      "source_commit": "68bf421db044a906121a3ef0a2eb8ec689d45045",
+      "source_sha256": "362c40f8f0a076acd59f4644ecee2a3e7c74ba5cf96bf0b2fba0811b3e4aa6a2",
+      "translation": "00-07-docker-for-ai-zh.md",
+      "translation_sha256": "b1d5b80b5217908eae7afd554d302f5ee9ba6c8e47bf2937b6cc94e15447b59d",
+      "code_blocks": 20,
+      "section_count": 18,
+      "status": "retranslated-structure-verified"
+    },
+    {
+      "lesson": "00/08",
+      "title": "编辑器配置",
+      "source": "phases/00-setup-and-tooling/08-editor-setup/docs/en.md",
+      "source_commit": "68bf421db044a906121a3ef0a2eb8ec689d45045",
+      "source_sha256": "ea254496263ee25ef65385c82f530397215d581dbc45c7c2eb89770f96cacb0b",
+      "translation": "00-08-editor-setup-zh.md",
+      "translation_sha256": "227cd56ce45e059b94a3802bdad462413d17f1497a02d28c7ed074c691f99ef1",
+      "code_blocks": 8,
+      "section_count": 16,
+      "status": "retranslated-structure-verified"
+    },
+    {
+      "lesson": "00/09",
+      "title": "数据管理",
+      "source": "phases/00-setup-and-tooling/09-data-management/docs/en.md",
+      "source_commit": "68bf421db044a906121a3ef0a2eb8ec689d45045",
+      "source_sha256": "42a4646bacf1ae9826abae21bdfe506a7fc2b91c8b6b3975733740ad3635244b",
+      "translation": "00-09-data-management-zh.md",
+      "translation_sha256": "ec2f105b032143c0709f38876323aacc5ad37c3b561de91ce24973d79b1609c9",
+      "code_blocks": 14,
+      "section_count": 17,
+      "status": "retranslated-structure-verified"
+    },
+    {
+      "lesson": "00/10",
+      "title": "终端与 Shell",
+      "source": "phases/00-setup-and-tooling/10-terminal-and-shell/docs/en.md",
+      "source_commit": "68bf421db044a906121a3ef0a2eb8ec689d45045",
+      "source_sha256": "eaef792ce219238e261ed2fd5de3527ae2305f7b732e122a7b1facaeabd013b1",
+      "translation": "00-10-terminal-and-shell-zh.md",
+      "translation_sha256": "54bd3be40c7f327ed12bfaf1f607b3cde5ed0a49151c6f2a5050017c4cd39239",
+      "code_blocks": 13,
+      "section_count": 15,
+      "status": "retranslated-structure-verified"
+    },
+    {
+      "lesson": "00/11",
+      "title": "面向 AI 的 Linux",
+      "source": "phases/00-setup-and-tooling/11-linux-for-ai/docs/en.md",
+      "source_commit": "68bf421db044a906121a3ef0a2eb8ec689d45045",
+      "source_sha256": "689abbd4451a28bf205b47d9b2633a91a1e9a397e07ebb42fd449c01539e33b6",
+      "translation": "00-11-linux-for-ai-zh.md",
+      "translation_sha256": "00967f8ddd9e0698d427ae794f0e9cce7d7b466ef9b200dfedb0393e8fab6854",
+      "code_blocks": 19,
+      "section_count": 19,
+      "status": "retranslated-structure-verified"
+    }
+  ]
+}
