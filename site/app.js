@@ -28,11 +28,15 @@
     var lessonTotal = PHASES.reduce(function (total, phase) {
       return total + (Array.isArray(phase.lessons) ? phase.lessons.length : 0);
     }, 0);
+    var lessonLabel = countLabel(lessonTotal, 'lesson', 'lessons');
+    var phaseLabel = countLabel(PHASES.length, 'phase', 'phases');
     var values = {
-      mastheadLessonCount: lessonTotal + ' lessons',
-      mastheadPhaseCount: PHASES.length + ' phases',
-      prefaceLessonCount: lessonTotal + ' lessons',
-      prefacePhaseCount: PHASES.length + ' phases'
+      mastheadLessonCount: lessonLabel,
+      mastheadPhaseCount: phaseLabel,
+      prefaceLessonCount: lessonLabel,
+      prefacePhaseCount: phaseLabel,
+      tocLessonCount: lessonLabel,
+      tocPhaseCount: phaseLabel
     };
     Object.keys(values).forEach(function (id) {
       var target = document.getElementById(id);
@@ -112,9 +116,9 @@
     var phasePct = stats.phases > 0 ? (stats.completePhases / stats.phases) * 100 : 0;
     var glossaryCount = (typeof GLOSSARY !== 'undefined') ? GLOSSARY.length : 0;
 
-    setText('[data-stat="complete-frac"]', stats.complete + ' / ' + stats.lessons);
-    setText('[data-stat="phases-frac"]', stats.completePhases + ' / ' + stats.phases);
-    setText('[data-stat="glossary-count"]', String(glossaryCount));
+    setText('[data-stat="complete-frac"]', formatCount(stats.complete) + ' / ' + formatCount(stats.lessons));
+    setText('[data-stat="phases-frac"]', formatCount(stats.completePhases) + ' / ' + formatCount(stats.phases));
+    setText('[data-stat="glossary-count"]', formatCount(glossaryCount));
     setBar('[data-bar="complete"]', pct);
     setBar('[data-bar="phases"]', phasePct);
     setBar('[data-bar="languages"]', 100);
@@ -129,6 +133,10 @@
   function renderPhases() {
     var grid = document.getElementById('phasesGrid');
     if (!grid) return;
+    if (!PHASES.length) {
+      grid.innerHTML = '<p class="toc-empty">No phases are published yet.</p>';
+      return;
+    }
     var hasProgress = !!window.AIFSProgress;
     var html = '';
     for (var i = 0; i < PHASES.length; i++) {
@@ -144,11 +152,11 @@
         }
         if (staticDone || userDone) done++;
       }
-      var statusClass = p.status.replace(/ /g, '-');
+      var statusClass = escapeHtml(String(p.status || 'planned').replace(/ /g, '-'));
       var roman = toRoman(p.id);
       var num = String(p.id).padStart(2, '0');
       html += '<div class="toc-row" data-phase="' + i + '" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Open Phase ' + num + ': ' + escapeHtml(p.name) + '">';
-      html += '<span class="toc-num">' + roman + '.</span>';
+      html += '<span class="toc-num" dir="ltr">' + roman + '.</span>';
       html += '<div><span class="toc-status ' + statusClass + '"></span><span class="toc-name">' + escapeHtml(p.name) + '</span></div>';
       html += '<span class="toc-meta">' + done + ' / ' + total + '</span>';
       html += '<span class="toc-meta">' + num + '</span>';
@@ -268,6 +276,14 @@
     document.getElementById('modalPhaseNum').textContent = 'PHASE ' + String(p.id).padStart(2, '0');
     document.getElementById('modalTitle').textContent = p.name;
     document.getElementById('modalDesc').textContent = p.desc;
+    var hubLink = document.getElementById('modalPhaseLink');
+    if (hubLink) {
+      hubLink.hidden = !p.hub;
+      if (p.hub) {
+        hubLink.setAttribute('href', p.hub);
+        hubLink.textContent = 'Open the ' + p.name + ' overview';
+      }
+    }
 
     renderModalLessons(p);
 
@@ -303,14 +319,16 @@
       var lessonLabel = escapeHtml(l.name);
       var lessonMeta = '<span class="modal-lesson-meta"><span class="modal-lesson-type" data-type="' + escapeHtml(l.type) + '"' + (l.combines ? ' title="Combines: ' + escapeHtml(l.combines) + '"' : '') + '>' + escapeHtml(l.type) + '</span><span aria-hidden="true">·</span><span class="modal-lesson-lang">' + escapeHtml(l.lang) + '</span></span>';
 
+      var lessonCopy = '<span class="modal-lesson-copy"><span class="modal-lesson-name" dir="auto" title="' + lessonLabel + '">' + lessonLabel + '</span>' + lessonMeta + '</span>';
+
       html += '<div class="modal-lesson' + (userComplete ? ' user-done' : '') + '">';
       if (canOpen) {
         html += '<a href="' + lessonUrl + '" class="modal-lesson-open" aria-label="Open lesson: ' + lessonLabel + '">';
-        html += '<span class="modal-lesson-copy"><span class="modal-lesson-name">' + lessonLabel + '</span>' + lessonMeta + '</span>';
+        html += lessonCopy;
         html += '<span class="modal-lesson-cta">' + (userComplete ? 'Review' : 'Open lesson') + '<span aria-hidden="true">→</span></span></a>';
       } else {
         html += '<span class="modal-lesson-open is-unavailable" aria-disabled="true">';
-        html += '<span class="modal-lesson-copy"><span class="modal-lesson-name">' + lessonLabel + '</span>' + lessonMeta + '</span>';
+        html += lessonCopy;
         html += '<span class="modal-lesson-cta">Coming soon</span></span>';
       }
 
@@ -322,7 +340,7 @@
       html += '</div>';
     }
 
-    container.innerHTML = html;
+    container.innerHTML = html || '<p class="modal-lessons-empty">No lessons are published in this phase yet.</p>';
 
     var toggles = container.querySelectorAll('.modal-lesson-toggle');
     for (var t = 0; t < toggles.length; t++) {
@@ -346,7 +364,7 @@
       var pct = Math.round((userDone / p.lessons.length) * 100);
       if (progEl) {
         progEl.style.display = '';
-        progEl.innerHTML = '<span><strong class="modal-progress-count">' + userDone + '</strong> of ' + p.lessons.length + ' lessons complete</span><span class="modal-progress-pct">' + pct + '%</span>';
+        progEl.innerHTML = '<span><strong class="modal-progress-count">' + formatCount(userDone) + '</strong> of ' + countLabel(p.lessons.length, 'lesson', 'lessons') + ' complete</span><span class="modal-progress-pct">' + pct + '%</span>';
       }
       if (barEl && barFill) {
         barEl.style.display = '';
@@ -698,9 +716,17 @@
     }
   }
 
+  function formatCount(value) {
+    return (Number(value) || 0).toLocaleString('en');
+  }
+
+  function countLabel(value, singular, plural) {
+    return formatCount(value) + ' ' + (Number(value) === 1 ? singular : plural);
+  }
+
   function escapeHtml(str) {
     var div = document.createElement('div');
     div.textContent = str == null ? '' : str;
-    return div.innerHTML;
+    return div.innerHTML.replace(/"/g, '&quot;');
   }
 })();
