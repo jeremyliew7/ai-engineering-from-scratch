@@ -19,8 +19,8 @@
 - Learning preferences: 中文分节讲解；环境操作由学习者按引导在 WSL 手动执行，助手可读取本聊天右侧终端核验输出。课后测验一次展示全部题目，学习者集中回答，再逐题反馈。
 - Lesson-end Git workflow: 每学完一节课，集中保存学习记录后检查并提交本课相关变更，无需再次确认；仅暂存本课记录、练习产物及必要配置，排除虚拟环境、密钥和无关改动，遵循仓库提交与验证规则。默认仅本地提交，推送需用户明确要求。
 - Restart: 用户明确选择重新开始全量学习；本轮不继承旧分级成绩、旧完成记录或旧断点。
-- Next lesson: phases/00-setup-and-tooling/11-linux-for-ai
-- Current checkpoint: 2026-10-10，00/10 Terminal & Shell 完成；Data Management 暖身 2/2，课后 C、D、A，3/3（100%，独立作答）。学习者在 WSL Bash 实测管道筛选/计行/awk、临时文件覆盖与追加、后台作业恢复/切回前台/终止、tmux 三窗格与分离重连、nvidia-smi 和 htop。纠正 2>&1 是复制当时输出去向、fg 不重新计时、Ctrl+Z 只暂停；理解 RES 与显存区别、SSH 本地端口转发、rsync 源路径尾斜杠及别名的 Shell 作用域。日志实时追踪、nohup、tee、首次 gpumem 查询及重定向顺序实验未取得可核验输出；远程复制/端口转发仅讨论，未实际操作。细节见 learning-artifacts/00-10-terminal-and-shell/README.md。下次先复查重定向顺序，进入 00/11 Linux for AI；Phase 0 仍为 Do。
+- Next lesson: phases/00-setup-and-tooling/12-debugging-and-profiling
+- Current checkpoint: 2026-10-15，00/11 Linux for AI 完成；Terminal & Shell 暖身 2/2，课后 C、C、D，3/3（100%，独立作答）。完整中文教材已在本聊天交付，本地译文源哈希与 19 个代码块核对一致。WSL 实测隐藏文件、脚本读取/执行权限与 chmod u+x、后台 sleep 的 SIGTERM 终止、df/du 与缓存排名；理解数字权限 744、sudo 所有权风险、apt update/upgrade、systemctl start/enable、scp 方向、rsync 尾斜杠、tmux 保护范围与 CRLF。远程传输、服务管理和换行转换仅概念练习，本课未重新实测 tmux/htop，未清理缓存。详见 learning-artifacts/00-11-linux-for-ai/README.md。下次进入 00/12 Debugging & Profiling；Phase 0 仍为 Do。
 - Source snapshot: 1bafaa88bb4668356791150bec3a6d7df38387eb
 - Estimates: 下表采用 ROADMAP.md 各阶段标题的工时，合计 1,128 小时；与其开头及结尾总数不一致，仅作粗略参考，不承诺完课日期。
 
@@ -63,6 +63,7 @@
 | 2026-10-10 | 00/08 | 3/3 (100%) | 验证 WSL Python 与 Notebook、Pylance 类型检查、Black 格式化、Ruff 修复及 Remote SSH；纠正类型提示运行时强制检查的误解，恢复默认排除后诊断恢复；远程 GPU 异常未作修复。 |
 | 2026-10-10 | 00/09 | 3/3 (100%) | 完成 WSL 数据加载/流式读取、格式转换、可复现划分、缓存与教材工具；纠正划分基数、仅本地缓存和 Git 历史保留误解；另行授权完成工具镜像配置。 |
 | 2026-10-10 | 00/10 | 3/3 (100%) | 完成 WSL 管道、作业控制、tmux 三窗格和资源监控；纠正重定向顺序与前台等待误解，确认别名不跨 Shell 同步；SSH/rsync 仅概念练习。 |
+| 2026-10-15 | 00/11 | 3/3 (100%) | 完成 WSL 隐藏文件、脚本权限、进程终止及磁盘缓存排查；澄清解释器读取与直接执行的区别，理解 744、sudo、apt、服务启动、传输方向和 CRLF；远程传输仅概念练习。 |
 
 ## Review queue
 
