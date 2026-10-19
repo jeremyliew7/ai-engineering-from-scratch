@@ -4,9 +4,12 @@ phase: "00"
 lesson: "03"
 translated: 2026-10-11
 translation_method: direct-new-translation
+updated: 2026-10-19
+update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/03-gpu-setup-and-cloud/docs/en.md
-source_commit: 68bf421db044a906121a3ef0a2eb8ec689d45045
-source_sha256: 586c344337ad138a6d3f09901ff727efc251a8352a323f8bd57531bfd193f457
+source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
+source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
+source_sha256: 1e6fdb7c16aeab51fb498a3b0d5fe984dd1a67e082d618bf30d1081639502809
 ---
 
 # GPU 配置与云计算
@@ -150,6 +153,14 @@ if torch.cuda.is_available():
 1. 运行上面的性能测试，对比 CPU 与 GPU 耗时。
 2. 如果没有 GPU，就在 Google Colab 上运行并比较。
 3. 查看 GPU 显存容量，估算能容纳的最大模型。经验规则：fp16 每个参数占 2 字节。
+
+### 练习提示
+
+**练习 1.** 原样运行“动手构建”部分的代码，记下 CPU 耗时、GPU 耗时和加速比所在行。再运行一次；第一次 GPU 运行包含启动开销，因此应比较第二次的数字。
+
+**练习 2.** 在 Colab 中选择 Runtime > Change runtime type > GPU，然后将基准测试粘贴到一个单元格中。先在另一个单元格运行 `!nvidia-smi`；它必须显示 GPU 名称，基准测试结果才有意义。
+
+**练习 3.** 像 `code/gpu_check.py` 那样，用 `torch.cuda.get_device_properties(0).total_memory / 1e9` 读取总显存。将以字节计的显存除以 2，得到 fp16 的参数数量，再留出余量，因为激活值和 CUDA 上下文也占显存。
 
 ## 关键术语
 

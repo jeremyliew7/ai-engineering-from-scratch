@@ -4,9 +4,12 @@ phase: "00"
 lesson: "02"
 translated: 2026-10-11
 translation_method: direct-new-translation
+updated: 2026-10-19
+update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/02-git-and-collaboration/docs/en.md
-source_commit: 68bf421db044a906121a3ef0a2eb8ec689d45045
-source_sha256: a9fb92eaad7d04949576a80f69a1d92f88d7255f291d5322eac18099a7fcf472
+source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
+source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
+source_sha256: 5bcc9ca73bdf9f2a3a647d167ed00ff223a81a9a36f996ce148aa1312d545f08
 ---
 
 # Git 与协作
@@ -129,6 +132,14 @@ git push origin my-progress
 1. Fork 本仓库、克隆自己的 Fork、创建 `my-progress` 分支，新增一个文件，提交并推送。
 2. 创建 `.gitignore`，排除模型检查点文件：`.pt`、`.pth`、`.safetensors`。
 3. 使用 `git log --oneline` 查看本仓库历史，阅读课程是如何逐步加入的。
+
+### 练习提示
+
+**练习 1.** 在 GitHub 上点击 Fork，然后用 `git clone` 克隆你自己分叉仓库的 URL。执行 `git push -u origin my-progress` 后，在 GitHub 上打开你的分叉仓库，确认分支列表中出现 `my-progress`，且其中包含你的文件。
+
+**练习 2.** 在仓库根目录的 `.gitignore` 文件中，为每个扩展名添加一条模式，例如 `*.pt`。分别创建一个对应扩展名的空文件，然后运行 `git status`；这些文件都不应出现在未跟踪文件列表中。
+
+**练习 3.** 先运行 `git log --oneline`，再运行 `git log --oneline -- phases/00-setup-and-tooling`，只查看修改过本阶段的提交。选一个提交，运行 `git show --stat <hash>`，查看它添加了哪些课程文件。
 
 ## 关键术语
 

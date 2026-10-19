@@ -4,9 +4,12 @@ phase: "00"
 lesson: "09"
 translated: 2026-10-11
 translation_method: direct-new-translation
+updated: 2026-10-19
+update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/09-data-management/docs/en.md
-source_commit: 68bf421db044a906121a3ef0a2eb8ec689d45045
-source_sha256: 42a4646bacf1ae9826abae21bdfe506a7fc2b91c8b6b3975733740ad3635244b
+source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
+source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
+source_sha256: 772d99967d3ccde7c765aae10f77622aa3a9db2975a6124d217c307e257dc84a
 ---
 
 # 数据管理
@@ -264,6 +267,16 @@ python code/data_utils.py
 2. 流式读取 c4，统计 10 秒内能处理多少条样本。
 3. 将数据集转成 Parquet，与 CSV 文件大小比较。
 4. 用固定种子创建 70/15/15 的训练、验证和测试划分，并验证大小。
+
+### 练习提示
+
+**练习 1.** 调用 `code/data_utils.py` 中的 `load_and_inspect("glue", "mrpc")`，或直接调用 `load_dataset("glue", "mrpc")`，并打印 `ds["train"][:5]`。每个样本必须包含 `sentence1`、`sentence2` 和 `label` 字段。
+
+**练习 2.** 像 `stream_dataset` 那样用 `streaming=True` 加载数据集，在循环中读取样本，并在 `time.time()` 超过开始时间加 10 秒时停止。打印计数；运行两次，因为第一次运行包含建立连接的启动开销。
+
+**练习 3.** 像 `convert_format` 那样，用 `to_csv` 和 `to_parquet` 保存同一个数据集，再用 `ls -lh` 或 `os.path.getsize` 比较文件大小。用 `load_from_parquet` 重新加载 Parquet 文件，检查行数没有变化。
+
+**练习 4.** 使用固定的 `seed`，调用两次 `train_test_split`：先分出 30%，再将这 30% 平分。三个子集的长度之和必须等于原始长度；用相同 seed 再运行一次，各子集的首行必须相同。
 
 ## 关键术语
 

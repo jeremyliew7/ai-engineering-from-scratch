@@ -4,9 +4,12 @@ phase: "00"
 lesson: "10"
 translated: 2026-10-11
 translation_method: direct-new-translation
+updated: 2026-10-19
+update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/10-terminal-and-shell/docs/en.md
-source_commit: 68bf421db044a906121a3ef0a2eb8ec689d45045
-source_sha256: eaef792ce219238e261ed2fd5de3527ae2305f7b732e122a7b1facaeabd013b1
+source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
+source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
+source_sha256: 17dc65d11d74510bada6bd4cdd1ae4bdb85849632ca0e4a999d0da53b2d5292e
 ---
 
 # 终端与 Shell
@@ -363,6 +366,16 @@ env | grep -i torch
 2. 将 code/shell_aliases.sh 的别名加入 Shell 配置，用 source ~/.zshrc 或 source ~/.bashrc 加载。
 3. 用 `for i in $(seq 1 100); do echo "epoch $i loss: $(echo "scale=4; 1/$i" | bc)"; sleep 0.1; done > fake_train.log` 创建模拟日志，再用 grep、tail、awk 提取 loss。
 4. 为可访问的服务器设置 SSH config 条目，或使用 localhost 练习语法。
+
+### 练习提示
+
+**练习 1.** 先运行 `tmux new -s practice`，然后按前缀键 `Ctrl+B`，再按 `"` 或 `%` 分割窗格；用 `Ctrl+B` 加方向键在窗格间移动。按 `Ctrl+B` 再按 `d` 分离会话，运行 `tmux ls`，再用 `tmux attach -t practice` 重新连接；三个程序都必须仍在运行。
+
+**练习 2.** 将 `code/shell_aliases.sh` 中的内容复制到 `~/.zshrc` 或 `~/.bashrc` 末尾，再对该文件运行 `source`。执行 `alias`，或对某个新别名执行 `type <name>`，确认 shell 已识别它。
+
+**练习 3.** 先运行 `tail -5 fake_train.log`，查看每行的格式。再用 `grep loss` 过滤，并用 `awk '{print $NF}'` 只打印最后一个字段；输出必须是 100 个逐渐减小的数字。
+
+**练习 4.** 将课程中的 `Host gpu` 配置块复制到 `~/.ssh/config`，将 `HostName` 和 `User` 改为你的服务器信息，或改为 `localhost` 和你的用户名。运行 `ssh -G gpu`，打印 SSH 将使用的设置。如果有可访问且接受你密钥的 SSH 服务器，再运行 `ssh gpu` 连接。
 
 ## 关键术语
 

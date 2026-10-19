@@ -4,9 +4,12 @@ phase: "00"
 lesson: "01"
 translated: 2026-10-11
 translation_method: direct-new-translation
+updated: 2026-10-19
+update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/01-dev-environment/docs/en.md
-source_commit: 68bf421db044a906121a3ef0a2eb8ec689d45045
-source_sha256: a87c71203815f91f36b4f0da2dc3e6536ed1b958a0973d69a3e8dee6de6e12c6
+source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
+source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
+source_sha256: 85bc7f1f0682cf607f287710b25f2dd3cde1475feaca985a89bf2cefb1e2cf52
 ---
 
 # 开发环境
@@ -242,7 +245,16 @@ Next: python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vector
 2. 为本课程创建 Python 虚拟环境，并安装 PyTorch。
 3. 用四种语言分别编写并运行一个 Hello World。
 
+### 练习提示
+
+**练习 1.** 从仓库根目录运行 `python3 phases/00-setup-and-tooling/01-dev-environment/code/verify.py --route beginner`，先修复第一项失败的检查，再看下一项。重新运行脚本，直到所有必需的检查项通过，才算完成。
+
+**练习 2.** 在仓库根目录用 `uv venv` 创建环境，激活后，使用第 6 步中与你硬件对应的命令安装 PyTorch。在该环境中运行 `python -c "import torch; print(torch.__version__)"`；输出版本号表示安装成功。
+
+**练习 3.** 使用“核心概念”中技术栈的四种运行环境：Python、运行在 Node.js 上的 TypeScript、Rust 和 Julia。分别编写一个小文件，使用 `python3`、`npx tsx`（Node.js 不能直接运行 `.ts` 文件）、`cargo run` 或 `rustc`，以及 `julia` 运行。每次运行都必须输出你的消息，并以退出码 0 结束。
+
 ## 译者校注
 
 - uv 的“10—100 倍”是原文性能表述，实际速度取决于缓存、网络和任务，不能作为本机速度保证。
 - 原文命令按来源保留。当前用户约定在 WSL 中手动执行环境操作，已有环境不必重复安装。
+- **新增提示中的 Node.js 限制需要按版本判断。** 原文“Node.js 不能直接运行 `.ts` 文件”不适用于所有版本。Node.js 22.18.0 起默认启用类型擦除，可直接运行仅含可擦除 TypeScript 语法的文件，但不执行类型检查，也不读取 `tsconfig.json`；这不等于完整支持所有 TypeScript 功能。`npx tsx` 仍是课程给出的运行方式。[Node.js TypeScript 官方说明](https://nodejs.org/api/typescript.html)

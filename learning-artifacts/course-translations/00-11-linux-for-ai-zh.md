@@ -4,9 +4,12 @@ phase: "00"
 lesson: "11"
 translated: 2026-10-11
 translation_method: direct-new-translation
+updated: 2026-10-19
+update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/11-linux-for-ai/docs/en.md
-source_commit: 68bf421db044a906121a3ef0a2eb8ec689d45045
-source_sha256: 689abbd4451a28bf205b47d9b2633a91a1e9a397e07ebb42fd449c01539e33b6
+source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
+source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
+source_sha256: e4546b58d30ef83badb36b07dbfea227add11bf045a28780acee41f370885514
 ---
 
 # 面向 AI 的 Linux
@@ -360,6 +363,18 @@ s0-process-fork
 3. 新建 tmux 会话，运行 sleep 300，分离、列出会话，再接回。
 4. 用 df -h 查看剩余空间，再用 du -sh ~/.cache/* 查找缓存中的大项目。
 5. 用 scp 把本地文件传到远程，再用 rsync 完成相同传输，比较体验。
+
+### 练习提示
+
+**练习 1.** 使用 `cd ~`、`mkdir`，并用 `cd` 进入新文件夹，再用 `touch` 加三个文件名创建文件。在 `ls -la` 输出中，检查三个文件的大小都是 0，所有者都是你的用户名。
+
+**练习 2.** 用 `sudo apt install -y htop` 安装，启动后按 `F6`（或点击列名），按 `MEM%` 排序。列表最上方的进程使用的内存最多。
+
+**练习 3.** 按课程所示执行 `tmux new -s train`，运行 `sleep 300`，再按 `Ctrl+B` 和 `d` 分离会话。运行 `tmux ls` 查看会话，再用 `tmux attach -t train` 重新连接；`sleep` 必须仍在运行。
+
+**练习 4.** 运行 `df -h`，读取包含主目录的文件系统对应的 `Avail` 列。再运行 `du -sh ~/.cache/* | sort -h`，使最大的文件夹显示在最后一行。
+
+**练习 5.** 用 `scp file.txt user@host:~/` 复制文件，再对同一文件运行 `rsync -avP file.txt user@host:~/`。第二次运行同一条 `rsync` 命令：因为远程文件没有变化，几乎不会传输任何数据。
 
 ## 译者校注
 

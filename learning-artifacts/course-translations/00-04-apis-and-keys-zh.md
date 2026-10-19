@@ -4,9 +4,12 @@ phase: "00"
 lesson: "04"
 translated: 2026-10-11
 translation_method: direct-new-translation
+updated: 2026-10-19
+update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/04-apis-and-keys/docs/en.md
-source_commit: 68bf421db044a906121a3ef0a2eb8ec689d45045
-source_sha256: df020a541489d51eb0f0530392d19346202e9ab8dcee93833f5e8fff365bc44a
+source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
+source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
+source_sha256: 1d4748fc1dc1b4ff3313ab9af092b9831221e7f7d96c1107b3938a895ee93346
 ---
 
 # API 与密钥
@@ -164,6 +167,14 @@ with urllib.request.urlopen(req) as resp:
 1. 获取 Anthropic API 密钥，完成第一次 API 调用。
 2. 尝试原始 HTTP 版本，并将响应格式与 SDK 版本对比。
 3. 故意使用错误的 API 密钥，阅读错误信息。
+
+### 练习提示
+
+**练习 1.** 在 Anthropic Console 中创建密钥，按课程所示放入 `ANTHROPIC_API_KEY`，然后运行 `code/first_api_call.py`。脚本输出模型回复且没有错误，表示调用成功。
+
+**练习 2.** `code/first_api_call.py` 中的两个函数都只打印文本和 token 数量。在 `call_with_sdk()` 中添加 `print(response)`，在 `call_raw_http()` 中添加 `print(result)`，再运行脚本查看两份完整响应。比较字段名：原始 JSON 中的 `content`、`usage` 和 `stop_reason` 字段，会被 SDK 转换为对象属性。
+
+**练习 3.** 仅在一个终端中将 `ANTHROPIC_API_KEY` 设置为伪造值，然后再次运行脚本。在输出中找到 HTTP 状态码和错误类型；身份验证失败会返回 401 状态码。
 
 ## 关键术语
 

@@ -4,9 +4,12 @@ phase: "00"
 lesson: "08"
 translated: 2026-10-11
 translation_method: direct-new-translation
+updated: 2026-10-19
+update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/08-editor-setup/docs/en.md
-source_commit: 68bf421db044a906121a3ef0a2eb8ec689d45045
-source_sha256: ea254496263ee25ef65385c82f530397215d581dbc45c7c2eb89770f96cacb0b
+source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
+source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
+source_sha256: e1f15c23a08a69e1f176c11403da0e2580379c1929311754dca686c5cd86dbe6
 ---
 
 # 编辑器配置
@@ -96,11 +99,11 @@ code --install-extension charliermarsh.ruff
 | Black Formatter | 保存时自动格式化，统一风格 |
 | Ruff | 快速代码检查，发现常见错误 |
 
-本课 `code/.vscode/extensions.json` 包含完整推荐列表，打开项目时 VS Code 会提示安装。
+本课的 `code/vscode/extensions.json` 文件包含完整推荐列表。将它复制到你的项目文件夹中的 `.vscode/extensions.json`，打开该文件夹时，VS Code 会提示安装这些扩展。
 
 ### 第 3 步：配置设置
 
-复制本课 `code/.vscode/settings.json` 的设置，或通过 Settings > Open Settings (JSON) 手动配置。
+复制本课 `code/vscode/settings.json` 中的设置，或通过 Settings > Open Settings (JSON) 手动配置。
 
 AI 工作的重要设置：
 
@@ -213,6 +216,16 @@ Host gpu-box
 2. 将本课 settings.json 的配置复制到自己的 VS Code 设置。
 3. 打开 Python 文件，验证 Pylance 显示类型提示、Black 在保存时格式化。
 4. 有远程访问权限时，配置 Remote SSH 并打开远程目录。
+
+### 练习提示
+
+**练习 1.** 安装第 2 步表格中的扩展，或对 `code/vscode/extensions.json` 中的每个 ID 执行 `code --install-extension <id>`。运行 `code --list-extensions`，逐一对照该文件检查每个 ID。
+
+**练习 2.** 打开 Settings > Open Settings (JSON)，将 `code/vscode/settings.json` 的内容复制进去。如果文件已有设置，合并键并保持 JSON 有效；文件格式错误时，VS Code 会用红线标出。
+
+**练习 3.** 编写一个带类型注解的函数，然后将鼠标悬停在调用它的位置；Pylance 会显示推断出的类型。在某行添加多余空格并保存文件；Black 必须在保存时重新格式化该行。
+
+**练习 4.** 先将服务器添加到 `~/.ssh/config`，并确认在终端中执行 `ssh <host>` 能正常连接。再使用 Remote SSH 命令连接；VS Code 在远程机器上运行时，状态栏会显示主机名。
 
 ## 关键术语
 

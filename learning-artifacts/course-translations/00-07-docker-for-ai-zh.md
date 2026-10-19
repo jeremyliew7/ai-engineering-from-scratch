@@ -4,9 +4,12 @@ phase: "00"
 lesson: "07"
 translated: 2026-10-11
 translation_method: direct-new-translation
+updated: 2026-10-19
+update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/07-docker-for-ai/docs/en.md
-source_commit: 68bf421db044a906121a3ef0a2eb8ec689d45045
-source_sha256: 362c40f8f0a076acd59f4644ecee2a3e7c74ba5cf96bf0b2fba0811b3e4aa6a2
+source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
+source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
+source_sha256: 1ed8ca02231e4ed40b749b07f2728659676a5fe4c7de6ad01b1638b5e1c6b198
 ---
 
 # 面向 AI 的 Docker
@@ -403,6 +406,16 @@ docker logs -f <container_id>
 2. 启动 Compose 服务，验证 AI 容器能访问 `http://qdrant:6333/collections`。
 3. 在 Dockerfile 中增加 `flask`，重建，在 5000 端口运行简单 API 服务，用 `-p 5000:5000` 映射端口。
 4. 用 `docker images` 测量镜像大小，将基础镜像从 devel 改为 runtime 并比较。
+
+### 练习提示
+
+**练习 1.** 用课程中的 `docker build -t ai-dev -f phases/00-setup-and-tooling/07-docker-for-ai/code/Dockerfile .` 命令构建，然后在 `docker run --rm ai-dev` 启动的容器内执行导入。按课程说明，在 Mac 上省略 `--gpus all`。容器必须打印以 `2.6.0` 开头的版本号。
+
+**练习 2.** 在 `code/` 文件夹中运行 `docker compose up -d`，再用 `docker compose exec ai-dev bash` 打开 `ai-dev` 服务内的 shell。在其中运行 `curl http://qdrant:6333/collections`；返回 JSON 表示服务名能在 Compose 网络中解析。
+
+**练习 3.** 在 Dockerfile 中添加一行 `RUN pip install flask`，重新构建，并使用 `host="0.0.0.0"` 启动服务器，因为只绑定到容器内 localhost 的服务器无法从外部访问。在你的电脑上打开 `http://localhost:5000`，确认端口映射有效。
+
+**练习 4.** 运行 `docker images ai-dev`，记下 SIZE 列。将 `FROM` 行中的 `devel` 改为 `runtime`，使用新标签构建并比较两个镜像的大小；runtime 镜像不包含编译器和头文件。
 
 ## 关键术语
 

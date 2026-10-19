@@ -4,10 +4,12 @@ phase: "00"
 lesson: "12"
 translated: 2026-10-15
 translation_method: direct-new-translation
+updated: 2026-10-19
+update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/12-debugging-and-profiling/docs/en.md
-source_commit: 498a165c412f36307de417cdbaaf17398ba54f19
-source_last_commit: 62cdefbe4c5cb559dcfe255399e97835d91761af
-source_sha256: a1ab58f6c638ae6e300e33acfed43ee5eb62d0808cf9bbdae172666228f875f8
+source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
+source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
+source_sha256: 2c8060d42a1115002a602a1db7241eb5338a7169661c238163c16c5653136513
 ---
 
 # 调试与性能分析
@@ -452,6 +454,18 @@ python phases/00-setup-and-tooling/12-debugging-and-profiling/code/debug_tools.p
 4. 为一次简单训练配置 TensorBoard，判断模型是否过拟合。
 5. 在训练循环中使用 `breakpoint()`，练习从调试器提示符检查张量形状、设备和梯度值。
 
+### 练习提示
+
+**练习 1.** 运行 `python3 phases/00-setup-and-tooling/12-debugging-and-profiling/code/debug_tools.py`，阅读每个演示函数的输出。然后修改 `demo_nan_detection` 中的模型，让其输出除以零，再次运行；`detect_nan` 必须打印带步骤编号的 NaN 警告。
+
+**练习 2.** 使用 `python -m cProfile -s cumtime your_script.py` 运行循环，或用 `cProfile.Profile()` 包裹循环。查看 `cumtime` 列顶部的行；属于你自己代码且耗时最大的函数，就是最慢的函数。
+
+**练习 3.** 像 `demo_memory_tracking` 那样，在数据加载代码前调用 `tracemalloc.start()`，在其后调用 `tracemalloc.take_snapshot()`。打印 `snapshot.statistics("lineno")[:5]`；第一行会显示分配内存最多的文件和行号。
+
+**练习 4.** 在每个 epoch，将训练损失和验证损失记录到 `SummaryWriter`，再运行 `tensorboard --logdir=runs`。如果训练损失持续下降而验证损失上升，模型就发生了过拟合。
+
+**练习 5.** 在循环内、`loss.backward()` 之后放置 `breakpoint()`，然后运行脚本。在 `(Pdb)` 提示符下，打印 `x.shape`、`x.device` 和 `next(model.parameters()).grad`，再输入 `c` 继续到下一步。
+
 ## 译者校注
 
 以下为对原文适用条件的补充，未改动上面的原文代码。
@@ -466,3 +480,4 @@ python phases/00-setup-and-tooling/12-debugging-and-profiling/code/debug_tools.p
 8. **本地学习与原文示例分开执行。** 本课实践继续使用仓库的 WSL `.venv/bin/python`；上面的安装命令按原文保留，不表示已执行。`line_profiler` 的 `@profile` 由 `kernprof` 运行方式提供，不能假设普通 `python train.py` 自带它。练习应放入 `learning-artifacts/00-12-debugging-and-profiling/`，保留课程参考代码。
 9. **损失有限仍可能出现非有限梯度。** 原文 `detect_nan` 仅在损失为 NaN 时进入梯度检查，不能覆盖有限损失配 Inf 梯度等情况。应在本轮 `backward()` 后、参数更新前，独立检查损失及各非空梯度的 `torch.isfinite` 结果。教材工具中的 `fake_nan_loss` 是独立构造的标量，没有对模型重新反向传播；此时打印出的梯度仍可能来自上一轮。输出标签写着“Normal”也不保证实际数值正常。[PyTorch 2.6 不可微点的梯度规则](https://docs.pytorch.org/docs/2.6/notes/autograd.html#gradients-for-non-differentiable-functions)
 10. **训练监控要区分验证集和测试集。** 通常用训练集更新参数、验证集监控和选择模型、测试集作最终独立评估。反复根据测试集表现修改模型会引入选择偏差。训练损失下降且验证损失上升是应调查的信号，还要观察趋势、样本量及评估过程；单次变化不能独立证明过拟合。只有训练损失的玩具优化实验不能完成泛化能力评估。[scikit-learn 验证与最终评估说明](https://scikit-learn.org/stable/modules/cross_validation.html)
+11. **新增练习提示仍有条件限制。** 练习 1 中“输出除以零”可能先产生 Inf，而非必然产生 NaN；是否触发 `detect_nan` 取决于损失计算后的值。该函数只在损失为 NaN 时进入检查，不能据此认定所有非有限值都能被捕获。练习 2 的累计耗时包含子调用，父函数和子函数的时间可能重叠，且 `cProfile` 不能直接定位 CUDA 内核耗时；练习 3 的快照统计反映快照时仍被跟踪的分配，而非整个执行期间的累计或峰值；练习 4 的曲线现象应结合上面的第 10 条校注判断。以上补充不改写原文提示。

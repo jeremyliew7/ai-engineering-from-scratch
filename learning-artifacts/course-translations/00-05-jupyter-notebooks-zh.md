@@ -4,9 +4,12 @@ phase: "00"
 lesson: "05"
 translated: 2026-10-11
 translation_method: direct-new-translation
+updated: 2026-10-19
+update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/05-jupyter-notebooks/docs/en.md
-source_commit: 68bf421db044a906121a3ef0a2eb8ec689d45045
-source_sha256: 5480797ee77e5bdd8648149bf603c045a823376626df2665012c0029b5bb94a8
+source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
+source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
+source_sha256: 543c38dcbca1352c41924f3a5ad4c6fadd715c38aae7e233e3b2be795865889b
 ---
 
 # Jupyter Notebook
@@ -257,6 +260,14 @@ Colab 与本地 Jupyter 的差别：
 2. 创建同时包含 Markdown 和代码单元格的 Notebook：加载 CSV、显示 DataFrame、绘制图表，然后执行 Kernel > Restart & Run All，验证能从上到下运行。
 3. 将 `code/notebook_tips.py` 中的代码复制到 Colab Notebook，使用免费 GPU 运行。
 
+### 练习提示
+
+**练习 1.** 用 `jupyter lab` 启动 JupyterLab，将两个版本分别放到以 `%timeit` 开头的单元格中。两个单元格都使用相同的 100,000 规模，保证两次计时衡量的是同等工作量。
+
+**练习 2.** 用 `pd.read_csv` 读取数据，把 dataframe 放在单元格最后一行以显示它，并用 `df.plot()` 或 matplotlib 绘图。执行 Kernel > Restart & Run All 后，每个单元格的执行计数器都必须显示数字，且不能有单元格报错。
+
+**练习 3.** 在 Colab 中，先选择 Runtime > Change runtime type > GPU，再粘贴代码。`code/notebook_tips.py` 中每个函数都输出其对应部分，且在一个单元格中执行 `torch.cuda.is_available()` 返回 `True`，表示运行正确。
+
 ## 关键术语
 
 | 术语 | 常见说法 | 实际含义 |
@@ -277,3 +288,4 @@ Colab 与本地 Jupyter 的差别：
 - 示例数值是教材示例，不是本次实测结果。界面颜色与快捷键可能随版本和配置变化。
 - Colab 的 GPU、免费额度和超时条件不是固定承诺，使用前核对服务页面。
 - 删除一个变量名不保证内存立即归还：对象可能还有其他引用，底层分配器也可能保留缓存。
+- **新增提示中的执行计数器只适用于代码单元格。** Markdown 单元格渲染后不显示数字执行计数器；核对 Restart & Run All 时，应确认代码单元格按顺序执行、没有报错，Markdown 单元格正常渲染。

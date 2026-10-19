@@ -4,9 +4,12 @@ phase: "00"
 lesson: "06"
 translated: 2026-10-11
 translation_method: direct-new-translation
+updated: 2026-10-19
+update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/06-python-environments/docs/en.md
-source_commit: 68bf421db044a906121a3ef0a2eb8ec689d45045
-source_sha256: db00956ed514c3ae3f81c15a8465ac2e21c2f8144c688b06c3405ce2fcc510c7
+source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
+source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
+source_sha256: d83b1b070403cd41624ec9d40c890f74b237a94c922bcd8d2f3758a757bcc719
 ---
 
 # Python 环境
@@ -283,6 +286,16 @@ bash phases/00-setup-and-tooling/06-python-environments/code/env_setup.sh
 2. 创建第二个虚拟环境，安装另一个 NumPy 版本，确认两个环境相互隔离。
 3. 为同时需要 PyTorch 和 Anthropic SDK 的项目编写 `pyproject.toml`。
 4. 故意在未激活虚拟环境时全局安装一个包，查看其位置，然后卸载。
+
+### 练习提示
+
+**练习 1.** 从仓库根目录运行 `bash phases/00-setup-and-tooling/06-python-environments/code/env_setup.sh`。逐行阅读输出；某项检查失败时，先修复这一项，再重新运行脚本，直到没有检查失败。
+
+**练习 2.** 在新文件夹中用 `uv venv` 创建第二个环境，激活后，用 `numpy==1.26.4` 这样的版本固定方式安装较旧的 numpy。在两个环境中分别运行 `python -c "import numpy; print(numpy.__version__)"`；输出的两个版本必须不同。
+
+**练习 3.** 从“pyproject.toml 基础”中的示例开始，在 `dependencies` 下列出 `torch` 和 `anthropic`。在新环境中运行 `uv pip install -e .` 或 `uv sync`；两个包都能无错误地导入，表示文件配置正确。
+
+**练习 4.** 退出所有环境，运行 `pip install --user <small package>`，再运行 `pip show <package>` 并查看 `Location` 行。用 `pip uninstall <package>` 卸载，然后再次运行 `pip show`，确认它已被移除。
 
 ## 关键术语
 
