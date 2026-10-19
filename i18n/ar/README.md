@@ -13,11 +13,11 @@
 
 مجاني ومفتوح المصدر بترخيص MIT. تعلّم عبر الموقع أو مع وكيل برمجة أو بتشغيل الشيفرة محليًا.
 
-> <span dir="rtl">528 درساً. 20 مرحلة.</span> <span dir="ltr">Python, TypeScript, Rust, Julia.</span>
+> <span dir="rtl">542 درساً. 20 مرحلة.</span> <span dir="ltr">Python, TypeScript, Rust, Julia.</span>
 
 <p align="center">
   <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="رخصة MIT"></a>
-  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-528-3553ff?style=flat-square&labelColor=fafaf5" alt="528 درساً"></a>
+  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-542-3553ff?style=flat-square&labelColor=fafaf5" alt="542 درساً"></a>
   <a href="#contents"><img src="https://img.shields.io/badge/phases-20-3553ff?style=flat-square&labelColor=fafaf5" alt="20 مرحلة"></a>
   <a href="https://github.com/rohitg00/ai-engineering-from-scratch/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/ai-engineering-from-scratch?style=flat-square&labelColor=fafaf5&color=3553ff" alt="نجوم GitHub"></a>
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="الموقع الإلكتروني"></a>
@@ -207,6 +207,7 @@ python3 --version
 | [`course-guide`](../../skills/course-guide/SKILL.md) | دليل للموضوعات: اسأل «أين أتعلم الانتباه؟» أو «لماذا أصبحت قيمة loss هي NaN؟» ليعرض لك الدروس الدقيقة وروابطها. |
 | [`learn-mcp`](../../skills/learn-mcp/SKILL.md) | معلّم مركّز لبروتوكول MCP. ينشئ `MCP-LEARNING.md`، ويتبع بيان الدروس الـ17، ويسجل أدلة الاتصال والأمن والموثوقية والمطابقة. |
 | [`learn-agent-skills`](../../skills/learn-agent-skills/SKILL.md) | معلّم مركّز لمهارات الوكلاء. ينشئ `AGENT-SKILLS-LEARNING.md`، ويعلّم الدروس 22 و24 و25 و26 و27، ويسجل أدلة من مضيف فعلي. |
+| [`learn-reverse-engineering`](../../skills/learn-reverse-engineering/SKILL.md) | معلّم مركّز للهندسة العكسية. ينشئ `REVERSE-ENGINEERING-LEARNING.md`، ويعلّم دروس المرحلة 13 من 32 إلى 45 على برامج تبنيها بنفسك، ويسجل أدلة المختبر. |
 | [`claude-certification`](../../skills/claude-certification/SKILL.md) | معلّم الشهادات. يختار CCAO-F أو CCDV-F أو CCAR-F أو CCAR-P، ويعلّم الدروس، ويشغّل المختبرات، ويراجع المخرجات، ويجري التشخيص والاختبارات التجريبية، ويحفظ التقدم. |
 | [`mcpa-certification`](../../skills/mcpa-certification/SKILL.md) | معلّم MCPA. يتبع مسار `mcpa-f` ذي الدروس الـ34 وفق بروتوكول 2026-07-28، ويشغّل المختبرات ومدقق الاتصال، ويجري الاختبار التشخيصي وثلاثة اختبارات تجريبية، ويحفظ التقدم. |
 | [`find-your-level`](../../skills/find-your-level/SKILL.md) | اختبار تحديد مستوى من عشرة أسئلة يربط معرفتك بمرحلة بداية ويقترح مسارًا مخصصًا مع تقديرات زمنية. |
@@ -246,7 +247,7 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 
 ## اختر مسارًا للتعلّم
 
-لا حاجة إلى استعراض 528 درسًا قبل أن تبدأ. اختر هدفًا واحدًا. يفتح كل رابط المنهج نفسه على GitHub أو الموقع، ويستخدم الإصداران شيفرة الدروس نفسها.
+لا حاجة إلى استعراض 542 درسًا قبل أن تبدأ. اختر هدفًا واحدًا. يفتح كل رابط المنهج نفسه على GitHub أو الموقع، ويستخدم الإصداران شيفرة الدروس نفسها.
 
 | هدفك | تعلّم على GitHub | تعلّم على الموقع |
 |---|---|---|
@@ -262,12 +263,13 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 قارن بين أربعة مجالات أساسية وستة مسارات مهنية في [مسارات تعلّم هندسة الذكاء الاصطناعي](https://aiengineeringfromscratch.com/learning-paths.html).
 
 <details>
-<summary>مسارات مركّزة لـ MCP وAgent Skills</summary>
+<summary>مسارات مركّزة لـ MCP وAgent Skills والهندسة العكسية</summary>
 
 | هدفك | تعلّم على GitHub | تعلّم على الموقع |
 |---|---|---|
 | أريد البناء باستخدام Model Context Protocol (MCP) | [مسار Model Context Protocol (MCP)](../../phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [مسار Model Context Protocol (MCP)](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |
 | أريد كتابة Agent Skills وإصدارها | [مسار Agent Skills المركّز](../../phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [مسار Agent Skills](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |
+| أريد قراءة البرامج المترجمة | [مسار الهندسة العكسية المركّز](../../phases/13-tools-and-protocols/README.md#reverse-engineering-path) | [مسار الهندسة العكسية](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch&learningPath=reverse-engineering) |
 
 </details>
 
@@ -290,6 +292,7 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 | مهندس خبير يريد هندسة الوكلاء فقط | المرحلة 14 — هندسة الوكلاء | ~60 ساعة |
 | تريد بناء أنظمة MCP إنتاجية فقط | [مسار Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json) | ~23 ساعة و15 دقيقة |
 | تريد بناء Agent Skills للإنتاج فقط | [مسار هندسة Agent Skills](../../learning-paths/agent-skills.json) | ~9.5 ساعات |
+| تريد تعلّم الهندسة العكسية فقط | [مسار الهندسة العكسية](../../learning-paths/reverse-engineering.json) | ~32.5 ساعة |
 
 </details>
 
@@ -697,7 +700,7 @@ flowchart TB
 </details>
 
 <details id="phase-13">
-<summary><b>المرحلة 13 — الأدوات والبروتوكولات</b> &nbsp;<code>31 lessons</code>&nbsp; <em>الواجهات التي تصل الذكاء الاصطناعي بالعالم الحقيقي.</em></summary>
+<summary><b>المرحلة 13 — الأدوات والبروتوكولات</b> &nbsp;<code>45 lessons</code>&nbsp; <em>الواجهات التي تصل الذكاء الاصطناعي بالعالم الحقيقي.</em></summary>
 <br/>
 
 | # | الدرس | النوع | اللغة |
@@ -733,6 +736,20 @@ flowchart TB
 | 29 | [موثوقية MCP والإلغاء والتحكم في التدفق](../../phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | بناء | Python |
 | 30 | [سلسلة توريد سجل MCP: القبول والانحراف والاسترجاع](../../phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | بناء | Python |
 | 31 | [هندسة مطابقة MCP: الإصدارات والأدلة والعمليات](../../phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | بناء | Python |
+| 32 | [تشريح البرنامج: قراءة ELF من الصفر](../../phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | بناء | Python |
+| 33 | [التفكيك ومخططات تدفق التحكم](../../phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | بناء | Python |
+| 34 | [رفع شيفرة الآلة إلى شيفرة زائفة](../../phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | بناء | Python |
+| 35 | [الأدلة والثقة والمجاهيل في تحليل الملفات الثنائية](../../phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | بناء | Python |
+| 36 | [أعد البناء وأثبت التطابق](../../phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | بناء | Python |
+| 37 | [مشهد الهندسة العكسية](../../phases/13-tools-and-protocols/37-the-reverse-engineering-landscape/) | بناء | Python |
+| 38 | [اصطلاحات الاستدعاء وإطارات المكدس](../../phases/13-tools-and-protocols/38-calling-conventions-and-stack-frames/) | بناء | Python |
+| 39 | [أنماط المترجم والتحسين](../../phases/13-tools-and-protocols/39-compiler-idioms-and-optimization/) | بناء | Python |
+| 40 | [الربط والتحميل والملفات الثنائية المجردة](../../phases/13-tools-and-protocols/40-linking-loading-and-stripped-binaries/) | بناء | Python |
+| 41 | [استعادة البيانات والأنواع](../../phases/13-tools-and-protocols/41-recovering-data-and-types/) | بناء | Python |
+| 42 | [التحليل الديناميكي لبرنامجك الخاص](../../phases/13-tools-and-protocols/42-dynamic-analysis-of-your-own-program/) | بناء | Python |
+| 43 | [الشيفرة الوسيطة والتنسيقات المُدارة](../../phases/13-tools-and-protocols/43-bytecode-and-managed-formats/) | بناء | Python |
+| 44 | [مقارنة الملفات الثنائية والتنفيذ الرمزي](../../phases/13-tools-and-protocols/44-binary-diffing-and-symbolic-execution/) | بناء | Python |
+| 45 | [الهندسة العكسية بمساعدة الذكاء الاصطناعي](../../phases/13-tools-and-protocols/45-ai-assisted-reverse-engineering/) | بناء | Python |
 
 
 تشكل الدروس <code>06–18</code> و<code>28–31</code> مسار [Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json) المركّز. وترتيب البيان هو: 06، 07، 08، 09، 10، 11، 12، 13، 14، 15، 16، 18، 17، 28، 29، 30، 31. ابدأ باستدعاء `learn-mcp` المخصص لمضيفك أعلاه. الدرس 23 هو المشروع الختامي الاختياري الوحيد للمسار، ويتطلب أيضًا الدرسين 19 و20.
@@ -1147,7 +1164,7 @@ flowchart LR
 <details>
 <summary>تثبيت مخرجات الدروس</summary>
 
-**مخرجات الدروس.** يضم المستودع 400 مهارة و100 موجّهًا تحت `phases/**/outputs/`؛ ثبّتها عبر `scripts/install_skills.py`. يلزم استنساخ المستودع. تدعم الأداة عوامل تصفية الوسوم والتشغيل التجريبي والتخطيطات الخاصة بكل وكيل:
+**مخرجات الدروس.** يضم المستودع 414 مهارة و100 موجّهًا تحت `phases/**/outputs/`؛ ثبّتها عبر `scripts/install_skills.py`. يلزم استنساخ المستودع. تدعم الأداة عوامل تصفية الوسوم والتشغيل التجريبي والتخطيطات الخاصة بكل وكيل:
 
 ```bash
 python3 scripts/install_skills.py <target>                                 # every skill, default --layout skills (nested)
@@ -1267,7 +1284,7 @@ python3 scripts/audit_lessons.py --json    # CI-friendly output
 <p align="center"><sub><b>114,584</b> القراء &nbsp;·&nbsp; <b>181,995</b> مشاهدات الصفحة في الـ 30 يومًا الأخير &nbsp;·&nbsp; حتى 2026-08-29</sub></p>
 <!-- STATS:END -->
 
-منهج مجاني بترخيص MIT يضم 528 درسًا. شكرًا للرعاة والداعمين الذين يجعلون هذا العمل ممكنًا. [عرض جميع الرعاة والداعمين](../../BACKERS.md).
+منهج مجاني بترخيص MIT يضم 542 درسًا. شكرًا للرعاة والداعمين الذين يجعلون هذا العمل ممكنًا. [عرض جميع الرعاة والداعمين](../../BACKERS.md).
 
 هل تريد دعم العمل؟ اطّلع على [خيارات الرعاية](../../SPONSORS.md)، بما فيها [رعاية الأجهزة](../../SPONSORS.md#hardware-lab-partner)، أو [ارعى المشروع على GitHub](https://github.com/sponsors/rohitg00).
 

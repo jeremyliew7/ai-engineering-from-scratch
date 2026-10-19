@@ -13,11 +13,11 @@ Implementujte vnitřní mechanismy modelů, vyhledávací pipeline a běhová pr
 
 Zdarma, s otevřeným zdrojovým kódem, pod licencí MIT. Učte se na webu, s programovacím agentem nebo spouštěním místního kódu.
 
-> 528 lekcí. 20 fází. Python, TypeScript, Rust, Julia.
+> 542 lekcí. 20 fází. Python, TypeScript, Rust, Julia.
 
 <p align="center">
   <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="Licence MIT"></a>
-  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-528-3553ff?style=flat-square&labelColor=fafaf5" alt="528 lekcí"></a>
+  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-542-3553ff?style=flat-square&labelColor=fafaf5" alt="542 lekcí"></a>
   <a href="#contents"><img src="https://img.shields.io/badge/phases-20-3553ff?style=flat-square&labelColor=fafaf5" alt="20 fází"></a>
   <a href="https://github.com/rohitg00/ai-engineering-from-scratch/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/ai-engineering-from-scratch?style=flat-square&labelColor=fafaf5&color=3553ff" alt="Hvězdičky na GitHubu"></a>
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="Webové stránky"></a>
@@ -207,6 +207,7 @@ Instalátor uvede podporované hostitele a zeptá se na místo instalace. Pokud 
 | [`course-guide`](../../skills/course-guide/SKILL.md) | Směrování témat. „Kde se naučím pozornost?“ nebo „moje ztráta je NaN“ → přesné lekce s odkazy. |
 | [`learn-mcp`](../../skills/learn-mcp/SKILL.md) | Tutor Model Context Protocol (MCP). Vytvoří `MCP-LEARNING.md`, sleduje manifest 17 lekcí a ukládá důkazy komunikace, bezpečnosti, spolehlivosti a shody. |
 | [`learn-agent-skills`](../../skills/learn-agent-skills/SKILL.md) | Tutor Agent Skills. Vytvoří `AGENT-SKILLS-LEARNING.md`, vyučuje lekce 22, 24, 25, 26 a 27 a zaznamenává důkazy ze skutečného hostitele. |
+| [`learn-reverse-engineering`](../../skills/learn-reverse-engineering/SKILL.md) | Tutor reverzního inženýrství. Vytvoří `REVERSE-ENGINEERING-LEARNING.md`, vyučuje lekce 32 až 45 fáze 13 na programech, které si sami sestavíte, a zaznamenává důkazy z laboratorních cvičení. |
 | [`claude-certification`](../../skills/claude-certification/SKILL.md) | Certifikační tutor. Vybere CCAO-F, CCDV-F, CCAR-F nebo CCAR-P; učí lekce, spouští cvičení, hodnotí artefakty, zadává diagnostiku a cvičné zkoušky, ukládá postup. |
 | [`mcpa-certification`](../../skills/mcpa-certification/SKILL.md) | Tutor MCPA. Sleduje cestu `mcpa-f` s 34 lekcemi o protokolu 2026-07-28; učí lekce, spouští cvičení a kontrolu komunikace, zadává diagnostiku a tři cvičné zkoušky, ukládá postup. |
 | [`find-your-level`](../../skills/find-your-level/SKILL.md) | Rozřazovací kvíz s deseti otázkami. Přiřadí znalosti k počáteční fázi a vytvoří osobní cestu s hodinovými odhady. |
@@ -246,7 +247,7 @@ Cesty v příkazech na stránkách lekcí vycházejí z kořenového adresáře 
 
 ## Vyberte si vzdělávací cestu
 
-Než začnete, nemusíte procházet všech 528 lekcí. Vyberte si jeden cíl. Každý odkaz otevře stejný vzdělávací program na GitHub nebo na webu a obě verze používají stejný kód lekcí.
+Než začnete, nemusíte procházet všech 542 lekcí. Vyberte si jeden cíl. Každý odkaz otevře stejný vzdělávací program na GitHub nebo na webu a obě verze používají stejný kód lekcí.
 
 | Váš cíl | Učení na GitHub | Učení na webu |
 |---|---|---|
@@ -262,12 +263,13 @@ Nevíte, kde začít? Použijte [tutora `start-learning` pro určení úrovně](
 Porovnejte čtyři hlavní oblasti a šest kariérních cest v [AI Engineering Learning Paths](https://aiengineeringfromscratch.com/learning-paths.html).
 
 <details>
-<summary>Zaměřené cesty MCP a Agent Skills</summary>
+<summary>Zaměřené cesty MCP, Agent Skills a reverzního inženýrství</summary>
 
 | Váš cíl | Učení na GitHub | Učení na webu |
 |---|---|---|
 | Chci vyvíjet s Model Context Protocol (MCP) | [Trasa Model Context Protocol (MCP)](../../phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Studijní cesta Model Context Protocol (MCP)](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |
 | Chci psát a vydávat Agent Skills | [Zaměřená trasa Agent Skills](../../phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Studijní cesta Agent Skills](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |
+| Chci číst zkompilované programy | [Trasa reverzního inženýrství](../../phases/13-tools-and-protocols/README.md#reverse-engineering-path) | [Studijní cesta reverzního inženýrství](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch&learningPath=reverse-engineering) |
 
 </details>
 
@@ -290,6 +292,7 @@ Porovnejte čtyři hlavní oblasti a šest kariérních cest v [AI Engineering L
 | Zkušený inženýr, chcete pouze inženýrství agentů | Fáze 14: Inženýrství agentů | ~60 hodin |
 | Chcete pouze budovat produkční systémy MCP | [Cesta Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json) | ~23 hodin 15 minut |
 | Chcete pouze budovat produkční Agent Skills | [Cesta inženýrství Agent Skills](../../learning-paths/agent-skills.json) | ~9.5 hodiny |
+| Chcete se pouze naučit reverzní inženýrství | [Cesta reverzního inženýrství](../../learning-paths/reverse-engineering.json) | ~32.5 hodiny |
 
 </details>
 
@@ -697,7 +700,7 @@ Dvacet fází. Kliknutím rozbalíte seznam lekcí dané fáze.
 </details>
 
 <details id="phase-13">
-<summary><b>Fáze 13: Nástroje a protokoly</b> &nbsp;<code>31 lekcí</code>&nbsp; <em>Rozhraní mezi AI a skutečným světem.</em></summary>
+<summary><b>Fáze 13: Nástroje a protokoly</b> &nbsp;<code>45 lekcí</code>&nbsp; <em>Rozhraní mezi AI a skutečným světem.</em></summary>
 <br/>
 
 | # | Lekce | Druh | Jazyk |
@@ -733,6 +736,20 @@ Dvacet fází. Kliknutím rozbalíte seznam lekcí dané fáze.
 | 29 | [Spolehlivost MCP, rušení a řízení toku](../../phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | Vytvořit | Python |
 | 30 | [Dodavatelský řetězec registru MCP: přijímání, odchylky a návrat změn](../../phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | Vytvořit | Python |
 | 31 | [Soulad MCP: verzování, důkazy a provoz](../../phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | Vytvořit | Python |
+| 32 | [Anatomie programu: čtení ELF od základů](../../phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | Vytvořit | Python |
+| 33 | [Disassemblování a grafy toku řízení](../../phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | Vytvořit | Python |
+| 34 | [Převod strojového kódu na pseudokód](../../phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | Vytvořit | Python |
+| 35 | [Důkazy, míra jistoty a neznámé v binární analýze](../../phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | Vytvořit | Python |
+| 36 | [Znovu sestavit a dokázat shodu](../../phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | Vytvořit | Python |
+| 37 | [Přehled oblasti reverzního inženýrství](../../phases/13-tools-and-protocols/37-the-reverse-engineering-landscape/) | Vytvořit | Python |
+| 38 | [Volací konvence a zásobníkové rámce](../../phases/13-tools-and-protocols/38-calling-conventions-and-stack-frames/) | Vytvořit | Python |
+| 39 | [Idiomy překladače a optimalizace](../../phases/13-tools-and-protocols/39-compiler-idioms-and-optimization/) | Vytvořit | Python |
+| 40 | [Linkování, zavádění a binárky bez symbolů](../../phases/13-tools-and-protocols/40-linking-loading-and-stripped-binaries/) | Vytvořit | Python |
+| 41 | [Obnova dat a typů](../../phases/13-tools-and-protocols/41-recovering-data-and-types/) | Vytvořit | Python |
+| 42 | [Dynamická analýza vlastního programu](../../phases/13-tools-and-protocols/42-dynamic-analysis-of-your-own-program/) | Vytvořit | Python |
+| 43 | [Bajtkód a spravované formáty](../../phases/13-tools-and-protocols/43-bytecode-and-managed-formats/) | Vytvořit | Python |
+| 44 | [Porovnávání binárek a symbolické vykonávání](../../phases/13-tools-and-protocols/44-binary-diffing-and-symbolic-execution/) | Vytvořit | Python |
+| 45 | [Reverzní inženýrství s pomocí AI](../../phases/13-tools-and-protocols/45-ai-assisted-reverse-engineering/) | Vytvořit | Python |
 
 Lekce 06-18 a 28-31 tvoří zaměřenou [cestu Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json). Pořadí v manifestu je 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 18, 17, 28, 29, 30, 31. Začněte výše uvedeným vyvoláním `learn-mcp` pro svého hostitele. Lekce 23 je jediný volitelný závěrečný projekt a vyžaduje také lekce 19 a 20.
 
@@ -1147,7 +1164,7 @@ Jiné kurzy končí slovy *„gratuluji, naučili jste se X“*. Zde každá lek
 <details>
 <summary>Nainstalovat výstupy lekcí</summary>
 
-**Artefakty lekcí.** Repozitář obsahuje 400 dovedností a 100 promptů pod `phases/**/outputs/`; instalujte je pomocí `scripts/install_skills.py`. Vyžaduje to klonování repozitáře. Podporuje filtry značek, zkušební běhy a rozložení podle agenta:
+**Artefakty lekcí.** Repozitář obsahuje 414 dovedností a 100 promptů pod `phases/**/outputs/`; instalujte je pomocí `scripts/install_skills.py`. Vyžaduje to klonování repozitáře. Podporuje filtry značek, zkušební běhy a rozložení podle agenta:
 
 ```bash
 python3 scripts/install_skills.py <target>                                 # every skill, default --layout skills (nested)
@@ -1267,7 +1284,7 @@ Při porušení pravidla je návratový kód nenulový. Pravidla L001–L010 ov�
 <p align="center"><sub><b>114,584</b> čtenářů &nbsp;·&nbsp; <b>181,995</b> zobrazení stránek za posledních 30 dní &nbsp;·&nbsp; stav k 2026-08-29</sub></p>
 <!-- STATS:END -->
 
-Zdarma, s licencí MIT, 528 lekcí. Děkujeme sponzorům a podporovatelům, kteří tuto práci umožňují. [Zobrazit všechny sponzory a podporovatele](../../BACKERS.md).
+Zdarma, s licencí MIT, 542 lekcí. Děkujeme sponzorům a podporovatelům, kteří tuto práci umožňují. [Zobrazit všechny sponzory a podporovatele](../../BACKERS.md).
 
 Chcete práci podpořit? Podívejte se na [možnosti sponzorství](../../SPONSORS.md), včetně [hardwarového sponzorství](../../SPONSORS.md#hardware-lab-partner), nebo [přispějte přes GitHub](https://github.com/sponsors/rohitg00).
 

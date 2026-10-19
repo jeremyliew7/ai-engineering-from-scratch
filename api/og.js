@@ -1,10 +1,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { renderCard } = require('../lib/og-render');
-const { STATIC_TYPES, cardPath, lessonCard, trackCard } = require('../lib/og-cards');
+const { STATIC_TYPES, cardPath, lessonCard, readPoster, trackCard } = require('../lib/og-cards');
 const { translationsOf } = require('../lib/lesson-translations');
 
-const SITE = path.join(__dirname, '..', 'site');
 const ID = /^[a-z0-9][a-z0-9-]*(?:\/[a-z0-9][a-z0-9-]*){0,3}$/;
 const QUERY_NAMES = new Set(['type', 'id', 'lang', 'v']);
 const IMMUTABLE = 'public, max-age=31536000, s-maxage=31536000, immutable';
@@ -16,7 +15,16 @@ function own(object, key) {
 }
 
 function readSite(name) {
-  return JSON.parse(fs.readFileSync(path.join(SITE, name), 'utf8'));
+  switch (name) {
+    case 'lesson-seo.json':
+      return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'site', 'lesson-seo.json'), 'utf8'));
+    case 'certification-seo.json':
+      return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'site', 'certification-seo.json'), 'utf8'));
+    case 'og-cards.json':
+      return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'site', 'og-cards.json'), 'utf8'));
+    default:
+      throw new Error(`Unknown social card manifest: ${name}`);
+  }
 }
 
 function findCard(type, id, lang, manifest) {
@@ -90,7 +98,7 @@ function createHandler({ manifest = readSite, render = renderCard } = {}) {
     try {
       if (!rendered.has(location)) {
         if (rendered.size >= RENDERED_LIMIT) rendered.delete(rendered.keys().next().value);
-        rendered.set(location, render(spec));
+        rendered.set(location, spec.image ? readPoster(spec.image) : render(spec));
       }
     } catch (_) {
       return send(res, method, 500, 'no-store', 'Card could not be rendered');

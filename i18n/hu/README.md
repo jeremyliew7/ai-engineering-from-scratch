@@ -13,11 +13,11 @@ Valósítsd meg a modellek belső működését, a visszakeresési folyamatokat 
 
 Ingyenes, nyílt forráskódú, MIT-licenccel. Tanulj a weboldalon, egy kódoló ügynökkel vagy helyben futtatott kóddal.
 
-> 528 lecke. 20 szakasz. Python, TypeScript, Rust, Julia.
+> 542 lecke. 20 szakasz. Python, TypeScript, Rust, Julia.
 
 <p align="center">
   <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="MIT-licenc"></a>
-  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-528-3553ff?style=flat-square&labelColor=fafaf5" alt="528 lecke"></a>
+  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-542-3553ff?style=flat-square&labelColor=fafaf5" alt="542 lecke"></a>
   <a href="#contents"><img src="https://img.shields.io/badge/phases-20-3553ff?style=flat-square&labelColor=fafaf5" alt="20 szakasz"></a>
   <a href="https://github.com/rohitg00/ai-engineering-from-scratch/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/ai-engineering-from-scratch?style=flat-square&labelColor=fafaf5&color=3553ff" alt="GitHub-csillagok"></a>
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="Weboldal"></a>
@@ -207,6 +207,7 @@ A telepítő felsorolja a beállítható gazdákat, és megkérdezi a telepíté
 | [`course-guide`](../../skills/course-guide/SKILL.md) | Témairányító. „Hol tanulhatok a figyelemről?” vagy „a veszteségem NaN” → a pontos leckék, linkekkel. |
 | [`learn-mcp`](../../skills/learn-mcp/SKILL.md) | Célzott Model Context Protocol (MCP) tutor. Létrehozza a `MCP-LEARNING.md` fájlt, követi a 17 leckés jegyzéket, és kommunikációs, biztonsági, megbízhatósági és megfelelőségi bizonyítékokat rögzít. |
 | [`learn-agent-skills`](../../skills/learn-agent-skills/SKILL.md) | Célzott Agent Skills tutor. Létrehozza az `AGENT-SKILLS-LEARNING.md` fájlt, tanítja a 22., 24., 25., 26. és 27. leckét, és valódi gazdán szerzett bizonyítékokat rögzít. |
+| [`learn-reverse-engineering`](../../skills/learn-reverse-engineering/SKILL.md) | Célzott visszafejtési tutor. Létrehozza a `REVERSE-ENGINEERING-LEARNING.md` fájlt, a saját magad által épített programokon tanítja a 13. szakasz leckéit a 32.-től a 45.-ig, és rögzíti a gyakorlati bizonyítékokat. |
 | [`claude-certification`](../../skills/claude-certification/SKILL.md) | Tanúsítási tutor. CCAO-F, CCDV-F, CCAR-F vagy CCAR-P útvonalat választ; leckéket tanít, gyakorlatokat futtat, eredményeket értékel, diagnosztikát és próbavizsgákat végez, menti az előrehaladást. |
 | [`mcpa-certification`](../../skills/mcpa-certification/SKILL.md) | MCPA-tutor. A 2026-07-28 protokoll 34 leckés `mcpa-f` útvonalát követi; tanít, gyakorlatokat és kommunikációellenőrzést futtat, diagnosztikát és három próbavizsgát végez, menti az előrehaladást. |
 | [`find-your-level`](../../skills/find-your-level/SKILL.md) | Tízkérdéses szintfelmérő. A tudásodhoz kezdőszakaszt rendel, és személyes útvonalat készít órabecslésekkel. |
@@ -246,7 +247,7 @@ A leckék parancsaiban szereplő útvonalak a kódtár gyökérkönyvtárához k
 
 ## Válassz tanulási útvonalat
 
-Nem kell végignézned mind az 528 leckét, mielőtt elkezded. Válassz egy célt. Minden hivatkozás ugyanazt a tananyagot nyitja meg a GitHub felületén vagy a weboldalon, és mindkét változat ugyanazt a leckekódot használja.
+Nem kell végignézned mind az 542 leckét, mielőtt elkezded. Válassz egy célt. Minden hivatkozás ugyanazt a tananyagot nyitja meg a GitHub felületén vagy a weboldalon, és mindkét változat ugyanazt a leckekódot használja.
 
 | A célod | Tanulás a GitHub felületén | Tanulás a weboldalon |
 |---|---|---|
@@ -262,12 +263,13 @@ Nem tudod, hol kezdd? Használd a [`start-learning` szintfelmérő tutort](../..
 Hasonlítsd össze a négy fő területet és a hat karrierutat az [AI Engineering Learning Paths](https://aiengineeringfromscratch.com/learning-paths.html) oldalon.
 
 <details>
-<summary>Célzott MCP- és Agent Skills-útvonalak</summary>
+<summary>Célzott MCP-, Agent Skills- és visszafejtési útvonalak</summary>
 
 | A célod | Tanulás a GitHub felületén | Tanulás a weboldalon |
 |---|---|---|
 | A Model Context Protocol (MCP) használatával szeretnék fejleszteni | [Model Context Protocol (MCP) útvonal](../../phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Model Context Protocol (MCP) tanulási útvonal](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |
 | Agent Skills csomagokat szeretnék írni és kiadni | [Célzott Agent Skills útvonal](../../phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Agent Skills tanulási útvonal](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |
+| Lefordított programokat szeretnék olvasni | [Visszafejtési útvonal](../../phases/13-tools-and-protocols/README.md#reverse-engineering-path) | [Visszafejtési tanulási útvonal](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch&learningPath=reverse-engineering) |
 
 </details>
 
@@ -290,6 +292,7 @@ Hasonlítsd össze a négy fő területet és a hat karrierutat az [AI Engineeri
 | Tapasztalt mérnök vagy, csak az ágensmérnökség érdekel | 14. szakasz: Ágensmérnökség | ~60 óra |
 | Csak üzemi MCP-rendszereket szeretnél építeni | [Model Context Protocol (MCP) útvonal](../../learning-paths/model-context-protocol.json) | ~23 óra 15 perc |
 | Csak üzemi Agent Skills képességeket szeretnél építeni | [Agent Skills mérnöki útvonal](../../learning-paths/agent-skills.json) | ~9.5 óra |
+| Csak visszafejtést szeretnél tanulni | [Visszafejtési útvonal](../../learning-paths/reverse-engineering.json) | ~32.5 óra |
 
 </details>
 
@@ -697,7 +700,7 @@ Húsz szakasz. A leckelista kibontásához kattints egy szakaszra.
 </details>
 
 <details id="phase-13">
-<summary><b>13. szakasz: Eszközök és protokollok</b> &nbsp;<code>31 lecke</code>&nbsp; <em>Az AI és a valódi világ közötti felületek.</em></summary>
+<summary><b>13. szakasz: Eszközök és protokollok</b> &nbsp;<code>45 lecke</code>&nbsp; <em>Az AI és a valódi világ közötti felületek.</em></summary>
 <br/>
 
 | # | Lecke | Típus | Nyelv |
@@ -733,6 +736,20 @@ Húsz szakasz. A leckelista kibontásához kattints egy szakaszra.
 | 29 | [MCP-megbízhatóság, megszakítás és folyamszabályozás](../../phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | Építés | Python |
 | 30 | [Az MCP-regiszter ellátási lánca: befogadás, eltérés és visszaállítás](../../phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | Építés | Python |
 | 31 | [MCP-megfelelőség: verziókezelés, bizonyítékok és üzemeltetés](../../phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | Építés | Python |
+| 32 | [A program anatómiája: ELF olvasása az alapoktól](../../phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | Építés | Python |
+| 33 | [Disassemblálás és vezérlésfolyam-gráfok](../../phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | Építés | Python |
+| 34 | [Gépi kód emelése pszeudokóddá](../../phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | Építés | Python |
+| 35 | [Bizonyíték, bizonyosság és ismeretlenek a bináris elemzésben](../../phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | Építés | Python |
+| 36 | [Újraépítés és az egyezés bizonyítása](../../phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | Építés | Python |
+| 37 | [A visszafejtés területei](../../phases/13-tools-and-protocols/37-the-reverse-engineering-landscape/) | Építés | Python |
+| 38 | [Hívási konvenciók és veremkeretek](../../phases/13-tools-and-protocols/38-calling-conventions-and-stack-frames/) | Építés | Python |
+| 39 | [Fordítói idiómák és optimalizálás](../../phases/13-tools-and-protocols/39-compiler-idioms-and-optimization/) | Építés | Python |
+| 40 | [Linkelés, betöltés és lecsupaszított binárisok](../../phases/13-tools-and-protocols/40-linking-loading-and-stripped-binaries/) | Építés | Python |
+| 41 | [Adatok és típusok visszanyerése](../../phases/13-tools-and-protocols/41-recovering-data-and-types/) | Építés | Python |
+| 42 | [A saját program dinamikus elemzése](../../phases/13-tools-and-protocols/42-dynamic-analysis-of-your-own-program/) | Építés | Python |
+| 43 | [Bájtkód és felügyelt formátumok](../../phases/13-tools-and-protocols/43-bytecode-and-managed-formats/) | Építés | Python |
+| 44 | [Bináris összehasonlítás és szimbolikus végrehajtás](../../phases/13-tools-and-protocols/44-binary-diffing-and-symbolic-execution/) | Építés | Python |
+| 45 | [AI-támogatott visszafejtés](../../phases/13-tools-and-protocols/45-ai-assisted-reverse-engineering/) | Építés | Python |
 
 A 06-18. és 28-31. leckék alkotják a célzott [Model Context Protocol (MCP) útvonalat](../../learning-paths/model-context-protocol.json). A jegyzék sorrendje: 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 18, 17, 28, 29, 30, 31. Kezdj a fenti gazdaspecifikus `learn-mcp` meghívással. A 23. lecke az egyetlen választható záróprojekt, és a 19. és 20. leckét is megköveteli.
 
@@ -1147,7 +1164,7 @@ Más tanfolyamok azzal zárulnak, hogy *„gratulálunk, megtanultad X-et”*. I
 <details>
 <summary>Leckeeredmények telepítése</summary>
 
-**A leckék eredményei.** A tároló 400 képességet és 100 promptot tartalmaz a `phases/**/outputs/` alatt; a `scripts/install_skills.py` segítségével telepítsd őket. Ehhez klónozás kell. Támogat címkeszűrést, próbafuttatást és ágensenkénti elrendezést:
+**A leckék eredményei.** A tároló 414 képességet és 100 promptot tartalmaz a `phases/**/outputs/` alatt; a `scripts/install_skills.py` segítségével telepítsd őket. Ehhez klónozás kell. Támogat címkeszűrést, próbafuttatást és ágensenkénti elrendezést:
 
 ```bash
 python3 scripts/install_skills.py <target>                                 # every skill, default --layout skills (nested)
@@ -1267,7 +1284,7 @@ A kilépési kód nem nulla, ha bármely szabály sérül. Az L001–L010 szabá
 <p align="center"><sub><b>114,584</b> olvasó &nbsp;·&nbsp; <b>181,995</b> oldalmegtekintés az elmúlt 30 napban &nbsp;·&nbsp; állapot: 2026-08-29</sub></p>
 <!-- STATS:END -->
 
-Ingyenes, MIT-licencű, 528 lecke. Köszönjük a szponzoroknak és támogatóknak, akik lehetővé teszik ezt a munkát. [Összes szponzor és támogató megtekintése](../../BACKERS.md).
+Ingyenes, MIT-licencű, 542 lecke. Köszönjük a szponzoroknak és támogatóknak, akik lehetővé teszik ezt a munkát. [Összes szponzor és támogató megtekintése](../../BACKERS.md).
 
 Szeretnéd támogatni a munkát? Nézd meg a [támogatási lehetőségeket](../../SPONSORS.md), köztük a [hardvertámogatást](../../SPONSORS.md#hardware-lab-partner), vagy [támogass a GitHub felületén](https://github.com/sponsors/rohitg00).
 

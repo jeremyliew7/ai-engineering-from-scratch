@@ -13,11 +13,11 @@ Implementa i componenti interni dei modelli, le pipeline di recupero e gli ambie
 
 Gratuito, open source, con licenza MIT. Impara sul sito, con un agente di programmazione o eseguendo codice locale.
 
-> 528 lezioni. 20 fasi. Python, TypeScript, Rust, Julia.
+> 542 lezioni. 20 fasi. Python, TypeScript, Rust, Julia.
 
 <p align="center">
   <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="Licenza MIT"></a>
-  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-528-3553ff?style=flat-square&labelColor=fafaf5" alt="528 lezioni"></a>
+  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-542-3553ff?style=flat-square&labelColor=fafaf5" alt="542 lezioni"></a>
   <a href="#contents"><img src="https://img.shields.io/badge/phases-20-3553ff?style=flat-square&labelColor=fafaf5" alt="20 fasi"></a>
   <a href="https://github.com/rohitg00/ai-engineering-from-scratch/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/ai-engineering-from-scratch?style=flat-square&labelColor=fafaf5&color=3553ff" alt="Stelle GitHub"></a>
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="Sito web"></a>
@@ -207,6 +207,7 @@ L’installer elenca gli host che può configurare e ti chiede dove installare l
 | [`course-guide`](../../skills/course-guide/SKILL.md) | Instrada verso gli argomenti: «Dove posso imparare l’attenzione?» o «la mia loss è NaN» → indica le lezioni esatte e i relativi link. |
 | [`learn-mcp`](../../skills/learn-mcp/SKILL.md) | Tutor dedicato al Model Context Protocol (MCP). Crea `MCP-LEARNING.md`, segue il manifesto del percorso di 17 lezioni e registra le prove relative al protocollo, alla sicurezza, all’affidabilità e alla conformità. |
 | [`learn-agent-skills`](../../skills/learn-agent-skills/SKILL.md) | Tutor dedicato alle Agent Skills. Crea `AGENT-SKILLS-LEARNING.md`, insegna le lezioni 22, 24, 25, 26 e 27 e registra le prove raccolte su un host reale. |
+| [`learn-reverse-engineering`](../../skills/learn-reverse-engineering/SKILL.md) | Tutor dedicato al reverse engineering. Crea `REVERSE-ENGINEERING-LEARNING.md`, insegna le lezioni dalla 32 alla 45 della fase 13 su programmi che compili tu stesso e registra le prove raccolte in laboratorio. |
 | [`claude-certification`](../../skills/claude-certification/SKILL.md) | Tutor per le certificazioni. Sceglie tra CCAO-F, CCDV-F, CCAR-F e CCAR-P; insegna ogni lezione; svolge i laboratori; esamina gli artefatti; propone prove diagnostiche e simulazioni; salva i progressi. |
 | [`mcpa-certification`](../../skills/mcpa-certification/SKILL.md) | Tutor MCPA. Segue il percorso di 34 lezioni `mcpa-f` sul protocollo del 2026-07-28; insegna ogni lezione, esegue i laboratori e il validatore del protocollo, propone la prova diagnostica e tre simulazioni e salva i progressi. |
 | [`find-your-level`](../../skills/find-your-level/SKILL.md) | Quiz di orientamento in dieci domande: identifica la fase iniziale più adatta e crea un percorso personalizzato con una stima delle ore di studio. |
@@ -246,7 +247,7 @@ I comandi nelle lezioni usano percorsi relativi alla radice del repository, salv
 
 ## Scegli un percorso di apprendimento
 
-Non serve scorrere tutte le 528 lezioni prima di cominciare. Scegli un obiettivo: ogni link apre lo stesso programma su GitHub o sul sito web, e le due versioni usano lo stesso codice delle lezioni.
+Non serve scorrere tutte le 542 lezioni prima di cominciare. Scegli un obiettivo: ogni link apre lo stesso programma su GitHub o sul sito web, e le due versioni usano lo stesso codice delle lezioni.
 
 | Il tuo obiettivo | Su GitHub | Sul sito web |
 |---|---|---|
@@ -262,12 +263,13 @@ Non sai da dove cominciare? Usa il [tutor di orientamento `start-learning`](../.
 Confronta quattro aree fondamentali e sei percorsi professionali nella [guida ai percorsi di apprendimento in AI Engineering](https://aiengineeringfromscratch.com/learning-paths.html).
 
 <details>
-<summary>Percorsi mirati MCP e Agent Skills</summary>
+<summary>Percorsi mirati MCP, Agent Skills e reverse engineering</summary>
 
 | Il tuo obiettivo | Su GitHub | Sul sito web |
 |---|---|---|
 | Voglio creare applicazioni con il Model Context Protocol (MCP) | [Percorso Model Context Protocol (MCP)](../../phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Percorso Model Context Protocol (MCP)](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |
 | Voglio scrivere e distribuire Agent Skills | [Percorso mirato di Agent Skills](../../phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Percorso Agent Skills](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |
+| Voglio leggere programmi compilati | [Percorso di reverse engineering](../../phases/13-tools-and-protocols/README.md#reverse-engineering-path) | [Percorso di reverse engineering](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch&learningPath=reverse-engineering) |
 
 </details>
 
@@ -290,6 +292,7 @@ Confronta quattro aree fondamentali e sei percorsi professionali nella [guida ai
 | Ingegnere senior interessato solo all’ingegneria degli agenti | Fase 14 — Ingegneria degli agenti | ~60 ore |
 | Vuoi solo creare sistemi MCP per la produzione | [Percorso Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json) | ~23 ore e 15 min |
 | Vuoi solo creare Agent Skills pronte per la produzione | [Percorso di ingegneria Agent Skills](../../learning-paths/agent-skills.json) | ~9,5 ore |
+| Vuoi solo imparare il reverse engineering | [Percorso di reverse engineering](../../learning-paths/reverse-engineering.json) | ~32,5 ore |
 
 </details>
 
@@ -697,7 +700,7 @@ Fai clic su una fase per espandere l’elenco delle lezioni.
 </details>
 
 <details id="phase-13">
-<summary><b>Fase 13 — Strumenti e protocolli</b> &nbsp;<code>31 lezioni</code>&nbsp; <em>Le interfacce tra l’IA e il mondo reale.</em></summary>
+<summary><b>Fase 13 — Strumenti e protocolli</b> &nbsp;<code>45 lezioni</code>&nbsp; <em>Le interfacce tra l’IA e il mondo reale.</em></summary>
 <br/>
 
 | # | Lezione | Tipo | Linguaggio |
@@ -733,6 +736,20 @@ Fai clic su una fase per espandere l’elenco delle lezioni.
 | 29 | [Affidabilità, cancellazione e controllo del flusso in MCP](../../phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | Costruire | Python |
 | 30 | [Supply chain dei registri MCP: ammissione, drift e rollback](../../phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | Costruire | Python |
 | 31 | [Conformità MCP: versionamento, evidenze e gestione operativa](../../phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | Costruire | Python |
+| 32 | [Anatomia di un programma: leggere ELF da zero](../../phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | Costruire | Python |
+| 33 | [Disassemblaggio e grafi del flusso di controllo](../../phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | Costruire | Python |
+| 34 | [Dal codice macchina allo pseudocodice](../../phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | Costruire | Python |
+| 35 | [Evidenze, confidenza e incognite nell’analisi dei binari](../../phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | Costruire | Python |
+| 36 | [Ricostruire e dimostrare l’equivalenza](../../phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | Costruire | Python |
+| 37 | [Il panorama del reverse engineering](../../phases/13-tools-and-protocols/37-the-reverse-engineering-landscape/) | Costruire | Python |
+| 38 | [Convenzioni di chiamata e stack frame](../../phases/13-tools-and-protocols/38-calling-conventions-and-stack-frames/) | Costruire | Python |
+| 39 | [Idiomi del compilatore e ottimizzazione](../../phases/13-tools-and-protocols/39-compiler-idioms-and-optimization/) | Costruire | Python |
+| 40 | [Linking, caricamento e binari senza simboli](../../phases/13-tools-and-protocols/40-linking-loading-and-stripped-binaries/) | Costruire | Python |
+| 41 | [Recuperare dati e tipi](../../phases/13-tools-and-protocols/41-recovering-data-and-types/) | Costruire | Python |
+| 42 | [Analisi dinamica del tuo programma](../../phases/13-tools-and-protocols/42-dynamic-analysis-of-your-own-program/) | Costruire | Python |
+| 43 | [Bytecode e formati gestiti](../../phases/13-tools-and-protocols/43-bytecode-and-managed-formats/) | Costruire | Python |
+| 44 | [Diffing dei binari ed esecuzione simbolica](../../phases/13-tools-and-protocols/44-binary-diffing-and-symbolic-execution/) | Costruire | Python |
+| 45 | [Reverse engineering assistito dall’IA](../../phases/13-tools-and-protocols/45-ai-assisted-reverse-engineering/) | Costruire | Python |
 
 Le lezioni dalla 06 alla 18 e dalla 28 alla 31 compongono il [percorso mirato Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json). L’ordine previsto dal manifesto è 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 18, 17, 28, 29, 30, 31. Avvia il percorso con l’invocazione `learn-mcp` specifica per il tuo host. La lezione 23 è l’unico progetto conclusivo facoltativo e richiede anche le lezioni 19 e 20.
 
@@ -1147,7 +1164,7 @@ Altri programmi si concludono con: *«Congratulazioni, hai imparato X».* Qui og
 <details>
 <summary>Installare gli artefatti delle lezioni</summary>
 
-**Artefatti delle lezioni.** Il repository include 400 skill e 100 prompt in `phases/**/outputs/`; installali con `scripts/install_skills.py`. È necessario clonare il repository. Lo script supporta filtri per tag, simulazioni senza scrittura e layout per agente:
+**Artefatti delle lezioni.** Il repository include 414 skill e 100 prompt in `phases/**/outputs/`; installali con `scripts/install_skills.py`. È necessario clonare il repository. Lo script supporta filtri per tag, simulazioni senza scrittura e layout per agente:
 
 ```bash
 python3 scripts/install_skills.py <target>                                 # every skill, default --layout skills (nested)
@@ -1267,7 +1284,7 @@ Il codice di uscita è diverso da zero se una regola non viene rispettata. Le re
 <p align="center"><sub><b>114,584</b> lettori &nbsp;·&nbsp; <b>181,995</b> visualizzazioni di pagina negli ultimi 30 giorni &nbsp;·&nbsp; a partire da 2026-08-29</sub></p>
 <!-- STATS:END -->
 
-Gratuito, con licenza MIT, 528 lezioni. Grazie agli sponsor e ai sostenitori che rendono possibile questo lavoro. [Vedi tutti gli sponsor e i sostenitori](../../BACKERS.md).
+Gratuito, con licenza MIT, 542 lezioni. Grazie agli sponsor e ai sostenitori che rendono possibile questo lavoro. [Vedi tutti gli sponsor e i sostenitori](../../BACKERS.md).
 
 Vuoi sostenere il progetto? Consulta le [opzioni di sponsorizzazione](../../SPONSORS.md), incluse le [sponsorizzazioni hardware](../../SPONSORS.md#hardware-lab-partner), oppure [sostienilo su GitHub](https://github.com/sponsors/rohitg00).
 

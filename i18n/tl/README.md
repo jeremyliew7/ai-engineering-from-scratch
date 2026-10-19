@@ -13,11 +13,11 @@ Ipatupad ang mga panloob na bahagi ng modelo, retrieval pipeline, at runtime ng 
 
 Libre, open source, lisensiyang MIT. Matuto sa websayt, kasama ang isang coding agent, o sa pagpapatakbo ng lokal na code.
 
-> 528 aralin. 20 yugto. Python, TypeScript, Rust, Julia.
+> 542 aralin. 20 yugto. Python, TypeScript, Rust, Julia.
 
 <p align="center">
   <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="Lisensiyang MIT"></a>
-  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-528-3553ff?style=flat-square&labelColor=fafaf5" alt="528 aralin"></a>
+  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-542-3553ff?style=flat-square&labelColor=fafaf5" alt="542 aralin"></a>
   <a href="#contents"><img src="https://img.shields.io/badge/phases-20-3553ff?style=flat-square&labelColor=fafaf5" alt="20 yugto"></a>
   <a href="https://github.com/rohitg00/ai-engineering-from-scratch/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/ai-engineering-from-scratch?style=flat-square&labelColor=fafaf5&color=3553ff" alt="Mga star sa GitHub"></a>
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="Websayt"></a>
@@ -207,6 +207,7 @@ Inililista ng installer ang mga host na kaya nitong i-configure at nagtatanong k
 | [`course-guide`](../../skills/course-guide/SKILL.md) | Tagapagturo ng lokasyon ng paksa. "Saan ko pag-aaralan ang attention?" o "NaN ang loss ko" → eksaktong mga aralin, na may link. |
 | [`learn-mcp`](../../skills/learn-mcp/SKILL.md) | Tutor na nakatuon sa Model Context Protocol (MCP). Gumagawa ng `MCP-LEARNING.md`, sumusunod sa manifest na may 17 aralin, at nagtatala ng ebidensiya sa komunikasyon, seguridad, pagiging maaasahan at pagsunod. |
 | [`learn-agent-skills`](../../skills/learn-agent-skills/SKILL.md) | Tutor na nakatuon sa Agent Skills. Gumagawa ng `AGENT-SKILLS-LEARNING.md`, nagtuturo ng mga aralin 22, 24, 25, 26 at 27, at nagtatala ng ebidensiya sa tunay na host. |
+| [`learn-reverse-engineering`](../../skills/learn-reverse-engineering/SKILL.md) | Tutor na nakatuon sa reverse engineering. Gumagawa ng `REVERSE-ENGINEERING-LEARNING.md`, nagtuturo ng mga aralin 32 hanggang 45 ng Yugto 13 gamit ang mga programang ikaw mismo ang bumuo, at nagtatala ng ebidensiya mula sa lab. |
 | [`claude-certification`](../../skills/claude-certification/SKILL.md) | Tutor ng sertipikasyon. Pumipili ng CCAO-F, CCDV-F, CCAR-F o CCAR-P; nagtuturo ng bawat aralin; nagpapatakbo ng lab; sumusuri ng nagawa; nagbibigay ng panimulang pagsusuri at mock exam; nagsa-save ng progreso. |
 | [`mcpa-certification`](../../skills/mcpa-certification/SKILL.md) | Tutor ng MCPA. Sumusunod sa rutang `mcpa-f` na may 34 aralin tungkol sa protocol na 2026-07-28; nagtuturo ng bawat aralin; nagpapatakbo ng lab at tagasuri ng komunikasyon; nagbibigay ng panimulang pagsusuri at tatlong mock exam; nagsa-save ng progreso. |
 | [`find-your-level`](../../skills/find-your-level/SKILL.md) | Sampung-tanong na pagsusulit ng antas. Itinutugma ang kaalaman mo sa panimulang yugto at gumagawa ng personal na landas na may tantiyang oras. |
@@ -246,7 +247,7 @@ Ang mga path sa mga command ng aralin ay mula sa root directory ng repository ma
 
 ## Pumili ng landas ng pag-aaral
 
-Hindi mo kailangang tingnan ang lahat ng 528 aralin bago magsimula. Pumili ng isang layunin. Binubuksan ng bawat link ang parehong kurikulum sa GitHub o sa website, at pareho ang code ng aralin sa dalawang bersiyon.
+Hindi mo kailangang tingnan ang lahat ng 542 aralin bago magsimula. Pumili ng isang layunin. Binubuksan ng bawat link ang parehong kurikulum sa GitHub o sa website, at pareho ang code ng aralin sa dalawang bersiyon.
 
 | Layunin mo | Matuto sa GitHub | Matuto sa website |
 |---|---|---|
@@ -262,12 +263,13 @@ Hindi sigurado kung saan ka magsisimula? Gamitin ang [`start-learning` tutor par
 Ihambing ang apat na pangunahing larangan at anim na ruta ng karera sa [Mga Landas sa Pag-aaral ng AI Engineering](https://aiengineeringfromscratch.com/learning-paths.html).
 
 <details>
-<summary>Mga nakatuong landas para sa MCP at Agent Skills</summary>
+<summary>Mga nakatuong landas para sa MCP, Agent Skills at reverse engineering</summary>
 
 | Layunin mo | Matuto sa GitHub | Matuto sa website |
 |---|---|---|
 | Gusto kong bumuo gamit ang Model Context Protocol (MCP) | [Ruta ng Model Context Protocol (MCP)](../../phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Landas ng Model Context Protocol (MCP)](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |
 | Gusto kong magsulat at maglabas ng Agent Skills | [Nakatuong ruta ng Agent Skills](../../phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Landas ng Agent Skills](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |
+| Gusto kong basahin ang mga compiled na programa | [Ruta ng reverse engineering](../../phases/13-tools-and-protocols/README.md#reverse-engineering-path) | [Landas ng reverse engineering](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch&learningPath=reverse-engineering) |
 
 </details>
 
@@ -290,6 +292,7 @@ Ihambing ang apat na pangunahing larangan at anim na ruta ng karera sa [Mga Land
 | Senior engineer, engineering ng agent lamang ang kailangan | Yugto 14: Engineering ng agent | ~60 oras |
 | Gustong bumuo lamang ng MCP system para sa aktuwal na paggamit | [Landas ng Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json) | ~23 oras 15 minuto |
 | Gustong bumuo lamang ng Agent Skills para sa aktuwal na paggamit | [Landas sa Engineering ng Agent Skills](../../learning-paths/agent-skills.json) | ~9.5 oras |
+| Gustong matuto lamang ng reverse engineering | [Landas ng reverse engineering](../../learning-paths/reverse-engineering.json) | ~32.5 oras |
 
 </details>
 
@@ -697,7 +700,7 @@ Dalawampung yugto. I-click ang anumang yugto upang buksan ang listahan ng mga ar
 </details>
 
 <details id="phase-13">
-<summary><b>Yugto 13: Mga kasangkapan at protocol</b> &nbsp;<code>31 aralin</code>&nbsp; <em>Mga interface sa pagitan ng AI at tunay na mundo.</em></summary>
+<summary><b>Yugto 13: Mga kasangkapan at protocol</b> &nbsp;<code>45 aralin</code>&nbsp; <em>Mga interface sa pagitan ng AI at tunay na mundo.</em></summary>
 <br/>
 
 | # | Aralin | Uri | Wika |
@@ -733,6 +736,20 @@ Dalawampung yugto. I-click ang anumang yugto upang buksan ang listahan ng mga ar
 | 29 | [Pagiging maaasahan, pagkansela at kontrol ng daloy sa MCP](../../phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | Buuin | Python |
 | 30 | [Supply chain ng registry ng MCP: pagtanggap, paglihis at rollback](../../phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | Buuin | Python |
 | 31 | [Engineering ng pagsunod sa MCP: bersiyon, ebidensiya at operasyon](../../phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | Buuin | Python |
+| 32 | [Anatomiya ng programa: pagbasa ng ELF mula sa simula](../../phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | Buuin | Python |
+| 33 | [Disassembly at mga control-flow graph](../../phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | Buuin | Python |
+| 34 | [Pag-angat ng machine code tungo sa pseudocode](../../phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | Buuin | Python |
+| 35 | [Ebidensiya, kumpiyansa at mga hindi alam sa pagsusuri ng binary](../../phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | Buuin | Python |
+| 36 | [Muling buuin at patunayang magkapareho](../../phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | Buuin | Python |
+| 37 | [Ang larangan ng reverse engineering](../../phases/13-tools-and-protocols/37-the-reverse-engineering-landscape/) | Buuin | Python |
+| 38 | [Mga calling convention at stack frame](../../phases/13-tools-and-protocols/38-calling-conventions-and-stack-frames/) | Buuin | Python |
+| 39 | [Mga idyoma at optimisasyon ng compiler](../../phases/13-tools-and-protocols/39-compiler-idioms-and-optimization/) | Buuin | Python |
+| 40 | [Pag-link, pag-load at mga stripped na binary](../../phases/13-tools-and-protocols/40-linking-loading-and-stripped-binaries/) | Buuin | Python |
+| 41 | [Pagbawi ng data at mga type](../../phases/13-tools-and-protocols/41-recovering-data-and-types/) | Buuin | Python |
+| 42 | [Dinamikong pagsusuri ng sarili mong programa](../../phases/13-tools-and-protocols/42-dynamic-analysis-of-your-own-program/) | Buuin | Python |
+| 43 | [Bytecode at mga managed na format](../../phases/13-tools-and-protocols/43-bytecode-and-managed-formats/) | Buuin | Python |
+| 44 | [Binary diffing at symbolic execution](../../phases/13-tools-and-protocols/44-binary-diffing-and-symbolic-execution/) | Buuin | Python |
+| 45 | [Reverse engineering sa tulong ng AI](../../phases/13-tools-and-protocols/45-ai-assisted-reverse-engineering/) | Buuin | Python |
 
 Binubuo ng mga aralin 06-18 at 28-31 ang nakatuong [landas ng Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json). Ang pagkakasunod sa manifest ay 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 18, 17, 28, 29, 30, 31. Simulan gamit ang pagtawag sa `learn-mcp` para sa host mo sa itaas. Ang aralin 23 ang tanging opsiyonal na pangwakas na proyekto at kailangan din nito ang mga Aralin 19 at 20.
 
@@ -1147,7 +1164,7 @@ Nagtatapos ang ibang kurikulum sa *"binabati kita, natutuhan mo ang X."* Nagtata
 <details>
 <summary>I-install ang mga artifact ng aralin</summary>
 
-**Mga nagawa sa aralin.** May 400 skill at 100 prompt ang repository sa `phases/**/outputs/`; i-install ang mga ito gamit ang `scripts/install_skills.py`. Kailangang i-clone ang repository. Sinusuportahan ang filter ayon sa tag, dry-run, at magkakaibang layout para sa agent:
+**Mga nagawa sa aralin.** May 414 skill at 100 prompt ang repository sa `phases/**/outputs/`; i-install ang mga ito gamit ang `scripts/install_skills.py`. Kailangang i-clone ang repository. Sinusuportahan ang filter ayon sa tag, dry-run, at magkakaibang layout para sa agent:
 
 ```bash
 python3 scripts/install_skills.py <target>                                 # every skill, default --layout skills (nested)
@@ -1267,7 +1284,7 @@ Hindi zero ang exit code kapag may tuntuning hindi pumasa. Sinusuri ng mga tuntu
 <p align="center"><sub><b>114,584</b> mambabasa &nbsp;·&nbsp; <b>181,995</b> pagtingin sa pahina sa nakalipas na 30 araw &nbsp;·&nbsp; noong 2026-08-29</sub></p>
 <!-- STATS:END -->
 
-Libre, may lisensiyang MIT, 528 aralin. Salamat sa mga sponsor at tagasuportang ginagawang posible ang gawaing ito. [Tingnan ang lahat ng sponsor at tagasuporta](../../BACKERS.md).
+Libre, may lisensiyang MIT, 542 aralin. Salamat sa mga sponsor at tagasuportang ginagawang posible ang gawaing ito. [Tingnan ang lahat ng sponsor at tagasuporta](../../BACKERS.md).
 
 Gustong suportahan ang gawaing ito? Tingnan ang [mga opsiyon sa sponsorship](../../SPONSORS.md), kasama ang [sponsorship ng hardware](../../SPONSORS.md#hardware-lab-partner), o [maging sponsor sa GitHub](https://github.com/sponsors/rohitg00).
 

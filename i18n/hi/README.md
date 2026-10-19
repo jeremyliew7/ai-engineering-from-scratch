@@ -13,11 +13,11 @@
 
 निःशुल्क, ओपन सोर्स, MIT लाइसेंस। वेबसाइट पर, कोडिंग एजेंट के साथ या स्थानीय कोड चलाकर सीखें।
 
-> 528 पाठ. 20 चरण. Python, TypeScript, Rust, Julia.
+> 542 पाठ. 20 चरण. Python, TypeScript, Rust, Julia.
 
 <p align="center">
   <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="एमआईटी लाइसेंस"></a>
-  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-528-3553ff?style=flat-square&labelColor=fafaf5" alt="528 पाठ"></a>
+  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-542-3553ff?style=flat-square&labelColor=fafaf5" alt="542 पाठ"></a>
   <a href="#contents"><img src="https://img.shields.io/badge/phases-20-3553ff?style=flat-square&labelColor=fafaf5" alt="20 चरण"></a>
   <a href="https://github.com/rohitg00/ai-engineering-from-scratch/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/ai-engineering-from-scratch?style=flat-square&labelColor=fafaf5&color=3553ff" alt="GitHub सितारे"></a>
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="वेबसाइट"></a>
@@ -207,6 +207,7 @@ python3 --version
 | [`course-guide`](../../skills/course-guide/SKILL.md) | विषय-मार्गदर्शक: “अटेंशन तंत्र कहाँ सीखूँ?” या “मेरे लॉस में NaN क्यों है?” पूछें और सही पाठों के लिंक पाएँ। |
 | [`learn-mcp`](../../skills/learn-mcp/SKILL.md) | MCP का केंद्रित ट्यूटर। `MCP-LEARNING.md` बनाता है, 17-पाठ की सूची अपनाता है और संचार, सुरक्षा, विश्वसनीयता तथा अनुरूपता के प्रमाण दर्ज करता है। |
 | [`learn-agent-skills`](../../skills/learn-agent-skills/SKILL.md) | Agent Skills का केंद्रित ट्यूटर। `AGENT-SKILLS-LEARNING.md` बनाता है, पाठ 22, 24, 25, 26 और 27 पढ़ाता है और वास्तविक होस्ट पर जाँच के प्रमाण रखता है। |
+| [`learn-reverse-engineering`](../../skills/learn-reverse-engineering/SKILL.md) | रिवर्स इंजीनियरिंग का केंद्रित ट्यूटर। `REVERSE-ENGINEERING-LEARNING.md` बनाता है, चरण 13 के पाठ 32 से 45 आपके अपने बनाए प्रोग्रामों पर पढ़ाता है और प्रयोगशाला के प्रमाण रखता है। |
 | [`claude-certification`](../../skills/claude-certification/SKILL.md) | प्रमाणन ट्यूटर। CCAO-F, CCDV-F, CCAR-F या CCAR-P चुनता है; पाठ पढ़ाता, प्रयोगशालाएँ चलाता, बनाए गए काम की समीक्षा करता, निदान और अभ्यास-परीक्षाएँ कराता तथा प्रगति सहेजता है। |
 | [`mcpa-certification`](../../skills/mcpa-certification/SKILL.md) | MCPA ट्यूटर। 2026-07-28 प्रोटोकॉल पर `mcpa-f` के 34-पाठ वाले मार्ग पर चलता है; प्रयोगशालाएँ और प्रोटोकॉल संदेशों की जाँच चलाता, निदान परीक्षा व तीन अभ्यास-परीक्षाएँ कराता और प्रगति सहेजता है। |
 | [`find-your-level`](../../skills/find-your-level/SKILL.md) | दस सवालों की स्तर-जाँच क्विज़ आपके ज्ञान के अनुसार शुरुआती चरण चुनती है और समय-अनुमान सहित निजी अध्ययन-मार्ग बनाती है। |
@@ -246,7 +247,7 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 
 ## सीखने का मार्ग चुनें
 
-शुरुआत से पहले 528 पाठों की सूची देखने की ज़रूरत नहीं। अपना एक लक्ष्य चुनें। हर लिंक GitHub या वेबसाइट पर उसी पाठ्यक्रम को खोलता है और दोनों जगह पाठों का कोड एक ही है।
+शुरुआत से पहले 542 पाठों की सूची देखने की ज़रूरत नहीं। अपना एक लक्ष्य चुनें। हर लिंक GitHub या वेबसाइट पर उसी पाठ्यक्रम को खोलता है और दोनों जगह पाठों का कोड एक ही है।
 
 | आपका लक्ष्य | GitHub पर सीखें | वेबसाइट पर सीखें |
 |---|---|---|
@@ -262,12 +263,13 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 [AI इंजीनियरिंग अध्ययन-पथ](https://aiengineeringfromscratch.com/learning-paths.html) में चार मुख्य क्षेत्रों और छह करियर-पथों की तुलना करें।
 
 <details>
-<summary>MCP और Agent Skills के केंद्रित मार्ग</summary>
+<summary>MCP, Agent Skills और रिवर्स इंजीनियरिंग के केंद्रित मार्ग</summary>
 
 | आपका लक्ष्य | GitHub पर सीखें | वेबसाइट पर सीखें |
 |---|---|---|
 | मैं Model Context Protocol (MCP) के साथ बनाना चाहता हूँ | [Model Context Protocol (MCP) मार्ग](../../phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Model Context Protocol (MCP) पथ](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |
 | मैं Agent Skills लिखकर जारी करना चाहता हूँ | [Agent Skills का केंद्रित मार्ग](../../phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Agent Skills पथ](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |
+| मैं कंपाइल किए गए प्रोग्राम पढ़ना चाहता हूँ | [रिवर्स इंजीनियरिंग का केंद्रित मार्ग](../../phases/13-tools-and-protocols/README.md#reverse-engineering-path) | [रिवर्स इंजीनियरिंग पथ](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch&learningPath=reverse-engineering) |
 
 </details>
 
@@ -290,6 +292,7 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 | वरिष्ठ इंजीनियर, केवल एजेंट इंजीनियरिंग चाहिए | चरण 14 — एजेंट इंजीनियरिंग | ~60 घंटे |
 | केवल उत्पादन MCP प्रणालियाँ बनाना चाहते हैं | [Model Context Protocol (MCP) पथ](../../learning-paths/model-context-protocol.json) | ~23 घंटे 15 मिनट |
 | केवल उत्पादन Agent Skills बनाना चाहते हैं | [Agent Skills इंजीनियरिंग पथ](../../learning-paths/agent-skills.json) | ~9.5 घंटे |
+| केवल रिवर्स इंजीनियरिंग सीखना चाहते हैं | [रिवर्स इंजीनियरिंग पथ](../../learning-paths/reverse-engineering.json) | ~32.5 घंटे |
 
 </details>
 
@@ -697,7 +700,7 @@ flowchart TB
 </details>
 
 <details id="phase-13">
-<summary><b>चरण 13 — टूल और प्रोटोकॉल</b> &nbsp;<code>31 पाठ</code>&nbsp; <em>AI और असली दुनिया के बीच के अंतरफलक।</em></summary>
+<summary><b>चरण 13 — टूल और प्रोटोकॉल</b> &nbsp;<code>45 पाठ</code>&nbsp; <em>AI और असली दुनिया के बीच के अंतरफलक।</em></summary>
 <br/>
 
 | # | पाठ | प्रकार | भाषा |
@@ -733,6 +736,20 @@ flowchart TB
 | 29 | [MCP की विश्वसनीयता, रद्दीकरण और प्रवाह नियंत्रण](../../phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | बनाएँ | Python |
 | 30 | [MCP रजिस्ट्री आपूर्ति-शृंखला: प्रवेश, विचलन और पूर्व स्थिति में वापसी](../../phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | बनाएँ | Python |
 | 31 | [MCP अनुरूपता अभियांत्रिकी: संस्करण, साक्ष्य और संचालन](../../phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | बनाएँ | Python |
+| 32 | [प्रोग्राम की संरचना: ELF को शुरू से पढ़ना](../../phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | बनाएँ | Python |
+| 33 | [डिसअसेंबली और कंट्रोल-फ़्लो ग्राफ़](../../phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | बनाएँ | Python |
+| 34 | [मशीन कोड को स्यूडोकोड में बदलना](../../phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | बनाएँ | Python |
+| 35 | [बाइनरी विश्लेषण में साक्ष्य, विश्वास-स्तर और अज्ञात बातें](../../phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | बनाएँ | Python |
+| 36 | [दोबारा बनाएँ और समानता सिद्ध करें](../../phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | बनाएँ | Python |
+| 37 | [रिवर्स इंजीनियरिंग का परिदृश्य](../../phases/13-tools-and-protocols/37-the-reverse-engineering-landscape/) | बनाएँ | Python |
+| 38 | [कॉलिंग कन्वेंशन और स्टैक फ़्रेम](../../phases/13-tools-and-protocols/38-calling-conventions-and-stack-frames/) | बनाएँ | Python |
+| 39 | [कंपाइलर के मुहावरे और अनुकूलन](../../phases/13-tools-and-protocols/39-compiler-idioms-and-optimization/) | बनाएँ | Python |
+| 40 | [लिंकिंग, लोडिंग और स्ट्रिप की गई बाइनरी](../../phases/13-tools-and-protocols/40-linking-loading-and-stripped-binaries/) | बनाएँ | Python |
+| 41 | [डेटा और टाइप की पुनर्प्राप्ति](../../phases/13-tools-and-protocols/41-recovering-data-and-types/) | बनाएँ | Python |
+| 42 | [अपने प्रोग्राम का गतिशील विश्लेषण](../../phases/13-tools-and-protocols/42-dynamic-analysis-of-your-own-program/) | बनाएँ | Python |
+| 43 | [बाइटकोड और प्रबंधित फ़ॉर्मैट](../../phases/13-tools-and-protocols/43-bytecode-and-managed-formats/) | बनाएँ | Python |
+| 44 | [बाइनरी तुलना और प्रतीकात्मक निष्पादन](../../phases/13-tools-and-protocols/44-binary-diffing-and-symbolic-execution/) | बनाएँ | Python |
+| 45 | [AI की सहायता से रिवर्स इंजीनियरिंग](../../phases/13-tools-and-protocols/45-ai-assisted-reverse-engineering/) | बनाएँ | Python |
 
 
 पाठ 06–18 और 28–31 मिलकर [Model Context Protocol (MCP) अध्ययन-पथ](../../learning-paths/model-context-protocol.json) बनाते हैं। पाठ्यक्रम-सूची का क्रम है: 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 18, 17, 28, 29, 30, 31। इसे ऊपर की होस्ट-विशिष्ट तालिका में `learn-mcp` से शुरू करें। पाठ 23 इस मार्ग की एकमात्र वैकल्पिक समापन परियोजना है और इसके लिए पाठ 19 तथा 20 भी चाहिए।
@@ -1145,7 +1162,7 @@ flowchart LR
 <details>
 <summary>पाठ के आर्टिफैक्ट स्थापित करें</summary>
 
-**पाठों से मिलने वाली सामग्री।** `phases/**/outputs/` में 400 कौशल और 100 प्रॉम्प्ट हैं। उन्हें `scripts/install_skills.py` से स्थापित करें। इसके लिए रिपॉज़िटरी की स्थानीय प्रतिलिपि चाहिए। स्क्रिप्ट टैग के अनुसार छाँटने, बदलाव किए बिना पूर्वावलोकन करने और हर एजेंट के लिए अलग फ़ाइल-संरचना बनाने देती है:
+**पाठों से मिलने वाली सामग्री।** `phases/**/outputs/` में 414 कौशल और 100 प्रॉम्प्ट हैं। उन्हें `scripts/install_skills.py` से स्थापित करें। इसके लिए रिपॉज़िटरी की स्थानीय प्रतिलिपि चाहिए। स्क्रिप्ट टैग के अनुसार छाँटने, बदलाव किए बिना पूर्वावलोकन करने और हर एजेंट के लिए अलग फ़ाइल-संरचना बनाने देती है:
 
 ```bash
 python3 scripts/install_skills.py <target>                                 # every skill, default --layout skills (nested)
@@ -1265,7 +1282,7 @@ python3 scripts/audit_lessons.py --json    # CI-friendly output
 <p align="center"><sub><b>114,584</b> पाठक &nbsp;·&nbsp; <b>181,995</b> पिछले 30 दिनों में पृष्ठ दृश्य &nbsp;·&nbsp; आँकड़े 2026-08-29 तक</sub></p>
 <!-- STATS:END -->
 
-मुफ़्त, MIT लाइसेंस, 528 पाठ। इसे संभव बनाने वाले प्रायोजकों और सहयोगियों का धन्यवाद। [सभी प्रायोजकों और सहयोगियों को देखें](../../BACKERS.md)।
+मुफ़्त, MIT लाइसेंस, 542 पाठ। इसे संभव बनाने वाले प्रायोजकों और सहयोगियों का धन्यवाद। [सभी प्रायोजकों और सहयोगियों को देखें](../../BACKERS.md)।
 
 इस काम में मदद करना चाहते हैं? [प्रायोजन विकल्प](../../SPONSORS.md) देखें। इनमें [हार्डवेयर प्रायोजन](../../SPONSORS.md#hardware-lab-partner) भी शामिल है, या [GitHub पर प्रायोजित करें](https://github.com/sponsors/rohitg00)।
 

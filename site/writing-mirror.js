@@ -5,16 +5,21 @@ const ARTICLE_PATH = /^\/(?:blog|guides)\/[a-z0-9]+(?:-[a-z0-9]+)*\/$/;
 const VOID_ELEMENTS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
 const ATTRIBUTE = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
 const TAG = /<!--[\s\S]*?-->|<![^>]*>|<\/?[a-z][a-z\d:-]*(?:[^"'<>]|"[^"]*"|'[^']*')*>/gi;
-const READER_STYLE = '<style data-aiefs-reader>\n'
-  + '.aiefs-reader-nav{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:40px;padding-bottom:20px;border-bottom:1px solid var(--hairline);font-family:var(--mono),monospace}'
-  + '.aiefs-reader-brand{color:var(--ink);font-size:15px;line-height:1.35;letter-spacing:-.4px;text-decoration:none;max-width:190px}'
-  + '.aiefs-reader-links{display:flex;align-items:center;gap:14px;flex-shrink:0}'
-  + '.aiefs-reader-links>a{color:var(--muted);font-size:12px;line-height:1.5;text-align:right;max-width:90px}'
-  + '.aiefs-reader-nav .toggle{width:40px;height:40px}'
-  + '.aiefs-reader-nav a:focus-visible{outline:2px solid var(--accent);outline-offset:4px}'
-  + '.aiefs-reader-nav[data-aiefs-fallback]{max-width:900px;margin:0 auto 28px;padding:22px}'
-  + '@media(max-width:380px){.aiefs-reader-nav{gap:10px}.aiefs-reader-brand{font-size:13px;max-width:140px}.aiefs-reader-links{gap:10px}.aiefs-reader-links>a{font-size:11px;max-width:76px}}'
-  + '\n</style>';
+const READER_STYLE = `<style data-aiefs-reader>
+.aiefs-reader-header{width:100%;border-bottom:1px solid var(--hairline,#d9d9d0);background:var(--canvas,#fafaf5)}
+.aiefs-reader-header .aiefs-reader-nav{box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:28px;max-width:1360px;min-height:76px;margin:0 auto;padding:16px 28px;font-family:var(--mono,monospace)}
+.aiefs-reader-header a{border:0;text-decoration:none;white-space:nowrap}
+.aiefs-reader-header .aiefs-reader-brand{display:inline-flex;align-items:center;gap:10px;flex-shrink:0;color:var(--ink,#222);font-family:"VT323",var(--mono,monospace);font-size:26px;font-weight:400;line-height:1;letter-spacing:.04em}
+.aiefs-reader-mark{display:inline-block;width:12px;height:12px;flex-shrink:0;background:var(--accent,#3553ff)}
+.aiefs-reader-links{display:flex;align-items:center;gap:26px;min-width:0}
+.aiefs-reader-header .aiefs-reader-links>a{display:inline-flex;align-items:center;min-height:44px;color:var(--body,#4a4a4a);font-size:12px;line-height:1.5;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.aiefs-reader-header .aiefs-reader-links>a[aria-current]{color:var(--accent,#3553ff);box-shadow:inset 0 -2px var(--accent,#3553ff)}
+.aiefs-reader-header a:hover{color:var(--accent,#3553ff)}
+.aiefs-reader-header .toggle{display:inline-flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;margin:0;border:1px solid var(--hairline,#d9d9d0);border-radius:4px;color:var(--accent,#3553ff);background:transparent;cursor:pointer}
+.aiefs-reader-header :is(a,button):focus-visible{outline:2px solid var(--accent,#3553ff);outline-offset:4px}
+@media(max-width:700px){.aiefs-reader-header .aiefs-reader-nav{flex-wrap:wrap;gap:12px;padding:20px}.aiefs-reader-header .aiefs-reader-brand{font-size:24px}.aiefs-reader-links{width:100%;gap:22px}.aiefs-reader-header .toggle{margin-left:auto}.aiefs-reader-header .aiefs-reader-links>a{font-size:11px;letter-spacing:.03em}}
+@media(max-width:360px){.aiefs-reader-header .aiefs-reader-nav{padding:16px}.aiefs-reader-links{gap:14px}.aiefs-reader-header .aiefs-reader-links>a{font-size:10px}}
+</style>`;
 
 function decodeAttribute(value) {
   return String(value || '').replace(/&(?:amp|quot|apos|lt|gt|#\d+|#x[\da-f]+);/gi, entity => {
@@ -110,7 +115,7 @@ function rewriteAttributes(token, rewrite) {
 
 function readerNavigation(themeButton = '', fallback = false) {
   const fallbackAttribute = fallback ? ' data-aiefs-fallback' : '';
-  return '<nav class="aiefs-reader-nav" aria-label="Primary"' + fallbackAttribute + '><a class="aiefs-reader-brand" href="/">AI / FROM SCRATCH</a><div class="aiefs-reader-links"><a href="/blogs">Blogs &amp; Guides</a>' + themeButton + '</div></nav>';
+  return '<div class="aiefs-reader-header"><nav class="aiefs-reader-nav" aria-label="Primary"' + fallbackAttribute + '><a class="aiefs-reader-brand" href="/"><span class="aiefs-reader-mark" aria-hidden="true"></span>AI / FROM SCRATCH</a><div class="aiefs-reader-links"><a href="/catalog.html">Catalog</a><a href="/roadmap.html">Roadmap</a><a aria-current="location" href="/blogs">Blogs &amp; Guides</a>' + themeButton + '</div></nav></div>';
 }
 
 function rewriteBreadcrumbs(body, item) {
@@ -172,6 +177,14 @@ function mirrorArticle(html, item, items) {
     (token.name === 'nav' && classIncludes(token, 'nav')) || (token.name === 'div' && classIncludes(token, 'topbar'))
   ));
 
+  let themeButton = '';
+  let primaryNavigationEnd = -1;
+  if (primaryNavigationIndex >= 0) {
+    primaryNavigationEnd = elementEnd(tokens, primaryNavigationIndex);
+    const theme = tokens.findIndex((candidate, index) => index > primaryNavigationIndex && index < primaryNavigationEnd && candidate.name === 'button' && candidate.attrs?.get('id') === 'theme');
+    if (theme >= 0) themeButton = tokens.slice(theme, elementEnd(tokens, theme) + 1).map(serialize).join('');
+  }
+
   function assetUrl(value) {
     if (!value || value.startsWith('#') || /^[a-z][a-z\d+.-]*:/i.test(value)) return value;
     return new URL(value, sourceUrl).href;
@@ -219,12 +232,7 @@ function mirrorArticle(html, item, items) {
       continue;
     }
     if (index === primaryNavigationIndex) {
-      const end = elementEnd(tokens, index);
-      const theme = tokens.findIndex((candidate, candidateIndex) => candidateIndex > index && candidateIndex < end && candidate.name === 'button' && candidate.attrs?.get('id') === 'theme');
-      let themeButton = '';
-      if (theme >= 0) themeButton = tokens.slice(theme, elementEnd(tokens, theme) + 1).map(serialize).join('');
-      output.push(readerNavigation(themeButton));
-      index = end;
+      index = primaryNavigationEnd;
       continue;
     }
     if (token.name === 'footer') {
@@ -258,7 +266,7 @@ function mirrorArticle(html, item, items) {
       if (name === 'srcset' && !value.includes('data:')) return value.split(',').map(candidate => candidate.trim().replace(/^\S+/, assetUrl)).join(', ');
       return value;
     }));
-    if (token.name === 'body' && primaryNavigationIndex < 0) output.push(readerNavigation('', true));
+    if (token.name === 'body') output.push(readerNavigation(themeButton, primaryNavigationIndex < 0));
     if (!VOID_ELEMENTS.has(token.name) && !/\/\s*>$/.test(token.raw)) ancestors.push(token);
   }
   return output.join('');

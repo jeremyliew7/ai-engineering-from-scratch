@@ -7,11 +7,11 @@
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <meta name="description" content="Build AI systems from first principles with 528 free, open-source lessons spanning math, models, tokenizers, agents, evaluation, and production.">
+  <meta name="description" content="Build AI systems from first principles with 542 free, open-source lessons spanning math, models, tokenizers, agents, evaluation, and production.">
   <link rel="canonical" href="https://aiengineeringfromscratch.com/">
   <link rel="alternate" type="text/markdown" href="https://aiengineeringfromscratch.com/llms.txt">
   <meta property="og:title" content="AI Engineering from Scratch | Free AI Engineering Course">
-  <meta property="og:description" content="528 lessons. 20 phases. Write the backprop, the tokenizer, the attention mechanism, and the agent loop by hand before any framework gets imported. Python, TypeScript, Rust, Julia.">
+  <meta property="og:description" content="542 lessons. 20 phases. Write the backprop, the tokenizer, the attention mechanism, and the agent loop by hand before any framework gets imported. Python, TypeScript, Rust, Julia.">
   <meta property="og:image" content="https://aiengineeringfromscratch.com/og/page/home.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -22,11 +22,11 @@
   <meta property="og:url" content="https://aiengineeringfromscratch.com">
   <meta property="og:type" content="website">
   <meta name="twitter:title" content="AI Engineering from Scratch | Free AI Engineering Course">
-  <meta name="twitter:description" content="528 lessons. 20 phases. Write the backprop, the tokenizer, the attention mechanism, and the agent loop by hand.">
+  <meta name="twitter:description" content="542 lessons. 20 phases. Write the backprop, the tokenizer, the attention mechanism, and the agent loop by hand.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260824a">
+  <link rel="stylesheet" href="style.css?v=20261015a">
   <link rel="stylesheet" href="intelligence-check.css">
   <script type="application/ld+json">
   {
@@ -51,7 +51,7 @@
         "@type": "Course",
         "@id": "https://aiengineeringfromscratch.com/#course",
         "name": "AI Engineering from Scratch",
-        "description": "528 lessons across 20 phases. Write the backprop, the tokenizer, the attention mechanism, and the agent loop by hand before any framework gets imported.",
+        "description": "542 lessons across 20 phases. Write the backprop, the tokenizer, the attention mechanism, and the agent loop by hand before any framework gets imported.",
         "url": "https://aiengineeringfromscratch.com",
         "isAccessibleForFree": true,
         "inLanguage": "en",
@@ -790,6 +790,21 @@
       padding: 48px 0 32px;
       border-bottom: 1px solid var(--rule-soft);
     }
+
+    .agent-machine-feature { padding: 44px 0; border-bottom: 1px solid var(--rule-soft); }
+    .agent-machine-link { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 32px; align-items: center; color: inherit; text-decoration: none; }
+    .agent-machine-copy .preface-eyebrow { margin-bottom: 12px; }
+    .agent-machine-copy h2 { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 0.95; text-transform: uppercase; margin: 0 0 14px; color: var(--ink); }
+    .agent-machine-copy p { margin: 0 0 18px; max-width: 34ch; }
+    .agent-machine-cta { font-family: var(--font-mono); font-size: 0.82rem; color: var(--blueprint); letter-spacing: 0.04em; text-transform: uppercase; }
+    .agent-machine-link img { display: block; width: 100%; height: auto; transition: transform var(--motion-enter) var(--ease-out); }
+    .agent-machine-light { mix-blend-mode: multiply; }
+    .agent-machine-dark { display: none !important; mix-blend-mode: screen; }
+    [data-theme="dark"] .agent-machine-dark { display: block !important; }
+    [data-theme="dark"] .agent-machine-light { display: none !important; }
+    .agent-machine-link:hover img, .agent-machine-link:focus-visible img { transform: translateY(-2px); }
+    @media (max-width: 760px) { .agent-machine-link { grid-template-columns: 1fr; gap: 18px; } }
+    @media (prefers-reduced-motion: reduce) { .agent-machine-link img { transition: none; } }
 
     .course-paths {
       padding: 40px 32px 46px;
@@ -2099,7 +2114,7 @@
         <a href="#contents">Contents</a>
         <a href="#books">Books</a>
         <a href="catalog.html">Catalog</a>
-        <a href="prereqs.html">Roadmap</a>
+        <a href="roadmap.html">Roadmap</a>
         <a href="glossary.html">Glossary</a>
         <a href="about.html">About</a>
         <a href="https://github.com/rohitg00/ai-engineering-from-scratch" target="_blank" rel="noopener" class="header-github">
@@ -2380,6 +2395,19 @@
         </div>
       </div>
     </section>
+    <section class="agent-machine-feature container" aria-labelledby="agentMachineTitle">
+      <a class="agent-machine-link" href="inside-an-ai-agent.html">
+        <div class="agent-machine-copy">
+          <div class="preface-eyebrow">FIG_AGT · Interactive simulation</div>
+          <h2 id="agentMachineTitle">Inside an AI Agent</h2>
+          <p>An AI agent is more than an LLM call. Run one request through a working machine, switch off retrieval, tools or the verifier, and watch what fails.</p>
+          <span class="agent-machine-cta">Break the machine →</span>
+        </div>
+        <img class="agent-machine-light" src="anatomy/inside-an-ai-agent-machine.png" width="2400" height="1260" loading="lazy" decoding="async" alt="An isometric card-processing machine with a nameplate on each station: request, memory, retrieval, model, tools, verifier, output, trace and the runtime loop.">
+        <img class="agent-machine-dark" src="anatomy/inside-an-ai-agent-machine-dark.png" width="2400" height="1260" loading="lazy" decoding="async" alt="">
+      </a>
+    </section>
+
     <section class="course-paths container" id="choose-path" aria-labelledby="coursePathsTitle">
       <header class="course-paths-header">
         <h2 id="coursePathsTitle">Choose the work you want to do</h2>
@@ -2507,7 +2535,7 @@
     </section>
 
     <section class="toc container" id="contents">
-      <div class="toc-title reveal reveal--left">Curriculum · <span id="tocPhaseCount">20 phases</span> · <span id="tocLessonCount">528 lessons</span></div>
+      <div class="toc-title reveal reveal--left">Curriculum · <span id="tocPhaseCount">20 phases</span> · <span id="tocLessonCount">542 lessons</span></div>
       <div class="toc-subtitle reveal" style="--stagger-delay: 80ms;">Tap a phase to expand its lessons. Each one ships when its math, code, and test are all written.</div>
       <div class="toc-list" id="phasesGrid"></div>
       <div class="legend">
@@ -2527,6 +2555,10 @@
           <a class="modal-phase-link" id="modalPhaseLink" href="catalog.html" hidden></a>
           <div class="modal-progress" id="modalProgress" style="display:none;"></div>
           <div class="modal-progress-bar" id="modalProgressBar" style="display:none;"><div class="modal-progress-bar-fill" id="modalProgressBarFill"></div></div>
+          <label class="modal-search-wrap" id="modalSearchWrap" for="modalSearch">
+            <span class="modal-search-label">Search lessons</span>
+            <input type="search" class="modal-search" id="modalSearch" placeholder="Search by lesson name" autocomplete="off" spellcheck="false">
+          </label>
         </div>
         <div class="modal-lessons" id="modalLessons"></div>
         <div class="modal-footer">
@@ -2636,6 +2668,7 @@
         <a href="certifications.html">Certifications</a>
         <a href="catalog.html">Catalog</a>
         <a href="/blogs">Blogs &amp; Guides</a>
+        <a href="/cheatsheets">Cheat Sheets</a>
         <a href="glossary.html">Glossary</a>
         <a href="https://github.com/rohitg00/ai-engineering-from-scratch/issues/new/choose" target="_blank" rel="noopener">Report</a>
         <a href="developer.html">For devs</a>
@@ -2718,9 +2751,9 @@
   <script src="lang-picker.js?v=20261010a" defer></script>
   <script src="data.js?v=20260821c"></script>
   <script src="progress.js?v=20260822a"></script>
-  <script src="header.js?v=20260927a" defer></script>
+  <script src="header.js?v=20261018a" defer></script>
   <script src="cmdpalette.js?v=20260821a" defer></script>
-  <script src="app.js?v=20260927a"></script>
+  <script src="app.js?v=20261015a"></script>
   <script src="intelligence-check.js" defer></script>
   <script defer src="https://va.vercel-scripts.com/v1/script.js"></script>
 </body>

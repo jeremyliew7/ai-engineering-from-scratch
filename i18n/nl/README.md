@@ -13,11 +13,11 @@ Implementeer de interne werking van modellen, zoekpijplijnen en uitvoeringsomgev
 
 Gratis, open source, met MIT-licentie. Leer op de webpagina, met een programmeeragent of door lokaal code uit te voeren.
 
-> 528 lessen. 20 fasen. Python, TypeScript, Rust, Julia.
+> 542 lessen. 20 fasen. Python, TypeScript, Rust, Julia.
 
 <p align="center">
   <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="MIT-licentie"></a>
-  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-528-3553ff?style=flat-square&labelColor=fafaf5" alt="528 lessen"></a>
+  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-542-3553ff?style=flat-square&labelColor=fafaf5" alt="542 lessen"></a>
   <a href="#contents"><img src="https://img.shields.io/badge/phases-20-3553ff?style=flat-square&labelColor=fafaf5" alt="20 fasen"></a>
   <a href="https://github.com/rohitg00/ai-engineering-from-scratch/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/ai-engineering-from-scratch?style=flat-square&labelColor=fafaf5&color=3553ff" alt="Sterren op GitHub"></a>
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="Webpagina"></a>
@@ -207,6 +207,7 @@ Het installatieprogramma toont de hosts die het kan configureren en vraagt waar 
 | [`course-guide`](../../skills/course-guide/SKILL.md) | Onderwerpwijzer. “Waar leer ik over aandacht?” of “mijn verlies is NaN” → de precieze lessen, met links. |
 | [`learn-mcp`](../../skills/learn-mcp/SKILL.md) | Gerichte tutor voor Model Context Protocol (MCP). Maakt `MCP-LEARNING.md`, volgt het manifest met 17 lessen en bewaart bewijs voor het wire-formaat, beveiliging, betrouwbaarheid en conformiteit. |
 | [`learn-agent-skills`](../../skills/learn-agent-skills/SKILL.md) | Gerichte Agent Skills-tutor. Maakt `AGENT-SKILLS-LEARNING.md`, behandelt lessen 22, 24, 25, 26 en 27 en bewaart bewijs van uitvoering op een echte host. |
+| [`learn-reverse-engineering`](../../skills/learn-reverse-engineering/SKILL.md) | Gerichte Reverse Engineering-tutor. Maakt `REVERSE-ENGINEERING-LEARNING.md`, behandelt lessen 32 tot en met 45 van fase 13 met programma's die je zelf bouwt en bewaart labbewijs. |
 | [`claude-certification`](../../skills/claude-certification/SKILL.md) | Certificeringstutor. Kiest CCAO-F, CCDV-F, CCAR-F of CCAR-P; behandelt elke les, voert practica uit, beoordeelt resultaten, neemt diagnostische toetsen en oefenexamens af en bewaart voortgang. |
 | [`mcpa-certification`](../../skills/mcpa-certification/SKILL.md) | MCPA-tutor. Volgt de route met 34 lessen `mcpa-f` voor het protocol van 2026-07-28; behandelt elke les, voert practica en de wire-controle uit, neemt de diagnostische toets en drie oefenexamens af en bewaart voortgang. |
 | [`find-your-level`](../../skills/find-your-level/SKILL.md) | Plaatsingstoets met tien vragen. Koppelt je kennis aan een beginfase en maakt een persoonlijke route met tijdsinschattingen. |
@@ -246,7 +247,7 @@ Paden in de commando's op lespagina's zijn relatief aan de hoofdmap van de repos
 
 ## Kies een leerpad
 
-Je hoeft niet alle 528 lessen door te nemen voordat je begint. Kies één doel. Elke link opent hetzelfde leerprogramma op GitHub of de website, en beide versies gebruiken dezelfde lescode.
+Je hoeft niet alle 542 lessen door te nemen voordat je begint. Kies één doel. Elke link opent hetzelfde leerprogramma op GitHub of de website, en beide versies gebruiken dezelfde lescode.
 
 | Jouw doel | Leren op GitHub | Leren op de website |
 |---|---|---|
@@ -262,12 +263,13 @@ Weet je niet waar je moet beginnen? Gebruik de [`start-learning`-tutor voor nive
 Vergelijk vier kerndomeinen en zes loopbaanroutes in de [AI Engineering Learning Paths](https://aiengineeringfromscratch.com/learning-paths.html).
 
 <details>
-<summary>Gerichte leerpaden voor MCP en Agent Skills</summary>
+<summary>Gerichte leerpaden voor MCP, Agent Skills en Reverse Engineering</summary>
 
 | Jouw doel | Leren op GitHub | Leren op de website |
 |---|---|---|
 | Ik wil bouwen met Model Context Protocol (MCP) | [Model Context Protocol (MCP)-route](../../phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Model Context Protocol (MCP)-leerroute](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |
 | Ik wil Agent Skills schrijven en uitbrengen | [Gerichte Agent Skills-route](../../phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Agent Skills-leerroute](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |
+| Ik wil gecompileerde programma's lezen | [Gerichte Reverse Engineering-route](../../phases/13-tools-and-protocols/README.md#reverse-engineering-path) | [Reverse Engineering-leerroute](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch&learningPath=reverse-engineering) |
 
 </details>
 
@@ -290,6 +292,7 @@ Vergelijk vier kerndomeinen en zes loopbaanroutes in de [AI Engineering Learning
 | Ervaren engineer die alleen agentengineering wil | Fase 14: Agentengineering | ~60 uur |
 | Je wilt alleen MCP-systemen voor productie bouwen | [Model Context Protocol (MCP)-leerroute](../../learning-paths/model-context-protocol.json) | ~23 uur 15 min |
 | Je wilt alleen Agent Skills voor productie bouwen | [Leerroute voor Agent Skills-engineering](../../learning-paths/agent-skills.json) | ~9.5 uur |
+| Je wilt alleen reverse engineering leren | [Reverse Engineering-leerroute](../../learning-paths/reverse-engineering.json) | ~32.5 uur |
 
 </details>
 
@@ -697,7 +700,7 @@ Twintig fasen. Klik op een fase om de lessenlijst open te klappen.
 </details>
 
 <details id="phase-13">
-<summary><b>Fase 13: Gereedschap en protocollen</b> &nbsp;<code>31 lessen</code>&nbsp; <em>De interfaces tussen AI en de echte wereld.</em></summary>
+<summary><b>Fase 13: Gereedschap en protocollen</b> &nbsp;<code>45 lessen</code>&nbsp; <em>De interfaces tussen AI en de echte wereld.</em></summary>
 <br/>
 
 | # | Les | Soort | Taal |
@@ -733,6 +736,20 @@ Twintig fasen. Klik op een fase om de lessenlijst open te klappen.
 | 29 | [MCP-betrouwbaarheid, annulering en stroomregeling](../../phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | Bouwen | Python |
 | 30 | [De MCP-registerketen: toelating, afwijkingen en terugdraaien](../../phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | Bouwen | Python |
 | 31 | [MCP-conformiteit: versiebeheer, bewijs en beheer](../../phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | Bouwen | Python |
+| 32 | [Programma-anatomie: ELF vanaf nul lezen](../../phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | Bouwen | Python |
+| 33 | [Disassembly en control-flow-grafen](../../phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | Bouwen | Python |
+| 34 | [Machinecode optillen naar pseudocode](../../phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | Bouwen | Python |
+| 35 | [Bewijs, zekerheid en onbekenden in binaire analyse](../../phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | Bouwen | Python |
+| 36 | [Opnieuw bouwen en gelijkheid bewijzen](../../phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | Bouwen | Python |
+| 37 | [Het landschap van reverse engineering](../../phases/13-tools-and-protocols/37-the-reverse-engineering-landscape/) | Bouwen | Python |
+| 38 | [Aanroepconventies en stackframes](../../phases/13-tools-and-protocols/38-calling-conventions-and-stack-frames/) | Bouwen | Python |
+| 39 | [Compileridiomen en optimalisatie](../../phases/13-tools-and-protocols/39-compiler-idioms-and-optimization/) | Bouwen | Python |
+| 40 | [Linken, laden en gestripte binaire bestanden](../../phases/13-tools-and-protocols/40-linking-loading-and-stripped-binaries/) | Bouwen | Python |
+| 41 | [Data en types terugwinnen](../../phases/13-tools-and-protocols/41-recovering-data-and-types/) | Bouwen | Python |
+| 42 | [Dynamische analyse van je eigen programma](../../phases/13-tools-and-protocols/42-dynamic-analysis-of-your-own-program/) | Bouwen | Python |
+| 43 | [Bytecode en beheerde formaten](../../phases/13-tools-and-protocols/43-bytecode-and-managed-formats/) | Bouwen | Python |
+| 44 | [Binaire diffing en symbolische uitvoering](../../phases/13-tools-and-protocols/44-binary-diffing-and-symbolic-execution/) | Bouwen | Python |
+| 45 | [AI-ondersteunde reverse engineering](../../phases/13-tools-and-protocols/45-ai-assisted-reverse-engineering/) | Bouwen | Python |
 
 Lessen 06-18 en 28-31 vormen de gerichte
 [Model Context Protocol (MCP)-leerroute](../../learning-paths/model-context-protocol.json). De volgorde in het manifest
@@ -1159,7 +1176,7 @@ Andere cursussen eindigen met *“gefeliciteerd, je hebt X geleerd.”* Elke les
 <details>
 <summary>Lesresultaten installeren</summary>
 
-**De lesresultaten.** De repository bevat 400 skills en 100 prompts onder `phases/**/outputs/`; installeer ze via `scripts/install_skills.py`. Hiervoor moet je de repository klonen. Het script ondersteunt tagfilters, proefruns en indelingen per agent:
+**De lesresultaten.** De repository bevat 414 skills en 100 prompts onder `phases/**/outputs/`; installeer ze via `scripts/install_skills.py`. Hiervoor moet je de repository klonen. Het script ondersteunt tagfilters, proefruns en indelingen per agent:
 
 ```bash
 python3 scripts/install_skills.py <target>                                 # every skill, default --layout skills (nested)
@@ -1279,7 +1296,7 @@ De exitcode is ongelijk aan nul als een regel faalt. Regels L001–L010 controle
 <p align="center"><sub><b>114,584</b> lezers &nbsp;·&nbsp; <b>181,995</b> paginaweergaven in de afgelopen 30 dagen &nbsp;·&nbsp; stand op 2026-08-29</sub></p>
 <!-- STATS:END -->
 
-Gratis, met MIT-licentie, 528 lessen. Dank aan de sponsors en supporters die dit werk mogelijk maken. [Bekijk alle sponsors en supporters](../../BACKERS.md).
+Gratis, met MIT-licentie, 542 lessen. Dank aan de sponsors en supporters die dit werk mogelijk maken. [Bekijk alle sponsors en supporters](../../BACKERS.md).
 
 Wil je het werk steunen? Bekijk de [sponsormogelijkheden](../../SPONSORS.md), waaronder [hardwaresponsoring](../../SPONSORS.md#hardware-lab-partner), of [word sponsor op GitHub](https://github.com/sponsors/rohitg00).
 

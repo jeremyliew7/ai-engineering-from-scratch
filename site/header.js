@@ -11,6 +11,7 @@
   var NARROW_HEADER_QUERY = '(max-width: 820px)';
   var NARRATION_VERSION = '20260829a';
   var UI_I18N_VERSION = '20261010a';
+  var STAR_NUDGE_VERSION = '20261013a';
   var navId = 0;
 
   function isStaticPreview(locationValue) {
@@ -36,7 +37,7 @@
     var boundary = href.search(/[?#]/);
     var pathname = boundary < 0 ? href : href.slice(0, boundary);
     var suffix = boundary < 0 ? '' : href.slice(boundary);
-    var pages = '(index|about|catalog|glossary|prereqs|developer|contact|privacy|sponsors|projects|project|learning-paths|certifications|certification|assessment|lesson|blogs|manuals|manual-[a-z0-9-]+)';
+    var pages = '(index|about|catalog|glossary|roadmap|developer|contact|privacy|sponsors|projects|project|learning-paths|certifications|certification|assessment|lesson|blogs|manuals|manual-[a-z0-9-]+|inside-an-ai-agent|skills|how-to-learn|highlights)';
     if (isStaticPreview(locationValue)) {
       return pathname.replace(new RegExp('(^|/)' + pages + '$'), '$1$2.html') + suffix;
     }
@@ -177,6 +178,15 @@
     document.head.appendChild(script);
   }
 
+  function ensureStarNudge() {
+    if (window.AIFSStarNudge || document.querySelector('script[data-aifs-star-nudge]')) return;
+    var script = document.createElement('script');
+    script.src = 'star-nudge.js?v=' + STAR_NUDGE_VERSION;
+    script.async = true;
+    script.setAttribute('data-aifs-star-nudge', STAR_NUDGE_VERSION);
+    document.head.appendChild(script);
+  }
+
   function ensureNewsletter() {
     if (document.querySelector('script[data-aifs-newsletter]')) return;
     var stylesheet = document.createElement('link');
@@ -184,7 +194,7 @@
     stylesheet.href = 'newsletter.css?v=20260926b';
     document.head.appendChild(stylesheet);
     var script = document.createElement('script');
-    script.src = 'newsletter.js?v=20260926b';
+    script.src = 'newsletter.js?v=20261015a';
     script.async = true;
     script.setAttribute('data-aifs-newsletter', 'true');
     document.head.appendChild(script);
@@ -259,8 +269,12 @@
 
   function addNavigationLinks(nav) {
     ensureNavigationLink(nav, 'learning-paths.html', 'Learning Paths', '');
+    ensureNavigationLink(nav, 'how-to-learn.html', 'How to Learn', '');
     ensureNavigationLink(nav, 'projects.html', 'Projects', '');
     ensureNavigationLink(nav, 'manuals.html', 'Manuals', '');
+    ensureNavigationLink(nav, '/cheatsheets', 'Cheat Sheets', '');
+    ensureNavigationLink(nav, 'skills.html', 'Skills', '');
+    ensureNavigationLink(nav, 'highlights.html', 'My Highlights', '');
     ensureNavigationLink(nav, '/blogs', 'Blogs & Guides', '');
     ensureNavigationLink(nav, 'certifications.html', 'Certifications', 'header-mobile-only');
     ensureNavigationLink(nav, 'sponsors.html', 'Sponsor us', 'header-mobile-only');
@@ -426,11 +440,14 @@
     var footers = document.querySelectorAll('.footer-links');
     for (var j = 0; j < footers.length; j++) {
       ensureNavigationLink(footers[j], '/blogs', 'Blogs & Guides', '');
+      ensureNavigationLink(footers[j], 'skills.html', 'Skills', '');
+      ensureNavigationLink(footers[j], 'highlights.html', 'My Highlights', '');
     }
     loadStars();
     ensureNarration();
     ensureUiI18n();
     ensureNewsletter();
+    ensureStarNudge();
   }
 
   setupRouteLinks();

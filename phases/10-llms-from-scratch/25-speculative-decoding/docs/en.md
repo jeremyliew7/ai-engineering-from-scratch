@@ -53,8 +53,8 @@ where `(p - q)+` denotes the positive part of the pointwise difference. When the
 
 If the draft model's token-level acceptance rate is `α`, the expected tokens produced per target-forward pass is:
 
-```
-E[tokens] = (1 - α^{K+1}) / (1 - α)        # K = draft length, α in [0, 1]
+```math
+\mathbb{E}[\text{tokens}] = \frac{1 - \alpha^{K+1}}{1 - \alpha} \qquad K = \text{draft length}, \ \alpha \in [0, 1]
 ```
 
 At `α = 0.8, K = 4`: `(1 - 0.8^5)/(1 - 0.8) = 3.36` tokens per forward. A single target forward costs roughly `cost_q * K + cost_p` (K draft steps plus one target verify). If `cost_p >> cost_q * K` the speedup ratio is `3.36× / 1 = 3.36×` on throughput.
@@ -175,7 +175,7 @@ This lesson produces `outputs/skill-speculative-tuning.md` — a skill that prof
 
 1. Implement the exact rejection rule and empirically verify it. Run 10K samples via `speculative_decode` and via plain target sampling; compute TV distance between the two output distributions. Should be < 0.01.
 
-2. Compute the speedup formula. Given fixed `α` and `K`, plot expected tokens per target-forward. Find the optimal K for α ∈ {0.5, 0.7, 0.9}.
+2. Compute the speedup formula. Given fixed `α` and `K`, plot expected tokens per target-forward. Find the optimal $K$ for $\alpha \in \lbrace 0.5, 0.7, 0.9 \rbrace$.
 
 3. Train a tiny draft. Take a 124M GPT-2 target and distill a 30M GPT-2 draft on 100M tokens with KL loss. Measure `α` on held-out text. Expected: 0.6-0.7.
 

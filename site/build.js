@@ -17,6 +17,7 @@ const { TRANSLATION_LANGUAGES, TRANSLATION_SOURCE, NATIVE_NAMES, isIndexedLangua
 const { socialCards } = require('../lib/og-cards');
 const { phaseHubPath, phaseLabel, glossaryLookupKey } = require('../lib/hub-routes');
 const { writeHubs } = require('./build-hubs.js');
+const { writeCheatsheets, loadTopics, coverage } = require('./build-cheatsheets.js');
 
 const REPO_ROOT = path.resolve(__dirname, '..');
 const README_PATH = path.join(REPO_ROOT, 'README.md');
@@ -2223,7 +2224,10 @@ function build() {
   const seoManifests = writeSeoArtifacts(phases, certifications, learningPaths);
 
   console.log('Writing glossary term pages and phase hubs...');
+  const cheatsheetTopics = loadTopics();
+  const cheatsheetCoverage = coverage(cheatsheetTopics);
   const hubs = writeHubs({
+    cheatsheets: cheatsheetCoverage.phases,
     phases,
     prerequisites: roadmapPrereqs,
     glossary: glossaryTerms,
@@ -2232,6 +2236,11 @@ function build() {
     minutes: lessonMinutes,
   });
   for (const hub of hubs.phaseModels) phases.find(phase => phase.id === hub.id).hub = hub.href;
+
+  console.log('Writing cheat sheets...');
+  const cheatsheets = writeCheatsheets({ siteDir: __dirname });
+  hubs.cheatsheetPages = cheatsheets.pages;
+  console.log(`   wrote ${cheatsheets.topics.length} cheat sheet posters`);
   const glossaryPage = path.join(__dirname, 'glossary.html');
   replaceGeneratedDiscovery(glossaryPage, GLOSSARY_JSONLD_START, GLOSSARY_JSONLD_END, hubs.glossaryJsonLd);
   replaceGeneratedDiscovery(glossaryPage, GLOSSARY_INDEX_START, GLOSSARY_INDEX_END, hubs.glossaryIndex);
@@ -2323,6 +2332,7 @@ function writeHubSitemaps(hubs, siteDir = __dirname) {
   return [
     ['sitemap-phases.xml', hubs.phasePages.map(page => ({ loc: page.href, priority: '0.8', freq: 'monthly' }))],
     ['sitemap-glossary.xml', hubs.termPages.map(page => ({ loc: page.href, priority: '0.5', freq: 'monthly' }))],
+    ['sitemap-cheatsheets.xml', (hubs.cheatsheetPages || []).map(page => ({ loc: page.href, priority: '0.5', freq: 'monthly' }))],
   ].filter(([, urls]) => urls.length).map(([name, urls]) => {
     fs.writeFileSync(path.join(siteDir, name), urlsetXml(urls), 'utf8');
     return name;
@@ -2333,10 +2343,13 @@ function writeSitemap(lessonManifest, glossaryCount, certifications, projects, h
   const urls = [
     { loc: '/', priority: '1.0', freq: 'weekly' },
     { loc: '/catalog.html', priority: '0.8', freq: 'weekly' },
-    { loc: '/prereqs.html', priority: '0.7', freq: 'monthly' },
+    { loc: '/roadmap', priority: '0.7', freq: 'monthly' },
     { loc: '/learning-paths.html', priority: '0.8', freq: 'monthly' },
     { loc: '/blogs', priority: '0.7', freq: 'daily' },
     { loc: '/about.html', priority: '0.5', freq: 'yearly' },
+    { loc: '/skills.html', priority: '0.7', freq: 'monthly' },
+    { loc: '/inside-an-ai-agent.html', priority: '0.7', freq: 'monthly' },
+    { loc: '/how-to-learn.html', priority: '0.8', freq: 'monthly' },
     { loc: '/developer.html', priority: '0.6', freq: 'monthly' },
     { loc: '/contact.html', priority: '0.3', freq: 'yearly' },
     { loc: '/privacy.html', priority: '0.3', freq: 'yearly' },
@@ -2462,7 +2475,7 @@ function writeLlms(phases, glossaryCount, artifactCount, certifications, lessonM
   out += `## Optional\n`;
   out += `- [Catalog](${SITE_ORIGIN}/catalog.html) — full searchable lesson index\n`;
   out += `- [Blogs & Guides](${SITE_ORIGIN}/blogs) - articles and practical guides on AI engineering, developer tools, and building software\n`;
-  out += `- [Roadmap](${SITE_ORIGIN}/prereqs.html) — prerequisite ordering across phases\n`;
+  out += `- [Roadmap](${SITE_ORIGIN}/roadmap) — prerequisite ordering across phases\n`;
   out += `- [AI Engineering Learning Paths](${SITE_ORIGIN}/learning-paths.html) — four core domain paths and six career routes connected to practical lessons\n`;
   if (glossaryCount > 0) out += `- [Glossary](${SITE_ORIGIN}/glossary.html) — plain-language definitions of ${glossaryCount} terms\n`;
   out += `- [Sponsor the project](${SITE_ORIGIN}/sponsors.html) — sponsorship tiers, rules, and current sponsors from SPONSORS.md\n`;
@@ -2534,7 +2547,7 @@ function syncReadme(lessons) {
 // ─── Keep marketing counts in sync (single source of truth = this build) ──
 function syncCounts(lessons, phaseCount, outputs) {
   const counts = { lessons, phases: phaseCount, outputs };
-  const targets = ['index.html', 'catalog.html', 'lesson.html', 'prereqs.html', 'learning-paths.html', 'about.html', 'cmdpalette.js']
+  const targets = ['index.html', 'catalog.html', 'lesson.html', 'roadmap.html', 'learning-paths.html', 'about.html', 'cmdpalette.js']
     .map(f => path.join(__dirname, f))
     .concat(SPONSORS_SOURCE_PATH);
   for (const p of targets) {

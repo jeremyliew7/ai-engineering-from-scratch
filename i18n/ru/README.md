@@ -13,11 +13,11 @@
 
 Бесплатно, с открытым исходным кодом, по лицензии MIT. Учитесь на сайте, с агентом программирования или запуская код локально.
 
-> 528 уроков. 20 этапов. Python, TypeScript, Rust, Julia.
+> 542 уроков. 20 этапов. Python, TypeScript, Rust, Julia.
 
 <p align="center">
   <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="Лицензия MIT"></a>
-  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-528-3553ff?style=flat-square&labelColor=fafaf5" alt="528 уроков"></a>
+  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-542-3553ff?style=flat-square&labelColor=fafaf5" alt="542 уроков"></a>
   <a href="#contents"><img src="https://img.shields.io/badge/phases-20-3553ff?style=flat-square&labelColor=fafaf5" alt="20 этапов"></a>
   <a href="https://github.com/rohitg00/ai-engineering-from-scratch/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/ai-engineering-from-scratch?style=flat-square&labelColor=fafaf5&color=3553ff" alt="Звезды GitHub"></a>
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="Веб-сайт"></a>
@@ -207,6 +207,7 @@ python3 --version
 | [course-guide](../../skills/course-guide/SKILL.md) | Навигатор по темам: на вопросы «Где изучить механизм внимания?» или «Почему функция потерь равна NaN?» он укажет нужные уроки и ссылки. |
 | [learn-mcp](../../skills/learn-mcp/SKILL.md) | Репетитор по Model Context Protocol (MCP). Создаёт MCP-LEARNING.md, следует маршруту из 17 уроков и фиксирует подтверждения по формату обмена, безопасности, надёжности и соответствию стандарту. |
 | [learn-agent-skills](../../skills/learn-agent-skills/SKILL.md) | Репетитор по Agent Skills. Создаёт AGENT-SKILLS-LEARNING.md, разбирает уроки 22 и 24–27 и фиксирует результат проверки на реальной среде. |
+| [`learn-reverse-engineering`](../../skills/learn-reverse-engineering/SKILL.md) | Репетитор по обратной разработке. Создаёт `REVERSE-ENGINEERING-LEARNING.md`, разбирает уроки с 32 по 45 этапа 13 на программах, которые вы собираете сами, и фиксирует результаты лабораторных работ. |
 | [claude-certification](../../skills/claude-certification/SKILL.md) | Репетитор по сертификации: выбирает CCAO-F, CCDV-F, CCAR-F или CCAR-P, разбирает уроки, запускает лабораторные работы, проверяет материалы, проводит диагностику и пробные экзамены, сохраняет прогресс. |
 | [mcpa-certification](../../skills/mcpa-certification/SKILL.md) | Репетитор MCPA: следует 34-урочному маршруту `mcpa-f` для протокола от 2026-07-28, запускает лабораторные работы и проверку формата обмена, проводит диагностику и три пробных экзамена, сохраняет прогресс. |
 | [`find-your-level`](../../skills/find-your-level/SKILL.md) | Тест из десяти вопросов: определяет этап для начала и составляет персональный маршрут с оценкой времени. |
@@ -246,7 +247,7 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 
 ## Выберите учебный маршрут
 
-Перед началом не нужно просматривать все 528 уроков. Выберите цель. Каждая ссылка открывает одну и ту же учебную программу на GitHub или на сайте; в обеих версиях используется один и тот же код уроков.
+Перед началом не нужно просматривать все 542 урока. Выберите цель. Каждая ссылка открывает одну и ту же учебную программу на GitHub или на сайте; в обеих версиях используется один и тот же код уроков.
 
 | Ваша цель | Учиться на GitHub | Учиться на сайте |
 |---|---|---|
@@ -262,12 +263,13 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 Сравните четыре основных направления и шесть карьерных маршрутов в разделе [«Маршруты обучения AI Engineering»](https://aiengineeringfromscratch.com/learning-paths.html).
 
 <details>
-<summary>Специализированные маршруты MCP и Agent Skills</summary>
+<summary>Специализированные маршруты MCP, Agent Skills и обратной разработки</summary>
 
 | Ваша цель | Учиться на GitHub | Учиться на сайте |
 |---|---|---|
 | Я хочу разрабатывать с использованием Model Context Protocol (MCP) | [Маршрут Model Context Protocol (MCP)](../../phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Маршрут Model Context Protocol (MCP)](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |
 | Я хочу создавать и выпускать Agent Skills | [Краткий маршрут Agent Skills](../../phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Маршрут Agent Skills](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |
+| Я хочу читать скомпилированные программы | [Краткий маршрут обратной разработки](../../phases/13-tools-and-protocols/README.md#reverse-engineering-path) | [Маршрут обратной разработки](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch&learningPath=reverse-engineering) |
 
 </details>
 
@@ -290,6 +292,7 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 | Опытный инженер, интересует только разработка агентов | Этап 14 — разработка агентов | ~60 часов |
 | Хочу создавать промышленные системы MCP | [Маршрут Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json) | ~23 часа 15 минут |
 | Хочу создавать промышленные Agent Skills | [Маршрут разработки Agent Skills](../../learning-paths/agent-skills.json) | ~9,5 часа |
+| Хочу изучить только обратную разработку | [Маршрут обратной разработки](../../learning-paths/reverse-engineering.json) | ~32,5 часа |
 
 </details>
 
@@ -697,7 +700,7 @@ flowchart TB
 </details>
 
 <details id="phase-13">
-<summary><b>Этап 13 — Инструменты и протоколы</b> &nbsp;<code>31 урок</code>&nbsp; <em>Интерфейсы между ИИ и реальным миром.</em></summary>
+<summary><b>Этап 13 — Инструменты и протоколы</b> &nbsp;<code>45 уроков</code>&nbsp; <em>Интерфейсы между ИИ и реальным миром.</em></summary>
 <br/>
 
 | # | Урок | Тип | Языки |
@@ -733,6 +736,20 @@ flowchart TB
 | 29 | [Надёжность MCP, отмена и управление потоком](../../phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | Создание | Python |
 | 30 | [Цепочка поставок реестра MCP: допуск, дрейф и откат](../../phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | Создание | Python |
 | 31 | [Инженерия соответствия MCP: версии, подтверждения и эксплуатация](../../phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | Создание | Python |
+| 32 | [Анатомия программы: читаем ELF с нуля](../../phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | Создание | Python |
+| 33 | [Дизассемблирование и графы потока управления](../../phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | Создание | Python |
+| 34 | [Подъём машинного кода до псевдокода](../../phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | Создание | Python |
+| 35 | [Доказательства, уверенность и неизвестные в анализе бинарных файлов](../../phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | Создание | Python |
+| 36 | [Пересобрать и доказать равенство](../../phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | Создание | Python |
+| 37 | [Обзор области обратной разработки](../../phases/13-tools-and-protocols/37-the-reverse-engineering-landscape/) | Создание | Python |
+| 38 | [Соглашения о вызовах и кадры стека](../../phases/13-tools-and-protocols/38-calling-conventions-and-stack-frames/) | Создание | Python |
+| 39 | [Идиомы компилятора и оптимизация](../../phases/13-tools-and-protocols/39-compiler-idioms-and-optimization/) | Создание | Python |
+| 40 | [Компоновка, загрузка и бинарные файлы без символов](../../phases/13-tools-and-protocols/40-linking-loading-and-stripped-binaries/) | Создание | Python |
+| 41 | [Восстановление данных и типов](../../phases/13-tools-and-protocols/41-recovering-data-and-types/) | Создание | Python |
+| 42 | [Динамический анализ собственной программы](../../phases/13-tools-and-protocols/42-dynamic-analysis-of-your-own-program/) | Создание | Python |
+| 43 | [Байт-код и управляемые форматы](../../phases/13-tools-and-protocols/43-bytecode-and-managed-formats/) | Создание | Python |
+| 44 | [Сравнение бинарных файлов и символьное выполнение](../../phases/13-tools-and-protocols/44-binary-diffing-and-symbolic-execution/) | Создание | Python |
+| 45 | [Обратная разработка с помощью ИИ](../../phases/13-tools-and-protocols/45-ai-assisted-reverse-engineering/) | Создание | Python |
 
 Уроки 06–18 и 28–31 составляют специализированный [маршрут Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json). Манифест задаёт следующий порядок: 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 18, 17, 28, 29, 30, 31. Начните с команды `learn-mcp` для своей среды. Урок 23 — единственный необязательный итоговый проект; для него также нужны уроки 19 и 20.
 
@@ -1147,7 +1164,7 @@ flowchart LR
 <details>
 <summary>Установить результаты уроков</summary>
 
-**Артефакты уроков.** В репозитории находятся 400 навыков и 100 промптов в `phases/**/outputs/`. Установите их с помощью `scripts/install_skills.py`. Для этого нужно клонировать репозиторий. Скрипт поддерживает фильтрацию по тегам, пробный запуск и раскладку файлов для разных агентов:
+**Артефакты уроков.** В репозитории находятся 414 навыков и 100 промптов в `phases/**/outputs/`. Установите их с помощью `scripts/install_skills.py`. Для этого нужно клонировать репозиторий. Скрипт поддерживает фильтрацию по тегам, пробный запуск и раскладку файлов для разных агентов:
 
 ```bash
 python3 scripts/install_skills.py <target>                                 # every skill, default --layout skills (nested)
@@ -1267,7 +1284,7 @@ python3 scripts/audit_lessons.py --json    # CI-friendly output
 <p align="center"><sub><b>114,584</b> читателей &nbsp;·&nbsp; <b>181,995</b> просмотров страниц за последние 30 дней &nbsp;·&nbsp; по состоянию на 2026-08-29</sub></p>
 <!-- STATS:END -->
 
-Бесплатно, по лицензии MIT, 528 уроков. Спасибо спонсорам и сторонникам, благодаря которым эта работа возможна. [Посмотреть всех спонсоров и сторонников](../../BACKERS.md).
+Бесплатно, по лицензии MIT, 542 уроков. Спасибо спонсорам и сторонникам, благодаря которым эта работа возможна. [Посмотреть всех спонсоров и сторонников](../../BACKERS.md).
 
 Хотите поддержать проект? Посмотрите [варианты спонсорства](../../SPONSORS.md), включая [спонсорство оборудования](../../SPONSORS.md#hardware-lab-partner), или [станьте спонсором на GitHub](https://github.com/sponsors/rohitg00).
 

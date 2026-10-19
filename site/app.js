@@ -144,21 +144,19 @@
       var total = p.lessons.length;
       var done = 0;
       for (var j = 0; j < p.lessons.length; j++) {
-        var staticDone = p.lessons[j].status === 'complete';
-        var userDone = false;
         if (hasProgress && p.lessons[j].url) {
           var lp = window.AIFSProgress.extractPath(p.lessons[j].url);
-          if (lp) userDone = window.AIFSProgress.isLessonComplete(lp);
+          if (lp && window.AIFSProgress.isLessonComplete(lp)) done++;
         }
-        if (staticDone || userDone) done++;
       }
+      var count = done > 0 ? done + ' / ' + total : total + (total === 1 ? ' lesson' : ' lessons');
       var statusClass = escapeHtml(String(p.status || 'planned').replace(/ /g, '-'));
       var roman = toRoman(p.id);
       var num = String(p.id).padStart(2, '0');
       html += '<div class="toc-row" data-phase="' + i + '" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Open Phase ' + num + ': ' + escapeHtml(p.name) + '">';
       html += '<span class="toc-num" dir="ltr">' + roman + '.</span>';
       html += '<div><span class="toc-status ' + statusClass + '"></span><span class="toc-name">' + escapeHtml(p.name) + '</span></div>';
-      html += '<span class="toc-meta">' + done + ' / ' + total + '</span>';
+      html += '<span class="toc-meta">' + count + '</span>';
       html += '<span class="toc-meta">' + num + '</span>';
       html += '</div>';
     }
@@ -236,6 +234,14 @@
     });
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
+        var activeSearch = document.getElementById('modalSearch');
+        if (activeSearch && document.activeElement === activeSearch && activeSearch.value) {
+          activeSearch.value = '';
+          if (currentPhaseIdx >= 0 && PHASES[currentPhaseIdx]) {
+            renderModalLessons(PHASES[currentPhaseIdx]);
+          }
+          return;
+        }
         closeModal(true);
         return;
       }
@@ -262,6 +268,15 @@
         window.AIFSProgress.reset();
       });
     }
+
+    var searchInput = document.getElementById('modalSearch');
+    if (searchInput) {
+      searchInput.addEventListener('input', function () {
+        if (currentPhaseIdx >= 0 && PHASES[currentPhaseIdx]) {
+          renderModalLessons(PHASES[currentPhaseIdx]);
+        }
+      });
+    }
   }
 
   var currentPhaseIdx = -1;
@@ -276,6 +291,8 @@
     document.getElementById('modalPhaseNum').textContent = 'PHASE ' + String(p.id).padStart(2, '0');
     document.getElementById('modalTitle').textContent = p.name;
     document.getElementById('modalDesc').textContent = p.desc;
+    var searchInput = document.getElementById('modalSearch');
+    if (searchInput) searchInput.value = '';
     var hubLink = document.getElementById('modalPhaseLink');
     if (hubLink) {
       hubLink.hidden = !p.hub;
@@ -302,10 +319,14 @@
   function renderModalLessons(p) {
     var container = document.getElementById('modalLessons');
     if (!container) return;
+    var searchWrap = document.getElementById('modalSearchWrap');
+    if (searchWrap) searchWrap.hidden = !p.lessons || p.lessons.length === 0;
 
     var hasProgress = !!window.AIFSProgress;
     var userDone = 0;
     var html = '';
+    var searchInput = document.getElementById('modalSearch');
+    var query = searchInput ? (searchInput.value || '').toLowerCase().trim() : '';
 
     for (var i = 0; i < p.lessons.length; i++) {
       var l = p.lessons[i];
@@ -313,6 +334,7 @@
       var lessonPath = pathMatch ? pathMatch[1] : '';
       var userComplete = hasProgress && lessonPath && window.AIFSProgress.isLessonComplete(lessonPath);
       if (userComplete) userDone++;
+      if (query && (l.name || '').toLowerCase().indexOf(query) === -1) continue;
 
       var canOpen = (l.status === 'complete' || userComplete) && lessonPath;
       var lessonUrl = canOpen ? 'lesson?path=' + encodeURIComponent(lessonPath) : '';
@@ -340,7 +362,12 @@
       html += '</div>';
     }
 
-    container.innerHTML = html || '<p class="modal-lessons-empty">No lessons are published in this phase yet.</p>';
+    if (!html) {
+      html = query
+        ? '<p class="modal-lessons-empty" role="status">No lessons match “' + escapeHtml(query) + '”.</p>'
+        : '<p class="modal-lessons-empty">No lessons are published in this phase yet.</p>';
+    }
+    container.innerHTML = html;
 
     var toggles = container.querySelectorAll('.modal-lesson-toggle');
     for (var t = 0; t < toggles.length; t++) {

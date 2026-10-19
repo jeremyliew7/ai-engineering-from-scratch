@@ -13,11 +13,11 @@ Modellerin iç mekanizmalarını, bilgi erişim işlem hatlarını ve ajan çal�
 
 Ücretsiz, açık kaynaklı, MIT lisanslı. Web sitesinde, bir kodlama ajanıyla veya yerel kod çalıştırarak öğrenin.
 
-> 528 ders. 20 aşama. Python, TypeScript, Rust, Julia.
+> 542 ders. 20 aşama. Python, TypeScript, Rust, Julia.
 
 <p align="center">
   <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="MIT Lisansı"></a>
-  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-528-3553ff?style=flat-square&labelColor=fafaf5" alt="528 ders"></a>
+  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-542-3553ff?style=flat-square&labelColor=fafaf5" alt="542 ders"></a>
   <a href="#contents"><img src="https://img.shields.io/badge/phases-20-3553ff?style=flat-square&labelColor=fafaf5" alt="20 aşama"></a>
   <a href="https://github.com/rohitg00/ai-engineering-from-scratch/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/ai-engineering-from-scratch?style=flat-square&labelColor=fafaf5&color=3553ff" alt="GitHub yıldızları"></a>
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="Web sitesi"></a>
@@ -207,6 +207,7 @@ Yükleyici, yapılandırabildiği hostları listeler ve yükleme konumunu sorar.
 | [`course-guide`](../../skills/course-guide/SKILL.md) | Konu yönlendiricisi: “Dikkat mekanizmasını nerede öğrenebilirim?” veya “Kayıp değerim NaN oluyor” gibi sorulardan ilgili derslere bağlantı verir. |
 | [`learn-mcp`](../../skills/learn-mcp/SKILL.md) | MCP’ye odaklanan eğitmen. `MCP-LEARNING.md` oluşturur, 17 derslik manifesti izler ve aktarım, güvenlik, güvenilirlik ile uygunluk kanıtlarını kaydeder. |
 | [`learn-agent-skills`](../../skills/learn-agent-skills/SKILL.md) | Agent Skills eğitmeni. `AGENT-SKILLS-LEARNING.md` oluşturur, 22, 24, 25, 26 ve 27. dersleri öğretir ve gerçek hostlarda çalıştığına dair kanıtları kaydeder. |
+| [`learn-reverse-engineering`](../../skills/learn-reverse-engineering/SKILL.md) | Tersine Mühendislik eğitmeni. `REVERSE-ENGINEERING-LEARNING.md` oluşturur, Aşama 13'teki 32 ile 45 arasındaki dersleri kendi derlediğiniz programlar üzerinde öğretir ve laboratuvar kanıtlarını kaydeder. |
 | [`claude-certification`](../../skills/claude-certification/SKILL.md) | Sertifika eğitmeni: CCAO-F, CCDV-F, CCAR-F veya CCAR-P yollarından birini seçer; dersleri öğretir, laboratuvarları çalıştırır, eserleri inceler, tanılama ve deneme sınavlarını yönetir, ilerlemeyi kaydeder. |
 | [`mcpa-certification`](../../skills/mcpa-certification/SKILL.md) | 34 derslik MCPA eğitmeni. `mcpa-f` yolundaki 2026-07-28 tarihli protokolü işler; dersleri ve kablo biçimi denetimlerini yürütür, tanılama ile üç deneme sınavını yönetir ve ilerlemeyi saklar. |
 | [`find-your-level`](../../skills/find-your-level/SKILL.md) | On soruluk bir sınavla mevcut bilginizi başlangıç aşamasına eşler ve tahmini sürelerle kişiselleştirilmiş bir yol oluşturur. |
@@ -246,7 +247,7 @@ Ders sayfalarındaki komutlar, ders açıkça başka bir dizine geçmenizi söyl
 
 ## Bir öğrenme yolu seçin
 
-Başlamadan önce 528 dersin hepsine göz atmanız gerekmez. Bir hedef seçin. Her bağlantı aynı müfredatı GitHub'da ya da web sitesinde açar; iki sürüm de aynı ders kodunu kullanır.
+Başlamadan önce 542 dersin hepsine göz atmanız gerekmez. Bir hedef seçin. Her bağlantı aynı müfredatı GitHub'da ya da web sitesinde açar; iki sürüm de aynı ders kodunu kullanır.
 
 | Hedefiniz | GitHub'da öğrenin | Web sitesinde öğrenin |
 |---|---|---|
@@ -262,12 +263,13 @@ Nereden başlayacağınızdan emin değil misiniz? [`start-learning` seviye beli
 [AI Engineering öğrenme yollarında](https://aiengineeringfromscratch.com/learning-paths.html) dört temel alanı ve altı kariyer rotasını karşılaştırın.
 
 <details>
-<summary>Odaklanmış MCP ve Agent Skills yolları</summary>
+<summary>Odaklanmış MCP, Agent Skills ve Tersine Mühendislik yolları</summary>
 
 | Hedefiniz | GitHub'da öğrenin | Web sitesinde öğrenin |
 |---|---|---|
 | Model Context Protocol (MCP) ile geliştirmek istiyorum | [Model Context Protocol (MCP) rotası](../../phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Model Context Protocol (MCP) yolu](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |
 | Agent Skills yazıp yayımlamak istiyorum | [Odaklı Agent Skills rotası](../../phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Agent Skills yolu](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |
+| Derlenmiş programları okumak istiyorum | [Odaklı Tersine Mühendislik rotası](../../phases/13-tools-and-protocols/README.md#reverse-engineering-path) | [Tersine Mühendislik yolu](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch&learningPath=reverse-engineering) |
 
 </details>
 
@@ -290,6 +292,7 @@ Nereden başlayacağınızdan emin değil misiniz? [`start-learning` seviye beli
 | Kıdemli mühendisim; yalnızca ajan mühendisliğini öğrenmek istiyorum | Aşama 14: Ajan Mühendisliği | Yaklaşık 60 saat |
 | Yalnızca üretim ortamına yönelik MCP sistemleri geliştirmek istiyorum | [Model Context Protocol (MCP) yolu](../../learning-paths/model-context-protocol.json) | Yaklaşık 23 saat 15 dakika |
 | Yalnızca Agent Skills geliştirmeyi öğrenmek istiyorum | [Agent Skills Mühendisliği yolu](../../learning-paths/agent-skills.json) | Yaklaşık 9,5 saat |
+| Yalnızca tersine mühendislik öğrenmek istiyorum | [Tersine Mühendislik yolu](../../learning-paths/reverse-engineering.json) | Yaklaşık 32,5 saat |
 
 </details>
 
@@ -697,7 +700,7 @@ flowchart TB
 </details>
 
 <details id="phase-13">
-<summary><b>Aşama 13 — Araçlar ve Protokoller</b> &nbsp;<code>31 ders</code>&nbsp; <em>Yapay zekâ ile gerçek dünya arasındaki arayüzler.</em></summary>
+<summary><b>Aşama 13 — Araçlar ve Protokoller</b> &nbsp;<code>45 ders</code>&nbsp; <em>Yapay zekâ ile gerçek dünya arasındaki arayüzler.</em></summary>
 <br/>
 
 | No. | Ders | Tür | Dil |
@@ -733,6 +736,20 @@ flowchart TB
 | 29 | [MCP Güvenilirliği, İptali ve Akış Denetimi](../../phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | Uygulama | Python |
 | 30 | [MCP Kayıt Defteri Tedarik Zinciri: Kabul, Sapma ve Geri Alma](../../phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | Uygulama | Python |
 | 31 | [MCP Uygunluk Mühendisliği: Sürümleme, Kanıt ve İşletim](../../phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | Uygulama | Python |
+| 32 | [Program Anatomisi: ELF'i Sıfırdan Okumak](../../phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | Uygulama | Python |
+| 33 | [Tersine Derleme ve Kontrol Akış Grafikleri](../../phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | Uygulama | Python |
+| 34 | [Makine Kodunu Sözde Koda Yükseltmek](../../phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | Uygulama | Python |
+| 35 | [İkili Analizde Kanıt, Güven ve Bilinmeyenler](../../phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | Uygulama | Python |
+| 36 | [Yeniden Derle ve Eşitliği Kanıtla](../../phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | Uygulama | Python |
+| 37 | [Tersine Mühendislik Alanına Genel Bakış](../../phases/13-tools-and-protocols/37-the-reverse-engineering-landscape/) | Uygulama | Python |
+| 38 | [Çağrı Kuralları ve Yığın Çerçeveleri](../../phases/13-tools-and-protocols/38-calling-conventions-and-stack-frames/) | Uygulama | Python |
+| 39 | [Derleyici Kalıpları ve Optimizasyon](../../phases/13-tools-and-protocols/39-compiler-idioms-and-optimization/) | Uygulama | Python |
+| 40 | [Bağlama, Yükleme ve Sembolleri Çıkarılmış İkili Dosyalar](../../phases/13-tools-and-protocols/40-linking-loading-and-stripped-binaries/) | Uygulama | Python |
+| 41 | [Verileri ve Türleri Geri Kazanmak](../../phases/13-tools-and-protocols/41-recovering-data-and-types/) | Uygulama | Python |
+| 42 | [Kendi Programınızın Dinamik Analizi](../../phases/13-tools-and-protocols/42-dynamic-analysis-of-your-own-program/) | Uygulama | Python |
+| 43 | [Bayt Kodu ve Yönetilen Biçimler](../../phases/13-tools-and-protocols/43-bytecode-and-managed-formats/) | Uygulama | Python |
+| 44 | [İkili Fark Analizi ve Sembolik Yürütme](../../phases/13-tools-and-protocols/44-binary-diffing-and-symbolic-execution/) | Uygulama | Python |
+| 45 | [Yapay Zekâ Destekli Tersine Mühendislik](../../phases/13-tools-and-protocols/45-ai-assisted-reverse-engineering/) | Uygulama | Python |
 
 06-18 ve 28-31 dersleri odaklanmıştır. [Modelle Konekst Protokolü (MCP) yol](../../learning-paths/model-context-protocol.json). Açık sıralaması 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 18, 17, 28, 29, 30, 31. `learn-mcp` Ders 23 onun tek seçeneği ve aynı zamanda ders 19 ve 20 gerektirir.
 
@@ -1147,7 +1164,7 @@ Başka müfredatlar genellikle “X’i öğrendiniz” diyerek biter. Burada he
 <details>
 <summary>Ders çıktılarını yükleyin</summary>
 
-**Ders çıktıları.** Depodaki `phases/**/outputs/` dizinlerinde 400 beceri ve 100 istem bulunur; bunları `scripts/install_skills.py` ile yükleyin. Depoyu klonlamanız gerekir. Etiket filtrelerini, deneme çalıştırmasını ve ajan başına yerleşim düzenlerini destekler:
+**Ders çıktıları.** Depodaki `phases/**/outputs/` dizinlerinde 414 beceri ve 100 istem bulunur; bunları `scripts/install_skills.py` ile yükleyin. Depoyu klonlamanız gerekir. Etiket filtrelerini, deneme çalıştırmasını ve ajan başına yerleşim düzenlerini destekler:
 
 ```bash
 python3 scripts/install_skills.py <target>                                 # every skill, default --layout skills (nested)
@@ -1267,7 +1284,7 @@ Herhangi bir kural başarısız olduğunda komut sıfırdan farklı bir çıkı�
 <p align="center"><sub><b>114,584</b> okuyucu &nbsp;·&nbsp; Son 30 günde <b>181,995</b> sayfa görüntüleme &nbsp;·&nbsp; 2026-08-29 itibarıyla</sub></p>
 <!-- STATS:END -->
 
-Ücretsiz, MIT lisanslı, 528 ders. Bu çalışmayı mümkün kılan sponsorlara ve destekçilere teşekkür ederiz. [Tüm sponsorları ve destekçileri görün](../../BACKERS.md).
+Ücretsiz, MIT lisanslı, 542 ders. Bu çalışmayı mümkün kılan sponsorlara ve destekçilere teşekkür ederiz. [Tüm sponsorları ve destekçileri görün](../../BACKERS.md).
 
 Çalışmaları desteklemek ister misiniz? [Sponsorluk seçeneklerini](../../SPONSORS.md), [donanım sponsorluğunu](../../SPONSORS.md#hardware-lab-partner) inceleyin veya [GitHub üzerinden sponsor olun](https://github.com/sponsors/rohitg00).
 

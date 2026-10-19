@@ -10,6 +10,8 @@ on:
       - ".claude/skills/**"
       - "scripts/audit_lessons.py"
       - "scripts/run_lesson_tests.py"
+      - "scripts/link_check.py"
+      - "scripts/test_link_check.py"
       - "scripts/audit_certifications.py"
       - "scripts/check_mcpa_wire.py"
       - "scripts/test_check_mcpa_wire.py"
@@ -27,6 +29,7 @@ on:
       - "scripts/test_agent_negotiation.js"
       - "scripts/test_agent_readiness.py"
       - "scripts/test_seo_routes.js"
+      - "scripts/test_function_bundles.js"
       - "scripts/test_skill_artifact_bundles.py"
       - "scripts/test_translate_workflow.py"
       - "scripts/translate_matrix.py"
@@ -46,6 +49,7 @@ on:
       - "glossary/**"
       - "site/build.js"
       - "site/**"
+      - "scripts/agent-machine/**"
       - "api/**"
       - "lib/**"
       - "scripts/test_agent_api.js"
@@ -63,6 +67,8 @@ on:
       - ".claude/skills/**"
       - "scripts/audit_lessons.py"
       - "scripts/run_lesson_tests.py"
+      - "scripts/link_check.py"
+      - "scripts/test_link_check.py"
       - "scripts/audit_certifications.py"
       - "scripts/check_mcpa_wire.py"
       - "scripts/test_check_mcpa_wire.py"
@@ -80,6 +86,7 @@ on:
       - "scripts/test_agent_negotiation.js"
       - "scripts/test_agent_readiness.py"
       - "scripts/test_seo_routes.js"
+      - "scripts/test_function_bundles.js"
       - "scripts/test_skill_artifact_bundles.py"
       - "scripts/test_translate_workflow.py"
       - "scripts/translate_matrix.py"
@@ -99,6 +106,7 @@ on:
       - "glossary/**"
       - "site/build.js"
       - "site/**"
+      - "scripts/agent-machine/**"
       - "api/**"
       - "lib/**"
       - "scripts/test_agent_api.js"
@@ -134,6 +142,8 @@ jobs:
         run: find certifications/*/lessons -path '*/code/main.py' -print0 | xargs -0 -r -n1 python3
       - name: MCPA wire-shape checker tests
         run: python3 scripts/test_check_mcpa_wire.py
+      - name: external link-checker extraction tests
+        run: python3 -m unittest scripts.test_link_check
       - name: MCPA lesson transcripts match the 2026-07-28 wire shape
         run: python3 scripts/check_mcpa_wire.py
       - name: skill artifact bundles install without losing companion files
@@ -142,12 +152,28 @@ jobs:
         run: node --test site/test_build_artifacts.js
       - name: returning visitors receive updated site assets
         run: node --test site/test_asset_cache.js
+      - name: lesson math renders outside code and money stays text
+        run: node --test site/test_lesson_math.js
       - name: command copying preserves keyboard focus
         run: node --test site/test_project_copy.js
       - name: homepage curiosity supports pointer and keyboard input
         run: node --test site/test_intelligence_check.js
+      - name: the skills page stays in sync with the skills folder
+        run: node --test site/test_skills_page.js
+      - name: the star note asks engaged readers at most twice
+        run: node --test site/test_star_nudge.js
+      - name: agent machine simulation and page stay in sync
+        run: node --test site/test_agent_machine.js
+      - name: lesson highlights re-anchor and survive storage faults
+        run: node --test site/test_highlights.js site/test_highlights_store.js
+      - name: my highlights page filters, exports, and stays local
+        run: node --test site/test_highlights_page.js
       - name: build the static site
         run: node site/build.js && node site/build-projects.js --strict && node site/build-agents.js
+      - name: deployment bundles stay small and preserve runtime assets
+        run: |
+          npm install --prefix "$RUNNER_TEMP/function-trace" --no-save --no-package-lock @vercel/nft@1.5.0
+          NODE_PATH="$RUNNER_TEMP/function-trace/node_modules" node --test scripts/test_function_bundles.js
       - name: public API and MCP contracts
         run: node --test scripts/test_agent_api.js scripts/test_agent_wire.js
       - name: dynamic lesson and certification routes preserve their public contracts

@@ -171,3 +171,20 @@ test('malformed and non-breadcrumb JSON-LD stays intact and does not prevent ren
     assert.match(result, /<h1>Example<\/h1>/);
   }
 });
+
+
+test('reader navigation sits outside the narrow article wrapper and preserves one theme control', () => {
+  for (const legacy of [false, true]) {
+    const result = mirrorArticle(fixture({ legacy }), item, catalog);
+    const headerStart = result.indexOf('<div class="aiefs-reader-header">');
+    const articleWrap = result.indexOf('<div class="wrap">');
+    assert.ok(headerStart > result.indexOf('<body>') && headerStart < articleWrap);
+    const header = result.slice(headerStart, articleWrap);
+    assert.equal((result.match(/id="theme"/g) || []).length, 1);
+    assert.ok(header.includes(theme));
+    assert.match(header, /href="\/catalog.html"/);
+    assert.match(header, /href="\/roadmap.html"/);
+    assert.match(header, /aria-current="location" href="\/blogs"/);
+    assert.doesNotMatch(result, /<nav class="nav"|<div class="topbar"/);
+  }
+});

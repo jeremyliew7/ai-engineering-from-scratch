@@ -13,11 +13,11 @@ Zaimplementuj wewnętrzne mechanizmy modeli, potoki wyszukiwania i środowiska w
 
 Bezpłatny, otwartoźródłowy, na licencji MIT. Ucz się na stronie, z agentem programistycznym lub uruchamiając kod lokalnie.
 
-> 528 lekcji. 20 etapów. Python, TypeScript, Rust, Julia.
+> 542 lekcji. 20 etapów. Python, TypeScript, Rust, Julia.
 
 <p align="center">
   <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="Licencja MIT"></a>
-  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-528-3553ff?style=flat-square&labelColor=fafaf5" alt="528 lekcji"></a>
+  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-542-3553ff?style=flat-square&labelColor=fafaf5" alt="542 lekcji"></a>
   <a href="#contents"><img src="https://img.shields.io/badge/phases-20-3553ff?style=flat-square&labelColor=fafaf5" alt="20 etapów"></a>
   <a href="https://github.com/rohitg00/ai-engineering-from-scratch/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/ai-engineering-from-scratch?style=flat-square&labelColor=fafaf5&color=3553ff" alt="Gwiazdki GitHub"></a>
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="Strona internetowa"></a>
@@ -207,6 +207,7 @@ Instalator wyświetla hosty, które potrafi skonfigurować, i pyta o miejsce ins
 | [`course-guide`](../../skills/course-guide/SKILL.md) | Wskazywanie tematów. „Gdzie nauczę się uwagi?” lub „moja strata to NaN” → dokładne lekcje z linkami. |
 | [`learn-mcp`](../../skills/learn-mcp/SKILL.md) | Tutor Model Context Protocol (MCP). Tworzy `MCP-LEARNING.md`, prowadzi manifestem 17 lekcji i zapisuje dowody komunikacji, bezpieczeństwa, niezawodności oraz zgodności. |
 | [`learn-agent-skills`](../../skills/learn-agent-skills/SKILL.md) | Tutor Agent Skills. Tworzy `AGENT-SKILLS-LEARNING.md`, uczy lekcji 22, 24, 25, 26 i 27 oraz zapisuje dowody z rzeczywistego hosta. |
+| [`learn-reverse-engineering`](../../skills/learn-reverse-engineering/SKILL.md) | Tutor inżynierii wstecznej. Tworzy `REVERSE-ENGINEERING-LEARNING.md`, uczy lekcji od 32 do 45 z etapu 13 na programach, które budujesz samodzielnie, oraz zapisuje dowody z ćwiczeń laboratoryjnych. |
 | [`claude-certification`](../../skills/claude-certification/SKILL.md) | Tutor certyfikacji. Wybiera CCAO-F, CCDV-F, CCAR-F lub CCAR-P; uczy lekcji, uruchamia laboratoria, ocenia artefakty, przeprowadza diagnostykę i próbne egzaminy, zapisuje postęp. |
 | [`mcpa-certification`](../../skills/mcpa-certification/SKILL.md) | Tutor MCPA. Prowadzi ścieżką `mcpa-f` z 34 lekcjami o protokole 2026-07-28; uczy lekcji, uruchamia laboratoria i kontrolę komunikacji, przeprowadza diagnostykę i trzy próbne egzaminy, zapisuje postęp. |
 | [`find-your-level`](../../skills/find-your-level/SKILL.md) | Test poziomujący z dziesięcioma pytaniami. Przypisuje wiedzę do etapu początkowego i tworzy osobistą ścieżkę z szacunkowym czasem. |
@@ -246,7 +247,7 @@ Kontrola wstępna oddziela wymagania potrzebne teraz od narzędzi potrzebnych p�
 
 ## Wybierz ścieżkę nauki
 
-Nie musisz przeglądać wszystkich 528 lekcji, zanim zaczniesz. Wybierz jeden cel. Każdy odnośnik otwiera ten sam program nauki na GitHub lub stronie internetowej, a obie wersje korzystają z tego samego kodu lekcji.
+Nie musisz przeglądać wszystkich 542 lekcji, zanim zaczniesz. Wybierz jeden cel. Każdy odnośnik otwiera ten sam program nauki na GitHub lub stronie internetowej, a obie wersje korzystają z tego samego kodu lekcji.
 
 | Twój cel | Nauka na GitHub | Nauka na stronie |
 |---|---|---|
@@ -262,12 +263,13 @@ Nie wiesz, od czego zacząć? Skorzystaj z [tutora `start-learning` oceniająceg
 Porównaj cztery główne dziedziny i sześć ścieżek kariery w [AI Engineering Learning Paths](https://aiengineeringfromscratch.com/learning-paths.html).
 
 <details>
-<summary>Specjalistyczne ścieżki MCP i Agent Skills</summary>
+<summary>Specjalistyczne ścieżki MCP, Agent Skills i inżynierii wstecznej</summary>
 
 | Twój cel | Nauka na GitHub | Nauka na stronie |
 |---|---|---|
 | Chcę tworzyć rozwiązania z Model Context Protocol (MCP) | [Trasa Model Context Protocol (MCP)](../../phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Ścieżka Model Context Protocol (MCP)](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |
 | Chcę pisać i publikować Agent Skills | [Skoncentrowana trasa Agent Skills](../../phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Ścieżka Agent Skills](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |
+| Chcę czytać skompilowane programy | [Trasa inżynierii wstecznej](../../phases/13-tools-and-protocols/README.md#reverse-engineering-path) | [Ścieżka inżynierii wstecznej](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch&learningPath=reverse-engineering) |
 
 </details>
 
@@ -290,6 +292,7 @@ Porównaj cztery główne dziedziny i sześć ścieżek kariery w [AI Engineerin
 | Doświadczony inżynier, interesuje Cię tylko inżynieria agentów | Etap 14: Inżynieria agentów | ~60 godzin |
 | Chcesz tylko budować produkcyjne systemy MCP | [Ścieżka Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json) | ~23 godziny 15 minut |
 | Chcesz tylko budować produkcyjne Agent Skills | [Ścieżka inżynierii Agent Skills](../../learning-paths/agent-skills.json) | ~9.5 godziny |
+| Chcesz tylko nauczyć się inżynierii wstecznej | [Ścieżka inżynierii wstecznej](../../learning-paths/reverse-engineering.json) | ~32.5 godziny |
 
 </details>
 
@@ -697,7 +700,7 @@ Dwadzieścia etapów. Kliknij etap, aby rozwinąć listę lekcji.
 </details>
 
 <details id="phase-13">
-<summary><b>Etap 13: Narzędzia i protokoły</b> &nbsp;<code>31 lekcji</code>&nbsp; <em>Interfejsy między AI a rzeczywistym światem.</em></summary>
+<summary><b>Etap 13: Narzędzia i protokoły</b> &nbsp;<code>45 lekcji</code>&nbsp; <em>Interfejsy między AI a rzeczywistym światem.</em></summary>
 <br/>
 
 | # | Lekcja | Rodzaj | Język |
@@ -733,6 +736,20 @@ Dwadzieścia etapów. Kliknij etap, aby rozwinąć listę lekcji.
 | 29 | [Niezawodność MCP, anulowanie i kontrola przepływu](../../phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | Buduj | Python |
 | 30 | [Łańcuch dostaw rejestru MCP: dopuszczanie, rozbieżności i wycofywanie](../../phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | Buduj | Python |
 | 31 | [Inżynieria zgodności MCP: wersjonowanie, dowody i operacje](../../phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | Buduj | Python |
+| 32 | [Anatomia programu: czytanie ELF od podstaw](../../phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | Buduj | Python |
+| 33 | [Deasemblacja i grafy przepływu sterowania](../../phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | Buduj | Python |
+| 34 | [Podnoszenie kodu maszynowego do pseudokodu](../../phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | Buduj | Python |
+| 35 | [Dowody, pewność i niewiadome w analizie binarnej](../../phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | Buduj | Python |
+| 36 | [Odbuduj i udowodnij równoważność](../../phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | Buduj | Python |
+| 37 | [Krajobraz inżynierii wstecznej](../../phases/13-tools-and-protocols/37-the-reverse-engineering-landscape/) | Buduj | Python |
+| 38 | [Konwencje wywołań i ramki stosu](../../phases/13-tools-and-protocols/38-calling-conventions-and-stack-frames/) | Buduj | Python |
+| 39 | [Idiomy kompilatora i optymalizacja](../../phases/13-tools-and-protocols/39-compiler-idioms-and-optimization/) | Buduj | Python |
+| 40 | [Linkowanie, ładowanie i okrojone pliki binarne](../../phases/13-tools-and-protocols/40-linking-loading-and-stripped-binaries/) | Buduj | Python |
+| 41 | [Odzyskiwanie danych i typów](../../phases/13-tools-and-protocols/41-recovering-data-and-types/) | Buduj | Python |
+| 42 | [Analiza dynamiczna własnego programu](../../phases/13-tools-and-protocols/42-dynamic-analysis-of-your-own-program/) | Buduj | Python |
+| 43 | [Kod bajtowy i formaty zarządzane](../../phases/13-tools-and-protocols/43-bytecode-and-managed-formats/) | Buduj | Python |
+| 44 | [Porównywanie plików binarnych i wykonanie symboliczne](../../phases/13-tools-and-protocols/44-binary-diffing-and-symbolic-execution/) | Buduj | Python |
+| 45 | [Inżynieria wsteczna wspomagana przez AI](../../phases/13-tools-and-protocols/45-ai-assisted-reverse-engineering/) | Buduj | Python |
 
 Lekcje 06-18 i 28-31 tworzą wyspecjalizowaną [ścieżkę Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json). Kolejność w manifeście to 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 18, 17, 28, 29, 30, 31. Zacznij od podanego wyżej wywołania `learn-mcp` dla swojego hosta. Lekcja 23 jest jedynym opcjonalnym projektem końcowym i wymaga również lekcji 19 i 20.
 
@@ -1147,7 +1164,7 @@ Inne kursy kończą się słowami *„gratulacje, nauczyłeś się X”*. Tutaj 
 <details>
 <summary>Zainstaluj rezultaty lekcji</summary>
 
-**Artefakty lekcji.** Repozytorium dostarcza 400 umiejętności i 100 promptów w `phases/**/outputs/`; instaluj je przez `scripts/install_skills.py`. Wymaga to klonowania repozytorium. Obsługiwane są filtry tagów, przebiegi próbne i układy dla poszczególnych agentów:
+**Artefakty lekcji.** Repozytorium dostarcza 414 umiejętności i 100 promptów w `phases/**/outputs/`; instaluj je przez `scripts/install_skills.py`. Wymaga to klonowania repozytorium. Obsługiwane są filtry tagów, przebiegi próbne i układy dla poszczególnych agentów:
 
 ```bash
 python3 scripts/install_skills.py <target>                                 # every skill, default --layout skills (nested)
@@ -1267,7 +1284,7 @@ Kod zakończenia jest niezerowy, gdy dowolna reguła zawiedzie. Reguły L001–L
 <p align="center"><sub><b>114,584</b> czytelników &nbsp;·&nbsp; <b>181,995</b> odsłon w ciągu ostatnich 30 dni &nbsp;·&nbsp; stan na 2026-08-29</sub></p>
 <!-- STATS:END -->
 
-Bezpłatnie, na licencji MIT, 528 lekcji. Dziękujemy sponsorom i osobom wspierającym, dzięki którym ta praca jest możliwa. [Zobacz wszystkich sponsorów i wspierających](../../BACKERS.md).
+Bezpłatnie, na licencji MIT, 542 lekcji. Dziękujemy sponsorom i osobom wspierającym, dzięki którym ta praca jest możliwa. [Zobacz wszystkich sponsorów i wspierających](../../BACKERS.md).
 
 Chcesz wesprzeć projekt? Sprawdź [możliwości sponsoringu](../../SPONSORS.md), w tym [wsparcie sprzętowe](../../SPONSORS.md#hardware-lab-partner), lub [zostań sponsorem na GitHub](https://github.com/sponsors/rohitg00).
 

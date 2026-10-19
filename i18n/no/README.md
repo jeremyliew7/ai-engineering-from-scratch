@@ -13,11 +13,11 @@ Implementer modellens indre, gjenfinningspipeliner og kjøremiljøer for agenter
 
 Gratis, åpen kildekode, MIT-lisens. Lær på nettstedet, med en kodeagent eller ved å kjøre kode lokalt.
 
-> 528 leksjoner. 20 faser. Python, TypeScript, Rust, Julia.
+> 542 leksjoner. 20 faser. Python, TypeScript, Rust, Julia.
 
 <p align="center">
   <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="MIT-lisens"></a>
-  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-528-3553ff?style=flat-square&labelColor=fafaf5" alt="528 leksjoner"></a>
+  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-542-3553ff?style=flat-square&labelColor=fafaf5" alt="542 leksjoner"></a>
   <a href="#contents"><img src="https://img.shields.io/badge/phases-20-3553ff?style=flat-square&labelColor=fafaf5" alt="20 faser"></a>
   <a href="https://github.com/rohitg00/ai-engineering-from-scratch/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/ai-engineering-from-scratch?style=flat-square&labelColor=fafaf5&color=3553ff" alt="GitHub-stjerner"></a>
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="Nettsted"></a>
@@ -207,6 +207,7 @@ Installasjonsprogrammet viser hvilke vertsprogrammer det kan konfigurere, og sp�
 | [`course-guide`](../../skills/course-guide/SKILL.md) | Emneveiviser. «Hvor lærer jeg attention?» eller «tapet mitt er NaN» → de relevante leksjonene med lenker. |
 | [`learn-mcp`](../../skills/learn-mcp/SKILL.md) | Fokusert veileder i Model Context Protocol (MCP). Oppretter `MCP-LEARNING.md`, følger manifestets 17 leksjoner og lagrer dokumentasjon på meldingsutveksling, sikkerhet, pålitelighet og protokollsamsvar. |
 | [`learn-agent-skills`](../../skills/learn-agent-skills/SKILL.md) | Fokusert veileder i Agent Skills. Oppretter `AGENT-SKILLS-LEARNING.md`, underviser i leksjonene 22, 24, 25, 26 og 27 og lagrer dokumentasjon fra virkelige vertsprogrammer. |
+| [`learn-reverse-engineering`](../../skills/learn-reverse-engineering/SKILL.md) | Fokusert veileder i reverse engineering. Oppretter `REVERSE-ENGINEERING-LEARNING.md`, underviser i leksjonene 32 til 45 i fase 13 på programmer du bygger selv, og lagrer dokumentasjon fra laboppgavene. |
 | [`claude-certification`](../../skills/claude-certification/SKILL.md) | Sertifiseringsveileder. Velger CCAO-F, CCDV-F, CCAR-F eller CCAR-P, underviser i hver leksjon, kjører øvelser, gjennomgår arbeidsresultater, gjennomfører diagnostiske prøver og øvingseksamener og lagrer fremgang. |
 | [`mcpa-certification`](../../skills/mcpa-certification/SKILL.md) | MCPA-veileder. Følger `mcpa-f` med 34 leksjoner om protokollen 2026-07-28, underviser i hver leksjon, kjører øvelser og meldingskontrollen, gjennomfører den diagnostiske prøven og tre øvingseksamener og lagrer fremgang. |
 | [`find-your-level`](../../skills/find-your-level/SKILL.md) | Nivåprøve med ti spørsmål. Knytter kunnskapen din til en passende startfase og lager et personlig læringsløp med tidsanslag. |
@@ -246,7 +247,7 @@ Stier i kommandoer på leksjonssidene tar utgangspunkt i roten av prosjektarkive
 
 ## Velg et læringsløp
 
-Du trenger ikke gå gjennom 528 leksjoner før du begynner. Velg et mål. Hver lenke åpner det samme pensumet på GitHub eller nettstedet, og begge versjonene bruker samme leksjonskode.
+Du trenger ikke gå gjennom 542 leksjoner før du begynner. Velg et mål. Hver lenke åpner det samme pensumet på GitHub eller nettstedet, og begge versjonene bruker samme leksjonskode.
 
 | Målet ditt | Lær på GitHub | Lær på nettstedet |
 |---|---|---|
@@ -262,12 +263,13 @@ Er du usikker på hvor du skal begynne? Bruk [nivåvurderingen med veilederen `s
 Sammenlign fire kjerneområder og seks karriereveier i [læringsløpene for AI-utvikling](https://aiengineeringfromscratch.com/learning-paths.html).
 
 <details>
-<summary>Fokuserte løp for MCP og Agent Skills</summary>
+<summary>Fokuserte løp for MCP, Agent Skills og reverse engineering</summary>
 
 | Målet ditt | Lær på GitHub | Lær på nettstedet |
 |---|---|---|
 | Jeg vil bygge med Model Context Protocol (MCP) | [Løp for Model Context Protocol (MCP)](../../phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Læringsløp for Model Context Protocol (MCP)](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |
 | Jeg vil skrive og publisere Agent Skills | [Fokusert løp for Agent Skills](../../phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Læringsløp for Agent Skills](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |
+| Jeg vil lese kompilerte programmer | [Løp for reverse engineering](../../phases/13-tools-and-protocols/README.md#reverse-engineering-path) | [Læringsløp for reverse engineering](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch&learningPath=reverse-engineering) |
 
 </details>
 
@@ -290,6 +292,7 @@ Sammenlign fire kjerneområder og seks karriereveier i [læringsløpene for AI-u
 | Erfaren utvikler som bare vil lære agentutvikling | Fase 14: Agentutvikling | ~60 timer |
 | Vil bare bygge MCP-systemer for produksjon | [Læringsløp for Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json) | ~23 timer 15 min |
 | Vil bare bygge Agent Skills for produksjon | [Læringsløp for utvikling av Agent Skills](../../learning-paths/agent-skills.json) | ~9.5 timer |
+| Vil bare lære reverse engineering | [Læringsløp for reverse engineering](../../learning-paths/reverse-engineering.json) | ~32.5 timer |
 
 </details>
 
@@ -697,7 +700,7 @@ Tjue faser. Klikk på en fase for å utvide leksjonslisten.
 </details>
 
 <details id="phase-13">
-<summary><b>Fase 13: Verktøy og protokoller</b> &nbsp;<code>31 leksjoner</code>&nbsp; <em>Grensesnittene mellom AI og den virkelige verden.</em></summary>
+<summary><b>Fase 13: Verktøy og protokoller</b> &nbsp;<code>45 leksjoner</code>&nbsp; <em>Grensesnittene mellom AI og den virkelige verden.</em></summary>
 <br/>
 
 | # | Leksjon | Type | Språk |
@@ -733,6 +736,20 @@ Tjue faser. Klikk på en fase for å utvide leksjonslisten.
 | 29 | [MCP-pålitelighet, avbryting og flytkontroll](../../phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | Bygg | Python |
 | 30 | [MCP-registerets forsyningskjede: opptak, avvik og tilbakerulling](../../phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | Bygg | Python |
 | 31 | [MCP-protokollsamsvar: versjonering, dokumentasjon og drift](../../phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | Bygg | Python |
+| 32 | [Programanatomi: les ELF fra bunnen av](../../phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | Bygg | Python |
+| 33 | [Disassemblering og kontrollflytgrafer](../../phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | Bygg | Python |
+| 34 | [Fra maskinkode til pseudokode](../../phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | Bygg | Python |
+| 35 | [Bevis, sikkerhet og ukjente i binæranalyse](../../phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | Bygg | Python |
+| 36 | [Bygg på nytt og bevis likhet](../../phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | Bygg | Python |
+| 37 | [Landskapet for reverse engineering](../../phases/13-tools-and-protocols/37-the-reverse-engineering-landscape/) | Bygg | Python |
+| 38 | [Kallkonvensjoner og stakkrammer](../../phases/13-tools-and-protocols/38-calling-conventions-and-stack-frames/) | Bygg | Python |
+| 39 | [Kompilatoridiomer og optimalisering](../../phases/13-tools-and-protocols/39-compiler-idioms-and-optimization/) | Bygg | Python |
+| 40 | [Lenking, lasting og strippede binærfiler](../../phases/13-tools-and-protocols/40-linking-loading-and-stripped-binaries/) | Bygg | Python |
+| 41 | [Gjenoppretting av data og typer](../../phases/13-tools-and-protocols/41-recovering-data-and-types/) | Bygg | Python |
+| 42 | [Dynamisk analyse av ditt eget program](../../phases/13-tools-and-protocols/42-dynamic-analysis-of-your-own-program/) | Bygg | Python |
+| 43 | [Bytekode og administrerte formater](../../phases/13-tools-and-protocols/43-bytecode-and-managed-formats/) | Bygg | Python |
+| 44 | [Binær diffing og symbolsk utførelse](../../phases/13-tools-and-protocols/44-binary-diffing-and-symbolic-execution/) | Bygg | Python |
+| 45 | [AI-assistert reverse engineering](../../phases/13-tools-and-protocols/45-ai-assisted-reverse-engineering/) | Bygg | Python |
 
 Leksjonene 06-18 og 28-31 utgjør det fokuserte [læringsløpet for Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json). Manifestets rekkefølge er 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 18, 17, 28, 29, 30, 31. Start med vertsprogrammets `learn-mcp`-kall ovenfor. Leksjon 23 er det eneste valgfrie avsluttende prosjektet og krever også leksjonene 19 og 20.
 
@@ -1147,7 +1164,7 @@ Andre kurs avsluttes med *«Gratulerer, du har lært X.»* Her avsluttes hver le
 <details>
 <summary>Installer leksjonsresultater</summary>
 
-**Leksjonenes arbeidsresultater.** Arkivet inneholder 400 ferdigheter og 100 prompter under `phases/**/outputs/`. Installer dem med `scripts/install_skills.py`. Arkivet må klones. Skriptet støtter filtrering etter emneknagger, forhåndsvisning uten skriving og mappestrukturer tilpasset hver agent:
+**Leksjonenes arbeidsresultater.** Arkivet inneholder 414 ferdigheter og 100 prompter under `phases/**/outputs/`. Installer dem med `scripts/install_skills.py`. Arkivet må klones. Skriptet støtter filtrering etter emneknagger, forhåndsvisning uten skriving og mappestrukturer tilpasset hver agent:
 
 ```bash
 python3 scripts/install_skills.py <target>                                 # every skill, default --layout skills (nested)
@@ -1267,7 +1284,7 @@ Avslutningskoden er forskjellig fra null hvis en regel feiler. Reglene (L001–L
 <p align="center"><sub><b>114,584</b> lesere &nbsp;·&nbsp; <b>181,995</b> sidevisninger de siste 30 dagene &nbsp;·&nbsp; oppdatert 2026-08-29</sub></p>
 <!-- STATS:END -->
 
-Gratis, MIT-lisensiert, 528 leksjoner. Takk til sponsorene og støttespillerne som gjør arbeidet mulig. [Se alle sponsorer og støttespillere](../../BACKERS.md).
+Gratis, MIT-lisensiert, 542 leksjoner. Takk til sponsorene og støttespillerne som gjør arbeidet mulig. [Se alle sponsorer og støttespillere](../../BACKERS.md).
 
 Vil du støtte arbeidet? Se [sponsormulighetene](../../SPONSORS.md), inkludert [maskinvarestøtte](../../SPONSORS.md#hardware-lab-partner), eller [bli sponsor på GitHub](https://github.com/sponsors/rohitg00).
 

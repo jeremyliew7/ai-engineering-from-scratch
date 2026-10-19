@@ -13,11 +13,11 @@ Implementasikan mekanisme internal model, pipeline penelusuran, dan runtime agen
 
 Gratis, sumber terbuka, berlisensi MIT. Belajar melalui situs web, bersama agen pemrograman, atau dengan menjalankan kode lokal.
 
-> 528 pelajaran. 20 tahap. Python, TypeScript, Rust, Julia.
+> 542 pelajaran. 20 tahap. Python, TypeScript, Rust, Julia.
 
 <p align="center">
   <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="Lisensi MIT"></a>
-  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-528-3553ff?style=flat-square&labelColor=fafaf5" alt="528 pelajaran"></a>
+  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-542-3553ff?style=flat-square&labelColor=fafaf5" alt="542 pelajaran"></a>
   <a href="#contents"><img src="https://img.shields.io/badge/phases-20-3553ff?style=flat-square&labelColor=fafaf5" alt="20 tahap"></a>
   <a href="https://github.com/rohitg00/ai-engineering-from-scratch/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/ai-engineering-from-scratch?style=flat-square&labelColor=fafaf5&color=3553ff" alt="Bintang GitHub"></a>
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="Situs web"></a>
@@ -207,6 +207,7 @@ Pemasang menampilkan host yang dapat dikonfigurasi dan menanyakan lokasi pemasan
 | [`course-guide`](../../skills/course-guide/SKILL.md) | Pengarah topik. "Di mana saya mempelajari attention?" atau "loss saya NaN" → pelajaran yang tepat, lengkap dengan tautan. |
 | [`learn-mcp`](../../skills/learn-mcp/SKILL.md) | Tutor khusus Model Context Protocol (MCP). Membuat `MCP-LEARNING.md`, mengikuti manifes 17 pelajaran, serta mencatat bukti komunikasi, keamanan, keandalan, dan kepatuhan. |
 | [`learn-agent-skills`](../../skills/learn-agent-skills/SKILL.md) | Tutor khusus Agent Skills. Membuat `AGENT-SKILLS-LEARNING.md`, mengajarkan pelajaran 22, 24, 25, 26, dan 27, serta mencatat bukti dari host nyata. |
+| [`learn-reverse-engineering`](../../skills/learn-reverse-engineering/SKILL.md) | Tutor khusus rekayasa balik. Membuat `REVERSE-ENGINEERING-LEARNING.md`, mengajarkan pelajaran 32 sampai 45 di Tahap 13 pada program yang Anda bangun sendiri, serta mencatat bukti lab. |
 | [`claude-certification`](../../skills/claude-certification/SKILL.md) | Tutor sertifikasi. Memilih CCAO-F, CCDV-F, CCAR-F, atau CCAR-P; mengajarkan setiap pelajaran; menjalankan praktikum; meninjau artefak; menyelenggarakan tes diagnostik dan simulasi; menyimpan kemajuan. |
 | [`mcpa-certification`](../../skills/mcpa-certification/SKILL.md) | Tutor MCPA. Mengikuti jalur `mcpa-f` berisi 34 pelajaran tentang protokol 2026-07-28; mengajarkan setiap pelajaran; menjalankan praktikum dan pemeriksa komunikasi; menyelenggarakan tes diagnostik dan tiga simulasi; menyimpan kemajuan. |
 | [`find-your-level`](../../skills/find-your-level/SKILL.md) | Kuis penempatan sepuluh pertanyaan. Memetakan pengetahuan Anda ke tahap awal dan menghasilkan jalur pribadi beserta perkiraan jam belajar. |
@@ -246,7 +247,7 @@ Perintah pada halaman pelajaran menggunakan jalur dari akar repositori, kecuali 
 
 ## Pilih jalur pembelajaran
 
-Anda tidak perlu menelusuri 528 pelajaran sebelum mulai. Pilih satu tujuan. Setiap tautan membuka kurikulum yang sama di GitHub atau situs web, dan kedua versi menggunakan kode pelajaran yang sama.
+Anda tidak perlu menelusuri 542 pelajaran sebelum mulai. Pilih satu tujuan. Setiap tautan membuka kurikulum yang sama di GitHub atau situs web, dan kedua versi menggunakan kode pelajaran yang sama.
 
 | Tujuan Anda | Belajar di GitHub | Belajar di situs web |
 |---|---|---|
@@ -262,12 +263,13 @@ Belum tahu harus mulai dari mana? Gunakan [tutor penempatan `start-learning`](..
 Bandingkan empat bidang inti dan enam jalur karier di [Jalur Pembelajaran Rekayasa AI](https://aiengineeringfromscratch.com/learning-paths.html).
 
 <details>
-<summary>Jalur khusus MCP dan Agent Skills</summary>
+<summary>Jalur khusus MCP, Agent Skills, dan rekayasa balik</summary>
 
 | Tujuan Anda | Belajar di GitHub | Belajar di situs web |
 |---|---|---|
 | Saya ingin membangun dengan Model Context Protocol (MCP) | [Rute Model Context Protocol (MCP)](../../phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Jalur Model Context Protocol (MCP)](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |
 | Saya ingin menulis dan merilis Agent Skills | [Rute khusus Agent Skills](../../phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Jalur Agent Skills](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |
+| Saya ingin membaca program terkompilasi | [Rute khusus rekayasa balik](../../phases/13-tools-and-protocols/README.md#reverse-engineering-path) | [Jalur rekayasa balik](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch&learningPath=reverse-engineering) |
 
 </details>
 
@@ -290,6 +292,7 @@ Bandingkan empat bidang inti dan enam jalur karier di [Jalur Pembelajaran Rekaya
 | Engineer senior, hanya ingin mempelajari rekayasa agen | Tahap 14: Rekayasa agen | ~60 jam |
 | Hanya ingin membangun sistem MCP untuk produksi | [Jalur Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json) | ~23 jam 15 menit |
 | Hanya ingin membangun Agent Skills untuk produksi | [Jalur Rekayasa Agent Skills](../../learning-paths/agent-skills.json) | ~9.5 jam |
+| Hanya ingin mempelajari rekayasa balik | [Jalur rekayasa balik](../../learning-paths/reverse-engineering.json) | ~32.5 jam |
 
 </details>
 
@@ -697,7 +700,7 @@ Dua puluh tahap. Klik tahap mana pun untuk membuka daftar pelajarannya.
 </details>
 
 <details id="phase-13">
-<summary><b>Tahap 13: Alat & protokol</b> &nbsp;<code>31 pelajaran</code>&nbsp; <em>Antarmuka antara AI dan dunia nyata.</em></summary>
+<summary><b>Tahap 13: Alat & protokol</b> &nbsp;<code>45 pelajaran</code>&nbsp; <em>Antarmuka antara AI dan dunia nyata.</em></summary>
 <br/>
 
 | # | Pelajaran | Jenis | Bahasa |
@@ -733,6 +736,20 @@ Dua puluh tahap. Klik tahap mana pun untuk membuka daftar pelajarannya.
 | 29 | [Keandalan, pembatalan, dan kendali aliran MCP](../../phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | Bangun | Python |
 | 30 | [Rantai pasok registri MCP: penerimaan, penyimpangan, dan rollback](../../phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | Bangun | Python |
 | 31 | [Rekayasa kepatuhan MCP: versi, bukti, dan operasi](../../phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | Bangun | Python |
+| 32 | [Anatomi program: membaca ELF dari nol](../../phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | Bangun | Python |
+| 33 | [Disassembly dan graf alur kendali](../../phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | Bangun | Python |
+| 34 | [Mengangkat kode mesin menjadi pseudocode](../../phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | Bangun | Python |
+| 35 | [Bukti, tingkat keyakinan, dan hal yang belum diketahui dalam analisis biner](../../phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | Bangun | Python |
+| 36 | [Bangun ulang dan buktikan kesetaraan](../../phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | Bangun | Python |
+| 37 | [Lanskap rekayasa balik](../../phases/13-tools-and-protocols/37-the-reverse-engineering-landscape/) | Bangun | Python |
+| 38 | [Konvensi pemanggilan dan stack frame](../../phases/13-tools-and-protocols/38-calling-conventions-and-stack-frames/) | Bangun | Python |
+| 39 | [Idiom kompiler dan optimasi](../../phases/13-tools-and-protocols/39-compiler-idioms-and-optimization/) | Bangun | Python |
+| 40 | [Linking, loading, dan biner yang dilucuti](../../phases/13-tools-and-protocols/40-linking-loading-and-stripped-binaries/) | Bangun | Python |
+| 41 | [Memulihkan data dan tipe](../../phases/13-tools-and-protocols/41-recovering-data-and-types/) | Bangun | Python |
+| 42 | [Analisis dinamis program Anda sendiri](../../phases/13-tools-and-protocols/42-dynamic-analysis-of-your-own-program/) | Bangun | Python |
+| 43 | [Bytecode dan format terkelola](../../phases/13-tools-and-protocols/43-bytecode-and-managed-formats/) | Bangun | Python |
+| 44 | [Diffing biner dan eksekusi simbolik](../../phases/13-tools-and-protocols/44-binary-diffing-and-symbolic-execution/) | Bangun | Python |
+| 45 | [Rekayasa balik berbantuan AI](../../phases/13-tools-and-protocols/45-ai-assisted-reverse-engineering/) | Bangun | Python |
 
 Pelajaran 06-18 dan 28-31 membentuk [jalur Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json) khusus. Urutan dalam manifesnya adalah 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 18, 17, 28, 29, 30, 31. Mulai dengan pemanggilan `learn-mcp` khusus host di atas. Pelajaran 23 adalah satu-satunya proyek akhir opsional dan juga memerlukan Pelajaran 19 dan 20.
 
@@ -1147,7 +1164,7 @@ Kurikulum lain berakhir dengan *"selamat, Anda telah mempelajari X."* Setiap pel
 <details>
 <summary>Pasang artefak pelajaran</summary>
 
-**Artefak pelajaran.** Repositori menyediakan 400 skill dan 100 prompt di bawah `phases/**/outputs/`; pasang melalui `scripts/install_skills.py`. Repositori harus diklon terlebih dahulu. Mendukung filter tag, simulasi tanpa perubahan, dan susunan khusus tiap agen:
+**Artefak pelajaran.** Repositori menyediakan 414 skill dan 100 prompt di bawah `phases/**/outputs/`; pasang melalui `scripts/install_skills.py`. Repositori harus diklon terlebih dahulu. Mendukung filter tag, simulasi tanpa perubahan, dan susunan khusus tiap agen:
 
 ```bash
 python3 scripts/install_skills.py <target>                                 # every skill, default --layout skills (nested)
@@ -1267,7 +1284,7 @@ Kode keluar bukan nol jika ada aturan yang gagal. Aturan (L001–L010) memvalida
 <p align="center"><sub><b>114,584</b> pembaca &nbsp;·&nbsp; <b>181,995</b> tayangan halaman dalam 30 hari terakhir &nbsp;·&nbsp; per 2026-08-29</sub></p>
 <!-- STATS:END -->
 
-Gratis, berlisensi MIT, 528 pelajaran. Terima kasih kepada sponsor dan pendukung yang memungkinkan pekerjaan ini. [Lihat seluruh sponsor dan pendukung](../../BACKERS.md).
+Gratis, berlisensi MIT, 542 pelajaran. Terima kasih kepada sponsor dan pendukung yang memungkinkan pekerjaan ini. [Lihat seluruh sponsor dan pendukung](../../BACKERS.md).
 
 Ingin mendukung pekerjaan ini? Lihat [pilihan sponsorship](../../SPONSORS.md), termasuk [sponsorship perangkat keras](../../SPONSORS.md#hardware-lab-partner), atau [dukung melalui GitHub](https://github.com/sponsors/rohitg00).
 

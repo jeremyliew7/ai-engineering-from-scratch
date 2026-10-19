@@ -13,11 +13,11 @@
 
 무료이며 오픈 소스이고 MIT 라이선스로 제공됩니다. 웹사이트에서, 코딩 에이전트와 함께, 또는 로컬 코드를 실행하며 배우세요.
 
-> 528 수업. 20단계. Python, TypeScript, Rust, Julia.
+> 542 수업. 20단계. Python, TypeScript, Rust, Julia.
 
 <p align="center">
   <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="MIT 라이선스"></a>
-  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-528-3553ff?style=flat-square&labelColor=fafaf5" alt="528 수업"></a>
+  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-542-3553ff?style=flat-square&labelColor=fafaf5" alt="542 수업"></a>
   <a href="#contents"><img src="https://img.shields.io/badge/phases-20-3553ff?style=flat-square&labelColor=fafaf5" alt="20단계"></a>
   <a href="https://github.com/rohitg00/ai-engineering-from-scratch/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/ai-engineering-from-scratch?style=flat-square&labelColor=fafaf5&color=3553ff" alt="GitHub 별"></a>
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="웹사이트"></a>
@@ -207,6 +207,7 @@ Agent Skills만 배우려면 호스트에 맞는 Agent Skills 호출 방법을 �
 | [`course-guide`](../../skills/course-guide/SKILL.md) | 주제를 찾아 줍니다. “어텐션은 어디서 배우나요?” 또는 “손실이 NaN입니다”와 같은 질문에 알맞은 레슨과 링크를 안내합니다. |
 | [`learn-mcp`](../../skills/learn-mcp/SKILL.md) | Model Context Protocol(MCP) 전용 튜터입니다. `MCP-LEARNING.md`를 만들고 17개 레슨 매니페스트를 따르며, 와이어 형식, 보안, 신뢰성, 적합성 근거를 기록합니다. |
 | [`learn-agent-skills`](../../skills/learn-agent-skills/SKILL.md) | Agent Skills 전용 튜터입니다. `AGENT-SKILLS-LEARNING.md`를 만들고 레슨 22, 24, 25, 26, 27을 가르치며 실제 호스트 근거를 기록합니다. |
+| [`learn-reverse-engineering`](../../skills/learn-reverse-engineering/SKILL.md) | 리버스 엔지니어링 전용 튜터입니다. `REVERSE-ENGINEERING-LEARNING.md`를 만들고 직접 빌드한 프로그램으로 13단계 레슨 32부터 45까지 가르치며 실습 근거를 기록합니다. |
 | [`claude-certification`](../../skills/claude-certification/SKILL.md) | 인증 튜터입니다. CCAO-F, CCDV-F, CCAR-F, CCAR-P 중 트랙을 선택하고 각 레슨을 가르치며 실습을 실행하고 산출물을 검토합니다. 진단과 모의시험을 진행하고 진도를 저장합니다. |
 | [`mcpa-certification`](../../skills/mcpa-certification/SKILL.md) | MCPA 튜터입니다. 2026-07-28 프로토콜의 34개 레슨 `mcpa-f` 경로를 따라가며 레슨과 실습, 와이어 검사기를 실행하고 진단 및 모의시험 3회를 진행한 뒤 진도를 저장합니다. |
 | [`find-your-level`](../../skills/find-your-level/SKILL.md) | 10문항 수준 진단 퀴즈로 지식을 시작 단계에 연결하고 예상 시간이 포함된 개인별 경로를 만듭니다. |
@@ -246,7 +247,7 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 
 ## 학습 경로 선택
 
-시작하기 전에 528개 레슨을 모두 훑어볼 필요는 없습니다. 목표 하나를 고르세요. 각 링크는 GitHub 또는 웹사이트에서 같은 교육과정을 엽니다. 두 버전 모두 같은 레슨 코드를 사용합니다.
+시작하기 전에 542개 레슨을 모두 훑어볼 필요는 없습니다. 목표 하나를 고르세요. 각 링크는 GitHub 또는 웹사이트에서 같은 교육과정을 엽니다. 두 버전 모두 같은 레슨 코드를 사용합니다.
 
 | 목표 | GitHub에서 학습 | 웹사이트에서 학습 |
 |---|---|---|
@@ -262,12 +263,13 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 4개 핵심 분야와 6개 진로를 [AI 엔지니어링 학습 경로](https://aiengineeringfromscratch.com/learning-paths.html)에서 비교해 보세요.
 
 <details>
-<summary>MCP와 Agent Skills 집중 경로</summary>
+<summary>MCP, Agent Skills, 리버스 엔지니어링 집중 경로</summary>
 
 | 목표 | GitHub에서 학습 | 웹사이트에서 학습 |
 |---|---|---|
 | Model Context Protocol(MCP)로 구축하고 싶습니다 | [Model Context Protocol(MCP) 학습 경로](../../phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [Model Context Protocol(MCP) 경로](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |
 | Agent Skills를 작성하고 배포하고 싶습니다 | [집중 Agent Skills 학습 경로](../../phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Agent Skills 경로](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |
+| 컴파일된 프로그램을 읽고 싶습니다 | [집중 리버스 엔지니어링 학습 경로](../../phases/13-tools-and-protocols/README.md#reverse-engineering-path) | [리버스 엔지니어링 경로](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch&learningPath=reverse-engineering) |
 
 </details>
 
@@ -290,6 +292,7 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 | 시니어 엔지니어이며 에이전트 엔지니어링만 배우고 싶습니다 | 14단계 — 에이전트 엔지니어링 | 약 60시간 |
 | 프로덕션 MCP 시스템만 구축하고 싶습니다 | [Model Context Protocol(MCP) 경로](../../learning-paths/model-context-protocol.json) | 약 23시간 15분 |
 | 프로덕션 Agent Skills만 만들고 싶습니다 | [Agent Skills 엔지니어링 경로](../../learning-paths/agent-skills.json) | 약 9.5시간 |
+| 리버스 엔지니어링만 배우고 싶습니다 | [리버스 엔지니어링 경로](../../learning-paths/reverse-engineering.json) | 약 32.5시간 |
 
 </details>
 
@@ -698,7 +701,7 @@ flowchart TB
 </details>
 
 <details id="phase-13">
-<summary><b>13단계 — 도구 및 프로토콜</b> &nbsp;<code>31 개 레슨</code>&nbsp; <em>AI와 현실 세계를 연결하는 인터페이스를 다룹니다.</em></summary>
+<summary><b>13단계 — 도구 및 프로토콜</b> &nbsp;<code>45 개 레슨</code>&nbsp; <em>AI와 현실 세계를 연결하는 인터페이스를 다룹니다.</em></summary>
 <br/>
 
 | # | 레슨 | 유형 | 언어 |
@@ -734,6 +737,20 @@ flowchart TB
 | 29 | [MCP 신뢰성, 취소, 흐름 제어](../../phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | 구현 | Python |
 | 30 | [MCP 레지스트리 공급망: 등록 심사, 드리프트, 롤백](../../phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | 구현 | Python |
 | 31 | [MCP 적합성 엔지니어링: 버전 관리, 증거, 운영](../../phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | 구현 | Python |
+| 32 | [프로그램 해부: ELF를 처음부터 읽기](../../phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | 구현 | Python |
+| 33 | [디스어셈블리와 제어 흐름 그래프](../../phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | 구현 | Python |
+| 34 | [기계어를 의사 코드로 리프팅하기](../../phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | 구현 | Python |
+| 35 | [바이너리 분석의 증거, 신뢰도, 미지 요소](../../phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | 구현 | Python |
+| 36 | [다시 빌드하고 동일함 증명하기](../../phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | 구현 | Python |
+| 37 | [리버스 엔지니어링의 전체 지형](../../phases/13-tools-and-protocols/37-the-reverse-engineering-landscape/) | 구현 | Python |
+| 38 | [호출 규약과 스택 프레임](../../phases/13-tools-and-protocols/38-calling-conventions-and-stack-frames/) | 구현 | Python |
+| 39 | [컴파일러 관용 패턴과 최적화](../../phases/13-tools-and-protocols/39-compiler-idioms-and-optimization/) | 구현 | Python |
+| 40 | [링킹, 로딩, 스트립된 바이너리](../../phases/13-tools-and-protocols/40-linking-loading-and-stripped-binaries/) | 구현 | Python |
+| 41 | [데이터와 타입 복원](../../phases/13-tools-and-protocols/41-recovering-data-and-types/) | 구현 | Python |
+| 42 | [직접 만든 프로그램의 동적 분석](../../phases/13-tools-and-protocols/42-dynamic-analysis-of-your-own-program/) | 구현 | Python |
+| 43 | [바이트코드와 관리형 형식](../../phases/13-tools-and-protocols/43-bytecode-and-managed-formats/) | 구현 | Python |
+| 44 | [바이너리 비교와 기호 실행](../../phases/13-tools-and-protocols/44-binary-diffing-and-symbolic-execution/) | 구현 | Python |
+| 45 | [AI 지원 리버스 엔지니어링](../../phases/13-tools-and-protocols/45-ai-assisted-reverse-engineering/) | 구현 | Python |
 
 레슨 06–18과 28–31은 [Model Context Protocol(MCP) 집중 학습 경로](../../learning-paths/model-context-protocol.json)를 이룹니다. 매니페스트 순서는 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 18, 17, 28, 29, 30, 31입니다. 위의 호스트별 호출 방법으로 `learn-mcp`를 시작하세요. 레슨 23은 유일한 선택형 캡스톤이며 레슨 19와 20도 필요합니다.
 
@@ -1148,7 +1165,7 @@ flowchart LR
 <details>
 <summary>수업 산출물 설치</summary>
 
-**레슨 산출물.** 저장소의 `phases/**/outputs/`에는 스킬 400개와 프롬프트 100개가 있습니다. `scripts/install_skills.py`로 설치할 수 있으며 저장소 복제가 필요합니다. 태그 필터, 드라이런, 에이전트별 레이아웃을 지원합니다.
+**레슨 산출물.** 저장소의 `phases/**/outputs/`에는 스킬 414개와 프롬프트 100개가 있습니다. `scripts/install_skills.py`로 설치할 수 있으며 저장소 복제가 필요합니다. 태그 필터, 드라이런, 에이전트별 레이아웃을 지원합니다.
 
 ```bash
 python3 scripts/install_skills.py <target>                                 # every skill, default --layout skills (nested)
@@ -1268,7 +1285,7 @@ python3 scripts/audit_lessons.py --json    # CI-friendly output
 <p align="center"><sub><b>114,584</b>명 독자 &nbsp;·&nbsp; <b>181,995</b> 지난 30일간 페이지 조회수 &nbsp;·&nbsp; 2026-08-29 기준</sub></p>
 <!-- STATS:END -->
 
-무료, MIT 라이선스, 528개 레슨. 이 작업을 가능하게 해 주는 후원사와 후원자 여러분께 감사드립니다. [모든 후원사와 후원자 보기](../../BACKERS.md).
+무료, MIT 라이선스, 542개 레슨. 이 작업을 가능하게 해 주는 후원사와 후원자 여러분께 감사드립니다. [모든 후원사와 후원자 보기](../../BACKERS.md).
 
 이 작업을 지원하려면 [후원 옵션](../../SPONSORS.md)과 [하드웨어 후원](../../SPONSORS.md#hardware-lab-partner)을 확인하거나 [GitHub에서 후원](https://github.com/sponsors/rohitg00)하세요.
 

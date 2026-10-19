@@ -43,8 +43,8 @@ Input monitoring is the main subject of this lesson, because it works before lab
 
 Write the joint distribution of inputs `x` and labels `y` in two ways:
 
-```text
-P(x, y) = P(x) * P(y | x) = P(y) * P(x | y)
+```math
+P(x, y) = P(x) \cdot P(y \mid x) = P(y) \cdot P(x \mid y)
 ```
 
 Each kind of drift changes a different factor:
@@ -87,8 +87,8 @@ Seasonality breaks naive windows. Monday traffic differs from Saturday traffic i
 
 PSI comes from credit scoring. Cut the reference values into bins, usually ten bins at the reference deciles, so that each bin holds 10 percent of the reference. Count the share of current values in each bin. Then add up one term per bin:
 
-```text
-PSI = sum over bins of (current_share - reference_share) * ln(current_share / reference_share)
+```math
+\text{PSI} = \sum_{\text{bins}} (\text{current\_share} - \text{reference\_share}) \cdot \ln\left(\frac{\text{current\_share}}{\text{reference\_share}}\right)
 ```
 
 A bin with a share of zero makes the log infinite, so clip every share to a small value such as 0.0001. PSI is symmetric. It equals the KL divergence from current to reference plus the KL divergence from reference to current.
@@ -99,8 +99,8 @@ Practitioners read PSI with fixed bands: below 0.1 is stable, 0.1 to 0.25 is a m
 
 The two-sample KS statistic `D` is the largest vertical gap between the two empirical cumulative distribution functions:
 
-```text
-D = max over x of | F_reference(x) - F_current(x) |
+```math
+D = \max_x \left\lvert F_{\text{reference}}(x) - F_{\text{current}}(x) \right\rvert
 ```
 
 `D` is 0 for identical samples and 1 for samples that do not overlap. It needs no bins. The p-value comes from the Kolmogorov distribution with the effective sample size `n * m / (n + m)`.
@@ -111,9 +111,11 @@ With large samples, the p-value goes to zero for a gap that nobody cares about. 
 
 For a categorical feature, such as the payment channel, build a table with two rows (reference, current) and one column per category. The expected count in each cell comes from the row and column totals:
 
-```text
-expected[r][c] = row_total[r] * column_total[c] / grand_total
-chi2 = sum over cells of (observed - expected)^2 / expected
+```math
+\begin{aligned}
+\text{expected}[r][c] &= \text{row\_total}[r] \cdot \text{column\_total}[c] / \text{grand\_total} \\
+\text{chi2} &= \sum_{\text{cells}} (\text{observed} - \text{expected})^2 / \text{expected}
+\end{aligned}
 ```
 
 The test has `k - 1` degrees of freedom for `k` categories. A category that appears only in the current window adds a large term, so the test reacts to new values. Cramér's V is the effect size. For a table with two rows, it equals the square root of `chi2 / grand_total`.

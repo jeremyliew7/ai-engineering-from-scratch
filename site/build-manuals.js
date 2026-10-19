@@ -17,7 +17,7 @@ const ISSUES_URL = 'https://github.com/rohitg00/ai-engineering-from-scratch/issu
 const AUTHOR = 'Rohit Ghumare';
 const LICENSE = 'MIT license';
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const KINDS = ['sequence', 'structure', 'flow', 'comparison', 'timeline', 'tree', 'state', 'decision', 'layers'];
+const KINDS = ['sequence', 'structure', 'flow', 'comparison', 'timeline', 'tree', 'state', 'decision', 'layers', 'chart'];
 const CONTINUATION = /^\s{2,}\S/;
 const NESTED_ITEM = /^\s+([-*]|\d+\.)\s+/;
 const LISTING_LANGS = new Set(['json', 'jsonl', 'http', 'sse']);
@@ -603,9 +603,19 @@ function manualArticle(manual, mode) {
   return `<article class="manual">${coverHtml(manual, mode)}${mode === 'print' ? tocHtml(manual, 'print') : ''}${body.join('\n')}\n${colophonHtml(manual)}</article>`;
 }
 
-const SITE_HEADER = '<header class="site-header"><div class="header-inner"><a href="index.html" class="logo"><span class="logo-icon" aria-hidden="true"></span> AI / FROM SCRATCH</a><nav class="header-nav"><a href="index.html#contents">Contents</a><a href="catalog.html">Catalog</a><a href="projects.html">Projects</a><a href="manuals.html">Manuals</a><a href="prereqs.html">Roadmap</a><a href="glossary.html">Glossary</a><a href="about.html">About</a><a href="https://github.com/rohitg00/ai-engineering-from-scratch" target="_blank" rel="noopener" class="header-github"><span>GitHub</span><span class="star-count" data-loading="true">…</span></a></nav><button class="search-toggle" type="button" data-cmd-palette aria-label="Search"><span aria-hidden="true">⌕</span></button><button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" type="button"><span class="theme-icon" id="themeIcon">N</span></button></div></header>';
+const SITE_HEADER = '<header class="site-header"><div class="header-inner"><a href="index.html" class="logo"><span class="logo-icon" aria-hidden="true"></span> AI / FROM SCRATCH</a><nav class="header-nav"><a href="index.html#contents">Contents</a><a href="catalog.html">Catalog</a><a href="projects.html">Projects</a><a href="manuals.html">Manuals</a><a href="roadmap.html">Roadmap</a><a href="glossary.html">Glossary</a><a href="about.html">About</a><a href="https://github.com/rohitg00/ai-engineering-from-scratch" target="_blank" rel="noopener" class="header-github"><span>GitHub</span><span class="star-count" data-loading="true">…</span></a></nav><button class="search-toggle" type="button" data-cmd-palette aria-label="Search"><span aria-hidden="true">⌕</span></button><button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" type="button"><span class="theme-icon" id="themeIcon">N</span></button></div></header>';
 
-function pageShell({ title, ogTitle, description, canonical, noindex, card, main }) {
+function highlightsScripts(highlights) {
+  if (!highlights) return '';
+  const ctx = JSON.stringify({ path: `manuals/${highlights.id}`, lang: 'en', title: highlights.title }).replace(/</g, '\\u003c');
+  return `<script src="highlights-anchor.js"></script>
+<script src="highlights-store.js"></script>
+<script src="highlights.js"></script>
+<script>(function () { function mount() { var article = document.querySelector('article.manual'); if (article && window.AIFSHighlights) window.AIFSHighlights.mount(article, ${ctx}); } if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount); else mount(); }());</script>
+`;
+}
+
+function pageShell({ title, ogTitle, description, canonical, noindex, card, main, highlights }) {
   const css = shared('tokens.css') + shared('manual.css') + shared('web.css');
   return `<!DOCTYPE html>
 <html lang="en" data-theme="light">
@@ -625,7 +635,7 @@ ${noindex ? '<meta name="robots" content="noindex">\n' : ''}<link rel="canonical
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="${FONT_LINK}" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<style>${css}</style>
+${highlights ? '<link rel="stylesheet" href="highlights.css">\n' : ''}<style>${css}</style>
 <script>${shared('theme.js')}</script>
 </head>
 <body>
@@ -639,7 +649,7 @@ ${main}
 <script src="cmdpalette.js" defer></script>
 <script>${shared('dither.js')}</script>
 <script>${shared('motion.js')}</script>
-</body>
+${highlightsScripts(highlights)}</body>
 </html>
 `;
 }
@@ -653,6 +663,7 @@ function webPage(manual) {
     noindex: manual.status === 'draft',
     card: manual.status === 'ready' ? `manual/${manual.id}` : 'page/manuals',
     main: `<main id="main" class="m-web"><div class="m-layout"><aside class="m-sidebar">${tocHtml(manual, 'web')}</aside>${manualArticle(manual, 'web')}</div></main>`,
+    highlights: { id: manual.id, title: manual.title },
   });
 }
 

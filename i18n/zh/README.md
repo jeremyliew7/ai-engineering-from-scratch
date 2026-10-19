@@ -13,11 +13,11 @@
 
 免费、开源、MIT 许可。你可以在网站学习、使用编程代理辅助学习，或在本地运行代码。
 
-> 528 节课. 20 个阶段. Python, TypeScript, Rust, Julia.
+> 542 节课. 20 个阶段. Python, TypeScript, Rust, Julia.
 
 <p align="center">
   <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="MIT 许可证"></a>
-  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-528-3553ff?style=flat-square&labelColor=fafaf5" alt="528 节课"></a>
+  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-542-3553ff?style=flat-square&labelColor=fafaf5" alt="542 节课"></a>
   <a href="#contents"><img src="https://img.shields.io/badge/phases-20-3553ff?style=flat-square&labelColor=fafaf5" alt="20 个阶段"></a>
   <a href="https://github.com/rohitg00/ai-engineering-from-scratch/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/ai-engineering-from-scratch?style=flat-square&labelColor=fafaf5&color=3553ff" alt="GitHub 星标"></a>
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="网站"></a>
@@ -207,6 +207,7 @@ python3 --version
 | [`course-guide`](../../skills/course-guide/SKILL.md) | 主题导航：根据“在哪里学注意力机制”或“损失值为什么是 NaN”等问题，定位到具体课程。 |
 | [`learn-mcp`](../../skills/learn-mcp/SKILL.md) | MCP 专项导师：创建 `MCP-LEARNING.md`，按 17 节课的路线学习，并记录协议、安全、可靠性和一致性证据。 |
 | [`learn-agent-skills`](../../skills/learn-agent-skills/SKILL.md) | Agent Skills 专项导师：创建 `AGENT-SKILLS-LEARNING.md`，学习第 22、24、25、26、27 节课，并记录真实宿主中的运行证据。 |
+| [`learn-reverse-engineering`](../../skills/learn-reverse-engineering/SKILL.md) | 逆向工程专项导师：创建 `REVERSE-ENGINEERING-LEARNING.md`，在你自己构建的程序上学习阶段 13 的第 32 至 45 节课，并记录实验证据。 |
 | [`claude-certification`](../../skills/claude-certification/SKILL.md) | Claude 认证导师：选择四条认证路线之一，逐课教学、运行实验、评阅成果，并组织诊断与模拟考试。 |
 | [`mcpa-certification`](../../skills/mcpa-certification/SKILL.md) | MCPA 导师：按 2026-07-28 协议学习 34 节课的 `mcpa-f` 路线，运行实验与协议检查，组织诊断和三套模拟考试。 |
 | [`find-your-level`](../../skills/find-your-level/SKILL.md) | 十道题的水平测评：根据已有知识推荐起始阶段，并生成带时长估计的个性化路径。 |
@@ -246,7 +247,7 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 
 ## 选择学习路径
 
-开始前不必先浏览 528 节课。选一个目标即可。每个链接都会打开同一套课程的 GitHub 或网站版本，两边使用相同的课程代码。
+开始前不必先浏览 542 节课。选一个目标即可。每个链接都会打开同一套课程的 GitHub 或网站版本，两边使用相同的课程代码。
 
 | 你的目标 | 在 GitHub 学习 | 在网站学习 |
 |---|---|---|
@@ -262,12 +263,13 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 在 [AI 工程学习路径](https://aiengineeringfromscratch.com/learning-paths.html)中，对比四大核心领域和六条职业路线。
 
 <details>
-<summary>MCP 与 Agent Skills 专项路径</summary>
+<summary>MCP、Agent Skills 与逆向工程专项路径</summary>
 
 | 你的目标 | 在 GitHub 学习 | 在网站学习 |
 |---|---|---|
 | 我想用模型上下文协议（MCP）构建系统 | [MCP 学习路线](../../phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [MCP 路径](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |
 | 我想编写并发布 Agent Skills | [Agent Skills 专项路线](../../phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [Agent Skills 路径](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |
+| 我想读懂编译后的程序 | [逆向工程专项路线](../../phases/13-tools-and-protocols/README.md#reverse-engineering-path) | [逆向工程路径](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch&learningPath=reverse-engineering) |
 
 </details>
 
@@ -290,6 +292,7 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 | 资深工程师，只想学智能体工程 | 阶段 14：智能体工程 | 约 60 小时 |
 | 只想构建生产级 MCP 系统 | [MCP 学习路径](../../learning-paths/model-context-protocol.json) | 约 23 小时 15 分钟 |
 | 只想构建生产级 Agent Skills | [Agent Skills 工程路径](../../learning-paths/agent-skills.json) | 约 9.5 小时 |
+| 只想学习逆向工程 | [逆向工程路径](../../learning-paths/reverse-engineering.json) | 约 32.5 小时 |
 
 </details>
 
@@ -697,7 +700,7 @@ flowchart TB
 </details>
 
 <details id="phase-13">
-<summary><b>阶段 13 — 工具与协议</b> &nbsp;<code>31 节课</code>&nbsp; <em>理解 AI 系统连接现实世界的接口。</em></summary>
+<summary><b>阶段 13 — 工具与协议</b> &nbsp;<code>45 节课</code>&nbsp; <em>理解 AI 系统连接现实世界的接口。</em></summary>
 <br/>
 
 | # | 课程 | 类型 | 语言 |
@@ -733,6 +736,20 @@ flowchart TB
 | 29 | [MCP 可靠性：取消与流量控制](../../phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | 构建 | Python |
 | 30 | [MCP 注册表供应链：准入、漂移与回滚](../../phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | 构建 | Python |
 | 31 | [MCP 一致性工程：版本、证据与运维](../../phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | 构建 | Python |
+| 32 | [程序解剖：从零读懂 ELF](../../phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | 构建 | Python |
+| 33 | [反汇编与控制流图](../../phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | 构建 | Python |
+| 34 | [把机器码提升为伪代码](../../phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | 构建 | Python |
+| 35 | [二进制分析中的证据、置信度与未知项](../../phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | 构建 | Python |
+| 36 | [重建程序并证明等价](../../phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | 构建 | Python |
+| 37 | [逆向工程全景](../../phases/13-tools-and-protocols/37-the-reverse-engineering-landscape/) | 构建 | Python |
+| 38 | [调用约定与栈帧](../../phases/13-tools-and-protocols/38-calling-conventions-and-stack-frames/) | 构建 | Python |
+| 39 | [编译器惯用法与优化](../../phases/13-tools-and-protocols/39-compiler-idioms-and-optimization/) | 构建 | Python |
+| 40 | [链接、加载与去符号二进制](../../phases/13-tools-and-protocols/40-linking-loading-and-stripped-binaries/) | 构建 | Python |
+| 41 | [恢复数据与类型](../../phases/13-tools-and-protocols/41-recovering-data-and-types/) | 构建 | Python |
+| 42 | [动态分析你自己的程序](../../phases/13-tools-and-protocols/42-dynamic-analysis-of-your-own-program/) | 构建 | Python |
+| 43 | [字节码与托管格式](../../phases/13-tools-and-protocols/43-bytecode-and-managed-formats/) | 构建 | Python |
+| 44 | [二进制差异比较与符号执行](../../phases/13-tools-and-protocols/44-binary-diffing-and-symbolic-execution/) | 构建 | Python |
+| 45 | [AI 辅助逆向工程](../../phases/13-tools-and-protocols/45-ai-assisted-reverse-engineering/) | 构建 | Python |
 
 第 06–18、28–31 课构成 [模型上下文协议（MCP）专项学习路径](../../learning-paths/model-context-protocol.json)。路线清单规定的顺序为 06、07、08、09、10、11、12、13、14、15、16、18、17、28、29、30、31；按上文对应宿主的方式调用 `learn-mcp` 开始学习。第 23 课是唯一的可选综合项目，还需要先完成第 19、20 课。
 
@@ -1147,7 +1164,7 @@ flowchart LR
 <details>
 <summary>安装课程成果</summary>
 
-**课程成果文件**位于 `phases/**/outputs/`，包含 400 个技能和 100 个提示词。克隆仓库后，可以用 `scripts/install_skills.py` 安装；脚本支持按阶段或标签筛选、预演，以及针对不同宿主的目录布局：
+**课程成果文件**位于 `phases/**/outputs/`，包含 414 个技能和 100 个提示词。克隆仓库后，可以用 `scripts/install_skills.py` 安装；脚本支持按阶段或标签筛选、预演，以及针对不同宿主的目录布局：
 
 ```bash
 python3 scripts/install_skills.py <target>                                 # every skill, default --layout skills (nested)
@@ -1267,7 +1284,7 @@ python3 scripts/audit_lessons.py --json    # CI-friendly output
 <p align="center"><sub><b>114,584</b> 位读者 &nbsp;·&nbsp; 近 30 天 <b>181,995</b> 次页面浏览 &nbsp;·&nbsp; 数据截至 2026-08-29</sub></p>
 <!-- STATS:END -->
 
-课程免费，采用 MIT 许可证，共有 528 节课。感谢所有让它持续开放的赞助方和支持者。[查看赞助方与支持者](../../BACKERS.md)。
+课程免费，采用 MIT 许可证，共有 542 节课。感谢所有让它持续开放的赞助方和支持者。[查看赞助方与支持者](../../BACKERS.md)。
 
 想支持项目？可了解[赞助方式](../../SPONSORS.md)，包括[硬件赞助](../../SPONSORS.md#hardware-lab-partner)，或[通过 GitHub 赞助](https://github.com/sponsors/rohitg00)。
 

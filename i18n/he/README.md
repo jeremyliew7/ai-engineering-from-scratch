@@ -13,11 +13,11 @@
 
 בחינם, בקוד פתוח וברישיון MIT. למדו באתר, עם סוכן תכנות או באמצעות הרצת קוד מקומי.
 
-> <span dir="rtl">528 שיעורים. 20 שלבים.</span> <span dir="ltr">Python, TypeScript, Rust, Julia.</span>
+> <span dir="rtl">542 שיעורים. 20 שלבים.</span> <span dir="ltr">Python, TypeScript, Rust, Julia.</span>
 
 <p align="center">
   <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-MIT-1a1a1a?style=flat-square&labelColor=fafaf5" alt="רישיון MIT"></a>
-  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-528-3553ff?style=flat-square&labelColor=fafaf5" alt="528 שיעורים"></a>
+  <a href="../../ROADMAP.md"><img src="https://img.shields.io/badge/lessons-542-3553ff?style=flat-square&labelColor=fafaf5" alt="542 שיעורים"></a>
   <a href="#contents"><img src="https://img.shields.io/badge/phases-20-3553ff?style=flat-square&labelColor=fafaf5" alt="20 שלבים"></a>
   <a href="https://github.com/rohitg00/ai-engineering-from-scratch/stargazers"><img src="https://img.shields.io/github/stars/rohitg00/ai-engineering-from-scratch?style=flat-square&labelColor=fafaf5&color=3553ff" alt="כוכבים ב-GitHub"></a>
   <a href="https://aiengineeringfromscratch.com"><img src="https://img.shields.io/badge/web-aiengineeringfromscratch.com-3553ff?style=flat-square&labelColor=fafaf5" alt="אתר האינטרנט"></a>
@@ -207,6 +207,7 @@ python3 --version
 | [`course-guide`](../../skills/course-guide/SKILL.md) | מנתב נושאים. ״איפה לומדים על קשב?״ או ״ערך ההפסד שלי הוא NaN״ → השיעורים המדויקים, עם קישורים. |
 | [`learn-mcp`](../../skills/learn-mcp/SKILL.md) | מורה ממוקד ל-Model Context Protocol (MCP). יוצר `MCP-LEARNING.md`, עוקב אחר מניפסט בן 17 שיעורים ושומר ראיות לתקשורת, לאבטחה, לאמינות ולתאימות. |
 | [`learn-agent-skills`](../../skills/learn-agent-skills/SKILL.md) | מורה ממוקד ל-Agent Skills. יוצר `AGENT-SKILLS-LEARNING.md`, מלמד את שיעורים 22, 24, 25, 26 ו-27 ושומר ראיות מיישומים מארחים אמיתיים. |
+| [`learn-reverse-engineering`](../../skills/learn-reverse-engineering/SKILL.md) | מורה ממוקד להנדסה לאחור. יוצר `REVERSE-ENGINEERING-LEARNING.md`, מלמד את שיעורים 32 עד 45 בשלב 13 על תוכניות שאתם בונים בעצמכם ושומר ראיות מהמעבדה. |
 | [`claude-certification`](../../skills/claude-certification/SKILL.md) | מורה להסמכה. בוחר CCAO-F, CCDV-F, CCAR-F או CCAR-P, מלמד כל שיעור, מריץ מעבדות, סוקר תוצרים, מעביר מבחני אבחון ותרגול ושומר התקדמות. |
 | [`mcpa-certification`](../../skills/mcpa-certification/SKILL.md) | מורה ל-MCPA. עוקב אחר מסלול `mcpa-f` בן 34 שיעורים על הפרוטוקול 2026-07-28, מלמד כל שיעור, מריץ מעבדות ובדיקת הודעות, מעביר מבחן אבחון ושלוש בחינות תרגול ושומר התקדמות. |
 | [`find-your-level`](../../skills/find-your-level/SKILL.md) | מבחן מיקום בן עשר שאלות. ממפה את הידע שלכם לשלב התחלה ומפיק מסלול אישי עם הערכות שעות. |
@@ -246,7 +247,7 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 
 ## בחרו מסלול לימוד
 
-אין צורך לעבור על 528 שיעורים לפני שמתחילים. בחרו מטרה אחת. כל קישור פותח את אותה תוכנית לימודים ב-GitHub או באתר, ובשתי הגרסאות משתמשים באותו קוד של השיעורים.
+אין צורך לעבור על 542 שיעורים לפני שמתחילים. בחרו מטרה אחת. כל קישור פותח את אותה תוכנית לימודים ב-GitHub או באתר, ובשתי הגרסאות משתמשים באותו קוד של השיעורים.
 
 | המטרה שלכם | למדו ב-GitHub | למדו באתר |
 |---|---|---|
@@ -262,12 +263,13 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 השוו בין ארבעה תחומי ליבה ושישה מסלולי קריירה ב[מסלולי הלימוד להנדסת AI](https://aiengineeringfromscratch.com/learning-paths.html).
 
 <details>
-<summary>מסלולים ממוקדים ל-MCP ול-Agent Skills</summary>
+<summary>מסלולים ממוקדים ל-MCP, ל-Agent Skills ולהנדסה לאחור</summary>
 
 | המטרה שלכם | למדו ב-GitHub | למדו באתר |
 |---|---|---|
 | אני רוצה לבנות עם Model Context Protocol (MCP) | [מסלול Model Context Protocol (MCP)](../../phases/13-tools-and-protocols/README.md#model-context-protocol-mcp-path) | [מסלול לימוד Model Context Protocol (MCP)](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/06-mcp-fundamentals&learningPath=model-context-protocol) |
 | אני רוצה לכתוב ולפרסם Agent Skills | [מסלול ממוקד ל-Agent Skills](../../phases/13-tools-and-protocols/README.md#agent-skills-fast-path) | [מסלול לימוד Agent Skills](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/22-skills-and-agent-sdks&learningPath=agent-skills) |
+| אני רוצה לקרוא תוכניות מהודרות | [מסלול הנדסה לאחור](../../phases/13-tools-and-protocols/README.md#reverse-engineering-path) | [מסלול לימוד הנדסה לאחור](https://aiengineeringfromscratch.com/lesson?path=phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch&learningPath=reverse-engineering) |
 
 </details>
 
@@ -290,6 +292,7 @@ python3 phases/01-math-foundations/01-linear-algebra-intuition/code/vectors.py
 | מהנדסים מנוסים שרוצים רק הנדסת סוכנים | שלב 14: הנדסת סוכנים | ~60 שעות |
 | רוצים לבנות רק מערכות MCP לייצור | [מסלול Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json) | ~23 שעות 15 דקות |
 | רוצים לבנות רק Agent Skills לייצור | [מסלול הנדסת Agent Skills](../../learning-paths/agent-skills.json) | ~9.5 שעות |
+| רוצים ללמוד רק הנדסה לאחור | [מסלול הנדסה לאחור](../../learning-paths/reverse-engineering.json) | ~32.5 שעות |
 
 </details>
 
@@ -697,7 +700,7 @@ flowchart TB
 </details>
 
 <details id="phase-13">
-<summary><b>שלב 13: כלים ופרוטוקולים</b> &nbsp;<code>31 שיעורים</code>&nbsp; <em>הממשקים שבין AI לעולם האמיתי.</em></summary>
+<summary><b>שלב 13: כלים ופרוטוקולים</b> &nbsp;<code>45 שיעורים</code>&nbsp; <em>הממשקים שבין AI לעולם האמיתי.</em></summary>
 <br/>
 
 | # | שיעור | סוג | שפה |
@@ -733,6 +736,20 @@ flowchart TB
 | 29 | [אמינות MCP, ביטול ובקרת זרימה](../../phases/13-tools-and-protocols/29-mcp-reliability-cancellation-and-flow-control/) | בנו | Python |
 | 30 | [שרשרת האספקה של רישום MCP: קבלה, סטיות וחזרה לאחור](../../phases/13-tools-and-protocols/30-mcp-registry-supply-chain-and-drift/) | בנו | Python |
 | 31 | [הנדסת תאימות MCP: גרסאות, ראיות ותפעול](../../phases/13-tools-and-protocols/31-mcp-conformance-versioning-and-operations/) | בנו | Python |
+| 32 | [אנטומיה של תוכנית: קריאת ELF מאפס](../../phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch/) | בנו | Python |
+| 33 | [פירוק לאסמבלי וגרפי זרימת בקרה](../../phases/13-tools-and-protocols/33-disassembly-and-control-flow/) | בנו | Python |
+| 34 | [העלאת קוד מכונה לפסאודו-קוד](../../phases/13-tools-and-protocols/34-lifting-to-pseudocode/) | בנו | Python |
+| 35 | [ראיות, רמת ביטחון ונעלמים בניתוח בינארי](../../phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns/) | בנו | Python |
+| 36 | [בנייה מחדש והוכחת שוויון](../../phases/13-tools-and-protocols/36-rebuild-and-prove-equal/) | בנו | Python |
+| 37 | [מפת התחום של הנדסה לאחור](../../phases/13-tools-and-protocols/37-the-reverse-engineering-landscape/) | בנו | Python |
+| 38 | [מוסכמות קריאה ומסגרות מחסנית](../../phases/13-tools-and-protocols/38-calling-conventions-and-stack-frames/) | בנו | Python |
+| 39 | [דפוסים אופייניים של מהדר ואופטימיזציה](../../phases/13-tools-and-protocols/39-compiler-idioms-and-optimization/) | בנו | Python |
+| 40 | [קישור, טעינה וקבצים בינאריים מופשטים](../../phases/13-tools-and-protocols/40-linking-loading-and-stripped-binaries/) | בנו | Python |
+| 41 | [שחזור נתונים וטיפוסים](../../phases/13-tools-and-protocols/41-recovering-data-and-types/) | בנו | Python |
+| 42 | [ניתוח דינמי של התוכנית שלכם](../../phases/13-tools-and-protocols/42-dynamic-analysis-of-your-own-program/) | בנו | Python |
+| 43 | [Bytecode ופורמטים מנוהלים](../../phases/13-tools-and-protocols/43-bytecode-and-managed-formats/) | בנו | Python |
+| 44 | [השוואת קבצים בינאריים והרצה סימבולית](../../phases/13-tools-and-protocols/44-binary-diffing-and-symbolic-execution/) | בנו | Python |
+| 45 | [הנדסה לאחור בסיוע AI](../../phases/13-tools-and-protocols/45-ai-assisted-reverse-engineering/) | בנו | Python |
 
 השיעורים 06-18 ו-28-31 מרכיבים את [מסלול Model Context Protocol (MCP)](../../learning-paths/model-context-protocol.json) הממוקד. סדר המניפסט הוא 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 18, 17, 28, 29, 30, 31. התחילו באמצעות הפעלת `learn-mcp` המתאימה ליישום המארח כמתואר למעלה. שיעור 23 הוא הפרויקט המסכם האופציונלי היחיד במסלול, והוא דורש גם את שיעורים 19 ו-20.
 
@@ -1147,7 +1164,7 @@ flowchart LR
 <details>
 <summary>התקנת תוצרי שיעורים</summary>
 
-**תוצרי השיעורים.** המאגר כולל 400 מיומנויות ו-100 הנחיות תחת `phases/**/outputs/`; התקינו אותן באמצעות `scripts/install_skills.py`. נדרש שכפול של המאגר. הסקריפט תומך בסינון לפי תגיות, בהרצות תצוגה מקדימה ובמבנה תיקיות המותאם לכל סוכן:
+**תוצרי השיעורים.** המאגר כולל 414 מיומנויות ו-100 הנחיות תחת `phases/**/outputs/`; התקינו אותן באמצעות `scripts/install_skills.py`. נדרש שכפול של המאגר. הסקריפט תומך בסינון לפי תגיות, בהרצות תצוגה מקדימה ובמבנה תיקיות המותאם לכל סוכן:
 
 ```bash
 python3 scripts/install_skills.py <target>                                 # every skill, default --layout skills (nested)
@@ -1267,7 +1284,7 @@ python3 scripts/audit_lessons.py --json    # CI-friendly output
 <p align="center"><sub><b>114,584</b> קוראים &nbsp;·&nbsp; <b>181,995</b> צפיות בדפים ב-30 הימים האחרונים &nbsp;·&nbsp; נכון ל-2026-08-29</sub></p>
 <!-- STATS:END -->
 
-בחינם, ברישיון MIT, 528 שיעורים. תודה לנותני החסות ולתומכים שמאפשרים את העבודה. [הצגת כל נותני החסות והתומכים](../../BACKERS.md).
+בחינם, ברישיון MIT, 542 שיעורים. תודה לנותני החסות ולתומכים שמאפשרים את העבודה. [הצגת כל נותני החסות והתומכים](../../BACKERS.md).
 
 רוצים לתמוך בעבודה? עיינו ב[אפשרויות החסות](../../SPONSORS.md), כולל [חסויות חומרה](../../SPONSORS.md#hardware-lab-partner), או [תמכו דרך GitHub](https://github.com/sponsors/rohitg00).
 

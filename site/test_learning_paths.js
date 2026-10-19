@@ -274,7 +274,7 @@ test('career chooser hash navigation reveals and focuses a guide', () => {
 
 test('learning paths shares the site theme preference', () => {
   assert.match(learningPaths, /<script src="learning-paths\.js\?v=20260830a"><\/script>/);
-  assert.match(learningPaths, /<link rel="stylesheet" href="learning-paths\.css\?v=20260829d">/);
+  assert.match(learningPaths, /<link rel="stylesheet" href="learning-paths\.css\?v=20261015a">/);
   assert.match(learningPathsJs, /localStorage\.getItem\('theme'\)/);
   assert.match(learningPathsJs, /localStorage\.setItem\('theme', theme\)/);
   assert.match(learningPathsJs, /prefers-color-scheme: dark/);
