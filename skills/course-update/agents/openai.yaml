@@ -1,0 +1,3 @@
+interface:
+  display_name: "Course Update"
+  short_description: "同步课程上游并更新关联本地产物、技能清单和变更说明"
