@@ -1,8 +1,10 @@
 {
   "translated_on": "2026-10-11",
+  "updated_on": "2026-10-19",
   "method": "direct-new-translation-from-current-source",
-  "scope": "00/01-00/11",
+  "scope": "00/01-00/12",
   "source_commit": "68bf421db044a906121a3ef0a2eb8ec689d45045",
+  "source_commit_policy": "Top-level source_commit records the initial 00/01-00/11 batch; per-lesson source_commit is authoritative.",
   "verification": "Code blocks preserved exactly after text newline decoding; heading counts preserved; translator notes separate. Semantic quality assessed by translator, not automatically proven.",
   "lessons": [
     {
@@ -136,6 +138,22 @@
       "code_blocks": 19,
       "section_count": 19,
       "status": "retranslated-structure-verified"
+    },
+    {
+      "lesson": "00/12",
+      "title": "调试与性能分析",
+      "translated_on": "2026-10-15",
+      "notes_updated_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "source": "phases/00-setup-and-tooling/12-debugging-and-profiling/docs/en.md",
+      "source_commit": "498a165c412f36307de417cdbaaf17398ba54f19",
+      "source_last_commit": "62cdefbe4c5cb559dcfe255399e97835d91761af",
+      "source_sha256": "a1ab58f6c638ae6e300e33acfed43ee5eb62d0808cf9bbdae172666228f875f8",
+      "translation": "00-12-debugging-and-profiling-zh.md",
+      "translation_sha256": "fb063185acc478bbaecb0b9f41db6cec01bd9585878e4e20b619db18e68f466e",
+      "code_blocks": 22,
+      "section_count": 23,
+      "status": "translated-structure-verified"
     }
   ]
 }
