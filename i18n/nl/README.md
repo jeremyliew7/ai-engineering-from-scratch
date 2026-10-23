@@ -36,7 +36,6 @@ Gratis, open source, met MIT-licentie. Leer op de webpagina, met een programmeer
 
 <p align="center">
   <a href="https://serpapi.com/ai-engineering-from-scratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/serpapi-banner-compact.png" width="48%"><img src="../../assets/sponsors/serpapi-banner-compact.png" alt="SerpApi. Webzoek-API voor je AI-apps. Beschikbaar in Markdown en JSON voor elke integratie." width="440"></picture></a>
-  <a href="https://nitrostack.ai/referral/aiengineeringfromscratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/nitrostack-banner-equal.png" width="48%"><img src="../../assets/sponsors/nitrostack-banner-equal.png" alt="NitroStack. Bouw je MCP-app en rol die in 10 minuten uit. Breng je product naar de marktplaatsen van ChatGPT en Claude met gratis clouduitrol." width="440"></picture></a>
 </p>
 
 <p align="center">

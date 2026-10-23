@@ -36,7 +36,6 @@ Gratis, sumber terbuka, berlisensi MIT. Belajar melalui situs web, bersama agen 
 
 <p align="center">
   <a href="https://serpapi.com/ai-engineering-from-scratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/serpapi-banner-compact.png" width="48%"><img src="../../assets/sponsors/serpapi-banner-compact.png" alt="SerpApi. API pencarian web untuk aplikasi AI Anda. Tersedia dalam Markdown dan JSON untuk berbagai integrasi." width="440"></picture></a>
-  <a href="https://nitrostack.ai/referral/aiengineeringfromscratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/nitrostack-banner-equal.png" width="48%"><img src="../../assets/sponsors/nitrostack-banner-equal.png" alt="NitroStack. Bangun dan deploy aplikasi MCP Anda dalam 10 menit. Hadirkan produk Anda di marketplace ChatGPT dan Claude dengan deployment cloud gratis." width="440"></picture></a>
 </p>
 
 <p align="center">

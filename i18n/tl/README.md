@@ -36,7 +36,6 @@ Libre, open source, lisensiyang MIT. Matuto sa websayt, kasama ang isang coding 
 
 <p align="center">
   <a href="https://serpapi.com/ai-engineering-from-scratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/serpapi-banner-compact.png" width="48%"><img src="../../assets/sponsors/serpapi-banner-compact.png" alt="SerpApi. API para sa paghahanap sa web para sa iyong mga AI app. May Markdown at JSON para sa anumang integrasyon." width="440"></picture></a>
-  <a href="https://nitrostack.ai/referral/aiengineeringfromscratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/nitrostack-banner-equal.png" width="48%"><img src="../../assets/sponsors/nitrostack-banner-equal.png" alt="NitroStack. Buuin at i-deploy ang MCP app mo sa loob ng 10 minuto. Dalhin ang produkto mo sa mga marketplace ng ChatGPT at Claude gamit ang libreng cloud deployment." width="440"></picture></a>
 </p>
 
 <p align="center">

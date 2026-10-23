@@ -67,7 +67,6 @@ Free, open source, MIT. Learn on the website, with a coding agent, or by running
 
 <p align="center">
   <a href="https://serpapi.com/ai-engineering-from-scratch"><picture><source media="(min-width: 768px)" srcset="assets/sponsors/serpapi-banner-compact.png" width="48%"><img src="assets/sponsors/serpapi-banner-compact.png" alt="SerpApi. Web Search API for your AI apps. Available in Markdown and JSON for any integration." width="440"></picture></a>
-  <a href="https://nitrostack.ai/referral/aiengineeringfromscratch"><picture><source media="(min-width: 768px)" srcset="assets/sponsors/nitrostack-banner-equal.png" width="48%"><img src="assets/sponsors/nitrostack-banner-equal.png" alt="NitroStack. Build and deploy your MCP app in 10 minutes. Get your product into ChatGPT and Claude marketplaces with free cloud deployment." width="440"></picture></a>
 </p>
 
 <p align="center">

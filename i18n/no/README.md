@@ -36,7 +36,6 @@ Gratis, åpen kildekode, MIT-lisens. Lær på nettstedet, med en kodeagent eller
 
 <p align="center">
   <a href="https://serpapi.com/ai-engineering-from-scratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/serpapi-banner-compact.png" width="48%"><img src="../../assets/sponsors/serpapi-banner-compact.png" alt="SerpApi. API for nettsøk i AI-applikasjonene dine. Tilgjengelig i Markdown og JSON for enhver integrasjon." width="440"></picture></a>
-  <a href="https://nitrostack.ai/referral/aiengineeringfromscratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/nitrostack-banner-equal.png" width="48%"><img src="../../assets/sponsors/nitrostack-banner-equal.png" alt="NitroStack. Bygg og rull ut MCP-appen din på 10 minutter. Få produktet ditt inn på markedsplassene til ChatGPT og Claude med gratis utrulling i skyen." width="440"></picture></a>
 </p>
 
 <p align="center">

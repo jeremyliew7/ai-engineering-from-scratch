@@ -36,7 +36,6 @@
 
 <p align="center">
   <a href="https://serpapi.com/ai-engineering-from-scratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/serpapi-banner-compact.png" width="48%"><img src="../../assets/sponsors/serpapi-banner-compact.png" alt="SerpApi。面向 AI 應用程式的網頁搜索 API，可為任何整合提供 Markdown 和 JSON 格式。" width="440"></picture></a>
-  <a href="https://nitrostack.ai/referral/aiengineeringfromscratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/nitrostack-banner-equal.png" width="48%"><img src="../../assets/sponsors/nitrostack-banner-equal.png" alt="NitroStack。10 分鐘內建置並部署 MCP 應用程式。通過免費的雲端部署，將產品上架到 ChatGPT 和 Claude 的應用程式市場。" width="440"></picture></a>
 </p>
 
 <p align="center">

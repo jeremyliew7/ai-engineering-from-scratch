@@ -15,7 +15,6 @@ If you or your company want to support the curriculum, this page is the rate car
 | Sponsor | Description |
 |---|---|
 | <a href="https://serpapi.com/ai-engineering-from-scratch"><picture><source media="(prefers-color-scheme: dark)" srcset="https://serpapi.com/assets/media_kit/logo-with-wordmark-white.svg"><img src="https://serpapi.com/assets/media_kit/logo-with-wordmark.svg" alt="SerpApi" width="180"></picture></a> | Web Search API for your AI apps. Available in Markdown and JSON for any integration. |
-| <a href="https://nitrostack.ai/referral/aiengineeringfromscratch"><img src="https://nitrostack.ai/logo.png" alt="NitroStack" width="56"></a> **NitroStack** | An end-to-end development platform for building, testing, debugging, and deploying production-ready MCP servers and applications. |
 
 ## How to sponsor
 

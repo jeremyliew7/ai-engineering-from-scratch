@@ -36,7 +36,6 @@
 
 <p align="center">
   <a href="https://serpapi.com/ai-engineering-from-scratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/serpapi-banner-compact.png" width="48%"><img src="../../assets/sponsors/serpapi-banner-compact.png" alt="SerpApi। আপনার AI অ্যাপের জন্য ওয়েব সার্চ API। যেকোনো ইন্টিগ্রেশনের জন্য Markdown ও JSON-এ পাওয়া যায়।" width="440"></picture></a>
-  <a href="https://nitrostack.ai/referral/aiengineeringfromscratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/nitrostack-banner-equal.png" width="48%"><img src="../../assets/sponsors/nitrostack-banner-equal.png" alt="NitroStack। 10 মিনিটে MCP অ্যাপ তৈরি করে স্থাপন করুন। বিনামূল্যের ক্লাউড স্থাপন দিয়ে ChatGPT ও Claude মার্কেটপ্লেসে পণ্য আনুন।" width="440"></picture></a>
 </p>
 
 <p align="center">

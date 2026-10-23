@@ -36,7 +36,6 @@ Miễn phí, mã nguồn mở, giấy phép MIT. Học trên trang web, cùng t�
 
 <p align="center">
   <a href="https://serpapi.com/ai-engineering-from-scratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/serpapi-banner-compact.png" width="48%"><img src="../../assets/sponsors/serpapi-banner-compact.png" alt="SerpApi. API tìm kiếm web cho ứng dụng AI của bạn. Hỗ trợ Markdown và JSON để tích hợp với các công cụ khác." width="440"></picture></a>
-  <a href="https://nitrostack.ai/referral/aiengineeringfromscratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/nitrostack-banner-equal.png" width="48%"><img src="../../assets/sponsors/nitrostack-banner-equal.png" alt="NitroStack. Xây dựng và triển khai ứng dụng MCP trong 10 phút. Đưa sản phẩm lên chợ ứng dụng ChatGPT và Claude với triển khai đám mây miễn phí." width="440"></picture></a>
 </p>
 
 <p align="center">

@@ -36,7 +36,6 @@ Modellerin iç mekanizmalarını, bilgi erişim işlem hatlarını ve ajan çal�
 
 <p align="center">
   <a href="https://serpapi.com/ai-engineering-from-scratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/serpapi-banner-compact.png" width="48%"><img src="../../assets/sponsors/serpapi-banner-compact.png" alt="SerpApi. Yapay zekâ uygulamalarınıza web araması ekleyen API; her entegrasyon için Markdown ve JSON çıktısı sunar." width="440"></picture></a>
-  <a href="https://nitrostack.ai/referral/aiengineeringfromscratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/nitrostack-banner-equal.png" width="48%"><img src="../../assets/sponsors/nitrostack-banner-equal.png" alt="NitroStack. MCP uygulamanızı 10 dakikada oluşturup dağıtın. Ücretsiz bulut dağıtımıyla ürününüzü ChatGPT ve Claude pazar yerlerine taşıyın." width="440"></picture></a>
 </p>
 
 <p align="center">

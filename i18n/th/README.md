@@ -36,7 +36,6 @@
 
 <p align="center">
   <a href="https://serpapi.com/ai-engineering-from-scratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/serpapi-banner-compact.png" width="48%"><img src="../../assets/sponsors/serpapi-banner-compact.png" alt="SerpApi API ค้นหาเว็บสำหรับแอป AI ของคุณ มีให้ในรูปแบบ Markdown และ JSON เพื่อเชื่อมต่อกับระบบต่าง ๆ" width="440"></picture></a>
-  <a href="https://nitrostack.ai/referral/aiengineeringfromscratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/nitrostack-banner-equal.png" width="48%"><img src="../../assets/sponsors/nitrostack-banner-equal.png" alt="NitroStack สร้างและปรับใช้แอป MCP ใน 10 นาที นำผลิตภัณฑ์ของคุณขึ้นตลาด ChatGPT และ Claude พร้อมปรับใช้บนคลาวด์ฟรี" width="440"></picture></a>
 </p>
 
 <p align="center">

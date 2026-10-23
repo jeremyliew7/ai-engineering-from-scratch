@@ -36,7 +36,6 @@ Ingyenes, nyílt forráskódú, MIT-licenccel. Tanulj a weboldalon, egy kódoló
 
 <p align="center">
   <a href="https://serpapi.com/ai-engineering-from-scratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/serpapi-banner-compact.png" width="48%"><img src="../../assets/sponsors/serpapi-banner-compact.png" alt="SerpApi. Webes keresési API az AI-alkalmazásaidhoz. Markdown és JSON formátumban, bármilyen integrációhoz." width="440"></picture></a>
-  <a href="https://nitrostack.ai/referral/aiengineeringfromscratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/nitrostack-banner-equal.png" width="48%"><img src="../../assets/sponsors/nitrostack-banner-equal.png" alt="NitroStack. Építsd meg és telepítsd MCP-alkalmazásodat 10 perc alatt. Juttasd el termékedet a ChatGPT és a Claude piacterére ingyenes felhőtelepítéssel." width="440"></picture></a>
 </p>
 
 <p align="center">

@@ -36,7 +36,6 @@
 
 <p align="center">
   <a href="https://serpapi.com/ai-engineering-from-scratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/serpapi-banner-compact.png" width="48%"><img src="../../assets/sponsors/serpapi-banner-compact.png" alt="SerpApi. API вебпошуку для ваших ШІ-застосунків. Доступний у форматах Markdown і JSON для будь-якої інтеграції." width="440"></picture></a>
-  <a href="https://nitrostack.ai/referral/aiengineeringfromscratch"><picture><source media="(min-width: 768px)" srcset="../../assets/sponsors/nitrostack-banner-equal.png" width="48%"><img src="../../assets/sponsors/nitrostack-banner-equal.png" alt="NitroStack. Створіть і розгорніть MCP-застосунок за 10 хвилин. Додайте продукт до маркетплейсів ChatGPT і Claude з безкоштовним хмарним розгортанням." width="440"></picture></a>
 </p>
 
 <p align="center">
