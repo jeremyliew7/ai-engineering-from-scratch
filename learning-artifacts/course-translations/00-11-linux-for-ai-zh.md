@@ -4,12 +4,12 @@ phase: "00"
 lesson: "11"
 translated: 2026-10-11
 translation_method: direct-new-translation
-updated: 2026-10-19
+updated: 2026-10-30
 update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/11-linux-for-ai/docs/en.md
-source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
-source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
-source_sha256: e4546b58d30ef83badb36b07dbfea227add11bf045a28780acee41f370885514
+source_commit: fe6c657dfb8d02cc898fcee7d4cfbf663aae1416
+source_last_commit: cbc761b453add05abffbc86d4ddcf923679f5235
+source_sha256: 07a2808c4707f0ba4290d7c92df72e48cb09fc8a9f6e85222c4b2229b1d314af
 ---
 
 # 面向 AI 的 Linux
@@ -63,7 +63,7 @@ graph TD
 
 ## 必备命令
 
-原文称这 15 个命令能覆盖远程 GPU 机器上 95% 的操作，以下按场景列出。
+原文称这 13 个命令能覆盖在远程 GPU 机器上进行的大多数操作，以下按场景列出。
 
 ### 目录导航
 
@@ -335,7 +335,7 @@ NVIDIA GPU 透传依赖 Windows 侧驱动。应安装 Windows NVIDIA 驱动，�
 
 ## 速查卡
 
-```
+```text
 Navigation:     pwd, ls, cd, find
 Files:          cp, mv, rm, mkdir, cat, head, tail, less
 Search:         grep, find
@@ -378,7 +378,7 @@ s0-process-fork
 
 ## 译者校注
 
-- “15 个命令覆盖 95%”是原文经验性表述，未提供统计依据，实际列表也不止 15 个命令。
+- 旧版原文“15 个命令覆盖 95%”是经验性表述，未提供统计依据，实际列表也不止 15 个命令。当前原文改称 13 个命令覆盖大多数操作；这仍是概括，后文列出的不同命令也不止 13 个。
 - /tmp 清理取决于配置。/、~、.、.. 分别是根目录、主目录、当前目录和上级目录。
 - Permission denied 不应一律用 sudo 处理，还需核查所有权、父目录权限、挂载选项和访问策略，避免制造 root 所有的项目文件。
 - kill 默认发 SIGTERM，能否清理保存由程序决定；SIGKILL 无法被捕获，会跳过程序清理。

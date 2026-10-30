@@ -4,12 +4,12 @@ phase: "00"
 lesson: "03"
 translated: 2026-10-11
 translation_method: direct-new-translation
-updated: 2026-10-19
+updated: 2026-10-30
 update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/03-gpu-setup-and-cloud/docs/en.md
-source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
-source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
-source_sha256: 1e6fdb7c16aeab51fb498a3b0d5fe984dd1a67e082d618bf30d1081639502809
+source_commit: fe6c657dfb8d02cc898fcee7d4cfbf663aae1416
+source_last_commit: cbc761b453add05abffbc86d4ddcf923679f5235
+source_sha256: 913b61e496cff6bba6c95c5121a4fa389793f5ce98ae9b7745c491158428e25a
 ---
 
 # GPU 配置与云计算
@@ -36,7 +36,7 @@ Phase 1—3 的大多数课程都可以在 CPU 上运行。但开始训练 CNN�
 
 ## 核心概念
 
-```
+```text
 Your options:
 
 1. Local NVIDIA GPU
@@ -73,7 +73,13 @@ s0-gpu-dispatch
 nvidia-smi
 ```
 
-安装支持 CUDA 的 PyTorch：
+安装支持 CUDA 的 PyTorch。原文说明：Linux 的默认 wheel 包含 CUDA；Windows 用户应从 pytorch.org 的选择器复制 CUDA 安装命令。
+
+```bash
+pip install torch torchvision torchaudio
+```
+
+这条命令安装 PyTorch、TorchVision 和 TorchAudio。然后检查 PyTorch 是否能识别 GPU：
 
 ```python
 import torch
@@ -173,6 +179,7 @@ if torch.cuda.is_available():
 
 ## 译者校注
 
+- PyTorch 的安装包和可用计算平台取决于系统、版本及安装来源；Linux 和 Windows 均应参考 [PyTorch 官方安装选择器](https://pytorch.org/get-started/locally/)选择适合的 CUDA 版本及命令，并在安装后验证设备。原文的 Linux 默认包说明不能替代对具体环境的核对。
 - 8 小时与 10 分钟、4—8 倍都是原文示例或概括，不能作为具体任务的速度承诺。
 - GPU 运算通常异步执行。可靠计时需要预热、重复测量，并在计时边界同步；单次冷启动结果可能误导。
 - 每参数 2 字节仅估算 fp16 权重。训练还需要梯度、优化器状态和中间激活，不能把该结果直接当作可训练模型规模。

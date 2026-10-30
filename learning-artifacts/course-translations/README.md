@@ -29,13 +29,19 @@
 - 验证：逐课对照完整新旧英文源文件，确认源文变化全部由新增提示和 00/08 路径修正组成；逐课验证提示条数、代码块内容及哈希。结构校验不等于自动语义质量保证。
 - 本次为教材维护，不代表这些更新后的完整译文已在聊天交付，也不改变课程完成状态。开始或恢复对应课程时，按本地学习约定交付完整当前版本译文。
 
+## 2026-10-30 上游增量维护
+
+- 00/03 补入 CUDA 版 PyTorch 安装说明和命令，并在校注中标明应按实际环境核对官方安装选择器；00/10 同步四种重定向与管道的表述；00/11 同步命令数量和覆盖范围的表述。原有校注保留并标明历史版本。
+- 以上三课对应源版本 `fe6c657dfb8d02cc898fcee7d4cfbf663aae1416`；其他已保存课程的英文正文与各自清单中的源版本核对一致。各课源文和译文哈希见清单。
+- 这是教材维护，不改变学习成绩或完成状态，也不代表更新后的完整译文已在聊天交付。
+
 ## 教材索引
 
 | 课程 | 标题 | Markdown | 原样保留代码块数 |
 |---|---|---|---|
 | 00/01 | 开发环境 | [00-01-dev-environment-zh.md](00-01-dev-environment-zh.md) | 15 |
 | 00/02 | Git 与协作 | [00-02-git-and-collaboration-zh.md](00-02-git-and-collaboration-zh.md) | 6 |
-| 00/03 | GPU 配置与云计算 | [00-03-gpu-setup-and-cloud-zh.md](00-03-gpu-setup-and-cloud-zh.md) | 7 |
+| 00/03 | GPU 配置与云计算 | [00-03-gpu-setup-and-cloud-zh.md](00-03-gpu-setup-and-cloud-zh.md) | 8 |
 | 00/04 | API 与密钥 | [00-04-apis-and-keys-zh.md](00-04-apis-and-keys-zh.md) | 7 |
 | 00/05 | Jupyter Notebook | [00-05-jupyter-notebooks-zh.md](00-05-jupyter-notebooks-zh.md) | 13 |
 | 00/06 | Python 环境 | [00-06-python-environments-zh.md](00-06-python-environments-zh.md) | 19 |

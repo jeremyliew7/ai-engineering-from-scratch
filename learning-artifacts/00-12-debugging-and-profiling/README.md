@@ -24,7 +24,7 @@
 | [vscode_debug_practice.py](vscode_debug_practice.py) | 在 backward 与 optimizer.step 前后用 F10 和调试控制台检查数值。 |
 | [debug_tools_fault_practice.py](debug_tools_fault_practice.py) | 教材工具的故障副本，在 demo_nan_detection 中故意将前向输出除以零；不是修复后的训练代码。 |
 
-教材参考脚本保留原样。故障副本除目标注入外，包含编辑器产生的空行和表达式格式调整。
+教材参考脚本保留原样。故障副本除目标注入外，包含编辑器产生的空行和表达式格式调整。2026-10-30 核对：上游参考脚本后来增加了 Apple MPS 设备与显存演示；故障副本保留本课实践时的版本，以上实验结果仍是当时的 CUDA 记录，未对新版 MPS 分支做运行验证。
 
 ## 已核验的调试与性能实验
 

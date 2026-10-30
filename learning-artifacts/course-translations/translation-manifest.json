@@ -1,9 +1,9 @@
 {
   "translated_on": "2026-10-11",
-  "updated_on": "2026-10-19",
+  "updated_on": "2026-10-30",
   "method": "direct-new-translation-from-current-source",
   "scope": "00/01-00/12",
-  "source_commit": "4b842f93e35f8f3e7f2b825a81ae9b08dc32194c",
+  "source_commit": "fe6c657dfb8d02cc898fcee7d4cfbf663aae1416",
   "source_commit_policy": "Top-level source_commit records the currently verified checkout; per-lesson source_commit and source_last_commit are authoritative. Source and translation SHA-256 hash raw file bytes; source_text_sha256_lf additionally hashes UTF-8 text with LF line endings.",
   "verification": "Full current source compared against recorded source; upstream delta fully accounted for. All fenced code blocks preserved exactly after newline decoding, and hint counts checked per lesson. SHA-256 values updated. Semantic quality assessed by translator, not automatically proven. Maintenance update does not establish full chat delivery.",
   "lessons": [
@@ -45,18 +45,18 @@
       "lesson": "00/03",
       "title": "GPU 配置与云计算",
       "source": "phases/00-setup-and-tooling/03-gpu-setup-and-cloud/docs/en.md",
-      "source_commit": "4b842f93e35f8f3e7f2b825a81ae9b08dc32194c",
-      "source_sha256": "1e6fdb7c16aeab51fb498a3b0d5fe984dd1a67e082d618bf30d1081639502809",
+      "source_commit": "fe6c657dfb8d02cc898fcee7d4cfbf663aae1416",
+      "source_sha256": "913b61e496cff6bba6c95c5121a4fa389793f5ce98ae9b7745c491158428e25a",
       "translation": "00-03-gpu-setup-and-cloud-zh.md",
-      "translation_sha256": "174835c56937f1eb5a9e11ea883bbcefd90140c8a6fca56a39966d3a6d14c519",
-      "code_blocks": 7,
+      "translation_sha256": "733f8551df158fa71f0e3afe02e09c72ef956adfacbcd27ddd97aec07f222210",
+      "code_blocks": 8,
       "section_count": 12,
       "status": "upstream-delta-translated-structure-verified",
-      "source_last_commit": "e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9",
-      "source_text_sha256_lf": "1e6fdb7c16aeab51fb498a3b0d5fe984dd1a67e082d618bf30d1081639502809",
+      "source_last_commit": "cbc761b453add05abffbc86d4ddcf923679f5235",
+      "source_text_sha256_lf": "913b61e496cff6bba6c95c5121a4fa389793f5ce98ae9b7745c491158428e25a",
       "upstream_hints": 3,
-      "updated_on": "2026-10-19",
-      "verified_on": "2026-10-19"
+      "updated_on": "2026-10-30",
+      "verified_on": "2026-10-30"
     },
     {
       "lesson": "00/04",
@@ -164,35 +164,35 @@
       "lesson": "00/10",
       "title": "终端与 Shell",
       "source": "phases/00-setup-and-tooling/10-terminal-and-shell/docs/en.md",
-      "source_commit": "4b842f93e35f8f3e7f2b825a81ae9b08dc32194c",
-      "source_sha256": "17dc65d11d74510bada6bd4cdd1ae4bdb85849632ca0e4a999d0da53b2d5292e",
+      "source_commit": "fe6c657dfb8d02cc898fcee7d4cfbf663aae1416",
+      "source_sha256": "5febcabad487875619e38bab7b925c05ac61d3f059cbfcb0d7d8a4902fd8e4bf",
       "translation": "00-10-terminal-and-shell-zh.md",
-      "translation_sha256": "9514168ab2c0059c96c15ac54ed998779b796c6d35731797d271658b1ab48ccd",
+      "translation_sha256": "fd248c1f829a4c7fb4d32411b33379e3636c659200addde2b1a24cb907d08d6b",
       "code_blocks": 13,
       "section_count": 16,
       "status": "upstream-delta-translated-structure-verified",
-      "source_last_commit": "e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9",
-      "source_text_sha256_lf": "17dc65d11d74510bada6bd4cdd1ae4bdb85849632ca0e4a999d0da53b2d5292e",
+      "source_last_commit": "cbc761b453add05abffbc86d4ddcf923679f5235",
+      "source_text_sha256_lf": "5febcabad487875619e38bab7b925c05ac61d3f059cbfcb0d7d8a4902fd8e4bf",
       "upstream_hints": 4,
-      "updated_on": "2026-10-19",
-      "verified_on": "2026-10-19"
+      "updated_on": "2026-10-30",
+      "verified_on": "2026-10-30"
     },
     {
       "lesson": "00/11",
       "title": "面向 AI 的 Linux",
       "source": "phases/00-setup-and-tooling/11-linux-for-ai/docs/en.md",
-      "source_commit": "4b842f93e35f8f3e7f2b825a81ae9b08dc32194c",
-      "source_sha256": "e4546b58d30ef83badb36b07dbfea227add11bf045a28780acee41f370885514",
+      "source_commit": "fe6c657dfb8d02cc898fcee7d4cfbf663aae1416",
+      "source_sha256": "07a2808c4707f0ba4290d7c92df72e48cb09fc8a9f6e85222c4b2229b1d314af",
       "translation": "00-11-linux-for-ai-zh.md",
-      "translation_sha256": "7c3dbce6a92afdea50983947574ba7bdc74ecbb386f5262cd6a6d5ce24c1ea6c",
+      "translation_sha256": "fb2b697f373500706d721f1e445648418774e31c5cff0bbdaafac0a6ae0e73fc",
       "code_blocks": 19,
       "section_count": 20,
       "status": "upstream-delta-translated-structure-verified",
-      "source_last_commit": "e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9",
-      "source_text_sha256_lf": "e4546b58d30ef83badb36b07dbfea227add11bf045a28780acee41f370885514",
+      "source_last_commit": "cbc761b453add05abffbc86d4ddcf923679f5235",
+      "source_text_sha256_lf": "07a2808c4707f0ba4290d7c92df72e48cb09fc8a9f6e85222c4b2229b1d314af",
       "upstream_hints": 5,
-      "updated_on": "2026-10-19",
-      "verified_on": "2026-10-19"
+      "updated_on": "2026-10-30",
+      "verified_on": "2026-10-30"
     },
     {
       "lesson": "00/12",
@@ -215,5 +215,5 @@
     }
   ],
   "initial_source_commit": "68bf421db044a906121a3ef0a2eb8ec689d45045",
-  "update_method": "upstream-delta-translation: 45 exercise hints across existing 00/01-00/12 plus two 00/08 editor path corrections; existing translator notes preserved"
+  "update_method": "upstream-delta-translation: 45 exercise hints across existing 00/01-00/12 plus two 00/08 editor path corrections; existing translator notes preserved; 2026-10-30: sync upstream changes in 00/03, 00/10 and 00/11"
 }

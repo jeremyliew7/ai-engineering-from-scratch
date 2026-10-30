@@ -4,12 +4,12 @@ phase: "00"
 lesson: "10"
 translated: 2026-10-11
 translation_method: direct-new-translation
-updated: 2026-10-19
+updated: 2026-10-30
 update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/10-terminal-and-shell/docs/en.md
-source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
-source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
-source_sha256: 17dc65d11d74510bada6bd4cdd1ae4bdb85849632ca0e4a999d0da53b2d5292e
+source_commit: fe6c657dfb8d02cc898fcee7d4cfbf663aae1416
+source_last_commit: cbc761b453add05abffbc86d4ddcf923679f5235
+source_sha256: 5febcabad487875619e38bab7b925c05ac61d3f059cbfcb0d7d8a4902fd8e4bf
 ---
 
 # 终端与 Shell
@@ -117,7 +117,7 @@ python train.py > train_full.log 2>&1
 
 示例展示筛选、计数、保存输出和组合处理。
 
-需要掌握的重定向与管道符号：
+需要掌握的四种重定向和一种管道符号：
 
 | 符号 | 功能 |
 |---|---|
@@ -391,7 +391,7 @@ env | grep -i torch
 ## 译者校注
 
 - 终端是交互界面，Shell 是命令解释器；$SHELL 常表示登录 Shell，不一定是当前进程。
-- 原文说“三种重定向”，实际表格有四种重定向和一种管道，此处保留全部条目。
+- 旧版原文说“三种重定向”，但表格有四种重定向和一种管道；当前原文已修正这一表述，此处保留全部条目。
 - 重定向按从左向右处理；2>&1 复制当时输出去向，此后修改 stdout 不会自动改变 stderr。
 - & 只表示后台执行，终端关闭后行为还受 Shell 和信号影响；nohup、tmux 也不能抵御关机或程序失败。
 - htop 的 RES 是系统内存，不是显存。已有 Shell 需分别加载别名，配置不会自动跨窗格同步。

@@ -2,7 +2,7 @@
 
 本目录保存 AI Engineering from Scratch 的技能源码，涵盖互动学习、项目实践、认证准备、图解与手册制作，以及课程仓库维护。Skill 是供 AI 助手按需读取的工作流程，可以附带参考资料、模板和脚本；注册技能本身不会启动课程、运行脚本或完成练习。
 
-本文根据 2026-10-19 的本地配置整理：本项目已注册 **17 个技能**。具体执行规则以各技能的 `SKILL.md` 为准，本地学习流程同时遵循 [AGENTS.md](../AGENTS.md) 和 [AGENTS.override.md](../AGENTS.override.md)。
+截至 2026-10-30，本目录有 **18 个技能源码**，本机有对应的 **18 个项目级发现入口**。具体执行规则以各技能的 `SKILL.md` 为准，本地学习流程同时遵循 [AGENTS.md](../AGENTS.md) 和 [AGENTS.override.md](../AGENTS.override.md)。
 
 ## 从哪里开始
 
@@ -16,6 +16,7 @@
 | 检查一个阶段是否掌握 | `check-understanding` |
 | 分阶段动手做一个项目 | `build-project` |
 | 集中学习 MCP、Agent Skills 或逆向工程 | 对应的 `learn-*` 技能 |
+| 在上课时用浏览器显示课程图和代码过程 | `lesson-screen` |
 | 生成静态机制图 | `blueprint-figure` |
 | 用动画或滑块解释变量怎样影响结果 | `motion-figure` |
 | 将整个流程做成可操作的机器演示 | `isometric-explainer` |
@@ -61,21 +62,23 @@
 
 认证技能提供的是仓库维护的独立学习与练习流程，不负责报名或颁发证书，也不保证通过考试。考试信息以对应 `certifications/` 目录的来源记录及当前官方规则为准。
 
-## 3. 图解与手册制作：5 个技能
+## 3. 课程画面、图解与手册制作：6 个技能
 
 这些技能用于制作内容，不会替代学习路线，也不会自动修改学习进度。
 
 | 技能 | 适用场景与产物 | 使用成本和边界 |
 |---|---|---|
+| [lesson-screen](lesson-screen/SKILL.md) | 上课时在本机浏览器显示课程图、代码轨迹和预测题，也可在同意后为本课制作新图 | 需要 Node.js 20+ 和本机浏览器；不安装额外包。新图按形式约需 5—120 分钟，屏幕点击不作为成绩或实验凭据 |
 | [blueprint-figure](blueprint-figure/SKILL.md) | 静态 SVG 机制图：时序、结构、数据流、对比、时间线、树、状态机、决策和分层，共九类 | 从真实代码、规范或日志取名；附生成脚本，检查字号、重叠、配色和可访问性。数值趋势图应另用绘图工具 |
 | [motion-figure](motion-figure/SKILL.md) | SVG 动画、滑块实验、交互式机制页面及抖动纹理页眉 | 课内图使用课程图形运行时；独立机制页有 HTML 模板。需要验证交互、窄屏和减少动态效果的行为 |
-| [isometric-explainer](isometric-explainer/SKILL.md) | 把流程表现为有工位、有运动部件的等距机器，支持运行、单步、故障与修复 | 先建立可测试的确定性状态模型，再绘制几何结构。需要模型测试和浏览器截图验证，成本高于普通图解 |
+| [isometric-explainer](isometric-explainer/SKILL.md) | 把流程表现为有工位、有运动部件的等距机器，支持运行、单步、故障与修复 | 先建立可测试的确定性状态模型，再绘制彩色材质、墨线和引线标签；需要模型测试及浏览器截图验证 |
 | [course-style](course-style/SKILL.md) | 本课程的配色、字体、图号、布局、英文写作及无障碍参考 | 主要是规范库，没有独立绘图流程；规则针对本课程风格，不应默认套用于其他品牌或中文写作 |
 | [write-manual](write-manual/SKILL.md) | 为固定版本的协议、工具或运行时编写系统手册，包含来源、采集记录、图解和审计 | 面向约 60—100 页的长篇文档，需要可复核的采集证据；普通短笔记不必采用整套结构 |
 
 示例请求：
 
 ```text
+使用 lesson-screen，显示这节课的课程图和代码过程。
 使用 blueprint-figure，根据这段真实代码画一张训练步骤时序图。
 使用 motion-figure，做一个能调整学习率的交互演示，并说明模型的简化条件。
 使用 isometric-explainer，把有缓存、重试和失败分支的请求流程做成机器演示。
@@ -84,6 +87,8 @@
 ```
 
 `blueprint-figure` 和 `motion-figure` 自带必要的参考资料，可独立使用。需要严格统一课程风格时，再配合 `course-style`。`write-manual` 会使用静态图规范；`isometric-explainer` 自带几何工具和模板。
+
+`lesson-screen` 由教学技能在符合环境条件时提出，是否启用由学习者决定；启动后才会运行本地服务。认证路线只在教学模式使用，进入测评前应停止画面。它不替代完整中文译文的前置交付；练习页可在浏览器保存自己的进度，导师不会把它写入课程成绩或学习记录。
 
 这些包包含本地脚本和模板，但不等于运行依赖已经安装。绘图构建通常需要 Node.js，交互页面还需要浏览器验证；课程实验、认证和手册采集所需的 Python、编译器或服务，按具体任务检查。确定性模拟的时间与数字应标明为模拟值，不能当作真实系统的实测结果。
 
@@ -120,7 +125,7 @@ Codex CLI 和 IDE 扩展也支持通过 `/skills` 选择，或用 `$技能名` �
 | `.agents/skills/<name>/` | 本地 Codex 的项目级发现入口；当前为指向对应源码目录的 Windows Junction |
 | `.claude/skills/` | 仓库面向 Claude Code 的发现位置，不是本地 Codex 的注册入口 |
 
-本机的 17 个入口都指向本仓库的 `skills/`，不是另外复制的一套源码。修改或同步源码后，入口会读取对应文件；若新增一个技能目录，仍需为它建立发现入口。
+本机的 18 个入口都指向本仓库的 `skills/`，不是另外复制的一套源码。修改或同步源码后，入口会读取对应文件；若新增一个技能目录，仍需为它建立发现入口。
 
 2026-10-19 已通过 Codex app-server 的 `skills/list` 复核本次新增的六个技能：`blueprint-figure`、`motion-figure`、`isometric-explainer`、`course-style`、`write-manual`、`learn-reverse-engineering`，均为 `scope=repo`、`enabled=true`。项目级注册让它们能在本仓库中发现；需要其他项目使用时，另行选择注册范围。
 
