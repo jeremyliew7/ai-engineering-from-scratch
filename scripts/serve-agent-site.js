@@ -28,15 +28,25 @@ function matches(rule, req) {
   });
 }
 
+function compile(source) {
+  const names = [];
+  const pattern = source.replace(/:(\w+)\(([^)]+)\)/g, (_, name, body) => { names.push(name); return `(${body})`; }).replace(/\.html$/, '\\.html');
+  return { names, regex: new RegExp('^' + pattern + '$') };
+}
+
+function fill(destination, names, match) {
+  return names.reduce((out, name, index) => out.replace(`:${name}`, match[index + 1] || ''), destination);
+}
+
 function createServer() {
   return http.createServer(async (req, res) => {
     try {
       const url = new URL(req.url, 'http://127.0.0.1');
       for (const rule of config.redirects || []) {
-        const pattern = rule.source.replace(/:page\(([^)]+)\)/, '($1)').replace(/\.html$/, '\\.html');
-        const match = url.pathname.match(new RegExp('^' + pattern + '$'));
+        const { names, regex } = compile(rule.source);
+        const match = url.pathname.match(regex);
         if (!match || (rule.missing || []).some(condition => url.searchParams.has(condition.key))) continue;
-        const destination = rule.destination.replace(':page', match[1] || '');
+        const destination = fill(rule.destination, names, match);
         res.writeHead(rule.permanent ? 308 : 307, { Location: destination + url.search });
         return res.end();
       }
@@ -59,10 +69,10 @@ function createServer() {
       };
       if (!routed && destination === '/') destination = '/index.html';
       if (!routed && !handlers[destination] && !isFile(destination)) {
-        const pageMatch = rule => rule.source.includes(':page(') && url.pathname.match(new RegExp('^' + rule.source.replace(/:page\(([^)]+)\)/, '($1)') + '$'));
-        const rule = config.rewrites.find(rule => ((rule.source === url.pathname || pageMatch(rule)) && matches(rule, req))
+        const paramMatch = rule => /:\w+\(/.test(rule.source) && url.pathname.match(compile(rule.source).regex);
+        const rule = config.rewrites.find(rule => ((rule.source === url.pathname || paramMatch(rule)) && matches(rule, req))
           || (rule.source === '/api/:missing*' && url.pathname.startsWith('/api/')));
-        if (rule) destination = rule.destination.replace(':page', (pageMatch(rule) || [])[1] || '');
+        if (rule) destination = fill(rule.destination, compile(rule.source).names, paramMatch(rule) || []);
       }
       const target = new URL(destination, 'http://127.0.0.1');
       for (const [key, value] of target.searchParams) url.searchParams.append(key, value);

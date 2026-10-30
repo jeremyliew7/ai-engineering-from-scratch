@@ -18,7 +18,7 @@ Every term is defined once, in the section the last column names. The meanings c
 | Counter | A Prometheus total that only grows, read with a rate over a window | [5.2](#s-the-metrics-endpoint) |
 | CUDA graph | A record of kernel launches with fixed shapes and addresses that the GPU replays with one CPU call | [4.1](#s-forwardmode-and-cuda-graphs) |
 | Data parallelism (DP) | Several complete copies of the model, each with its own requests and its own KV cache | [6.1](#s-tp-size-dp-size-and-attn-dp-size) |
-| Decode | The loop that produces each next token, one forward pass per token per request | [1.1](#s-what-a-serving-engine-owns) |
+| Decode | The loop that produces each next token, one forward pass per token per request | [1.3](#s-what-the-server-does-with-your-request) |
 | DetokenizerManager | The process that turns output token ids into text and sends it back to the TokenizerManager | [2.1](#s-sglang-serve-and-the-three-processes) |
 | Draft model | A small model or head that proposes the next few tokens cheaply | [4.4](#s-speculative-decoding) |
 | EPLB | The expert parallelism load balancer, which records expert use and moves experts between GPUs | [6.2](#s-moe-serving-deepep-and-eplb) |
@@ -26,7 +26,7 @@ Every term is defined once, in the section the last column names. The meanings c
 | ForwardMode | The label on a batch that tells the model runner what kind of pass to run | [4.1](#s-forwardmode-and-cuda-graphs) |
 | Gauge | A value the scheduler overwrites on each log interval, so a scrape sees the latest value only | [5.2](#s-the-metrics-endpoint) |
 | GEMM backend | The kernel library that multiplies quantized weights | [4.3](#s-quantization) |
-| Goodput | Requests per second that meet a TTFT target and a TPOT target at the same time | [1.1](#s-what-a-serving-engine-owns) |
+| Goodput | Requests per second that meet a TTFT target and a TPOT target at the same time | [1.3](#s-what-the-server-does-with-your-request) |
 | Grammar queue | The list of requests whose grammar is still compiling | [4.5](#s-structured-outputs-with-xgrammar) |
 | Grouped-query attention | Several query heads share one key and value head, so a model has fewer KV heads than attention heads | [3.1](#s-kv-bytes-per-token-and-the-kv-pool) |
 | HiCache | The hierarchical cache, which extends the radix tree from GPU memory to host memory and to storage | [3.5](#s-eviction-policies-and-hicache) |
@@ -34,7 +34,7 @@ Every term is defined once, in the section the last column names. The meanings c
 | ITL | Every gap between two streamed chunks, pooled across all requests | [5.1](#s-sglang-benchmark-serving) |
 | KV cache | The stored keys and values of every earlier token, for every layer, kept so that decode does not compute them again | [3.1](#s-kv-bytes-per-token-and-the-kv-pool) |
 | KV cache dtype | The format of the cached keys and values | [4.3](#s-quantization) |
-| KV pool | The memory that holds the keys and values of every token the server keeps | [1.2](#s-one-request-end-to-end) |
+| KV pool | The memory that holds the keys and values of every token the server keeps | [1.2](#s-check-that-the-server-is-healthy) |
 | L1, L2, L3 | The HiCache tiers: the GPU pool, a pool in pinned host memory, and an optional shared storage backend | [3.5](#s-eviction-policies-and-hicache) |
 | Logprob | The log probability of a token under the distribution the server sampled from | [4.6](#s-deterministic-inference-and-logprobs) |
 | Mamba layer | A state-space or linear-attention layer that keeps one fixed-size state per sequence | [3.6](#s-hybrid-models-and-the-cache) |
@@ -51,7 +51,7 @@ Every term is defined once, in the section the last column names. The meanings c
 | Pause and resume | `POST /pause_generation` with a mode, whose default `abort` ends every running request | [7.2](#s-sglang-as-an-rl-rollout-engine) |
 | Peak concurrent requests | The largest count of requests active at any point inside one second of a benchmark run | [5.1](#s-sglang-benchmark-serving) |
 | Pipeline parallelism (PP) | Whole layers go to different GPUs in order, and `--pp-size` sets the number of stages | [6.1](#s-tp-size-dp-size-and-attn-dp-size) |
-| Prefill | The forward pass over the whole prompt, which computes its keys and values and the first output token | [1.1](#s-what-a-serving-engine-owns) |
+| Prefill | The forward pass over the whole prompt, which computes its keys and values and the first output token | [1.3](#s-what-the-server-does-with-your-request) |
 | Prefill-decode disaggregation (PD) | Two kinds of SGLang servers, one for prefill and one for decode, with KV moved between them | [6.3](#s-prefill-decode-disaggregation) |
 | RadixCache | A radix tree over token sequences whose nodes hold the KV slot indices of the tokens on their edges | [3.3](#s-radixcache) |
 | ReqToTokenPool | A table with one row per running request and one column per token position | [3.1](#s-kv-bytes-per-token-and-the-kv-pool) |
@@ -63,7 +63,7 @@ Every term is defined once, in the section the last column names. The meanings c
 | Stop condition | A rule that ends a request: a stop token, a stop string, a regex, a length limit, an abort, or the end of a grammar | [2.5](#s-streaming-stop-strings-and-the-openai-api) |
 | Tail-Optimized LRU (tlru) | An eviction policy that keeps only the part of a conversation that the next turn's latency target needs | [3.5](#s-eviction-policies-and-hicache) |
 | Tensor parallelism (TP) | The weight matrices of each layer are cut into `--tp-size` slices, one per GPU | [6.1](#s-tp-size-dp-size-and-attn-dp-size) |
-| Throughput | Output tokens per second across all users | [1.1](#s-what-a-serving-engine-owns) |
+| Throughput | Output tokens per second across all users | [1.3](#s-what-the-server-does-with-your-request) |
 | TokenizerManager | The object in the main process that receives each request, applies the chat template, and tokenizes it | [2.1](#s-sglang-serve-and-the-three-processes) |
 | TokenToKVPoolAllocator | The free list of KV slots | [3.1](#s-kv-bytes-per-token-and-the-kv-pool) |
 | TPOT | For each request, the time after the first token divided by the remaining output tokens | [5.1](#s-sglang-benchmark-serving) |

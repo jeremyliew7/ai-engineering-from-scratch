@@ -8,7 +8,7 @@ When you finish this section, you can initialize a policy, add a rule in the rig
 
 ## The preset and the global policy
 
-**policy init:** sets "the initial global policy, not a per-sandbox default" {{help-sbx sbx policy init}}. It runs once, before the first sandbox, with `allow-all`, `balanced`, or `deny-all`, and `sbx policy reset` or `sbx daemon start --policy` starts over {{help-sbx sbx daemon start}}. The capture host chose `balanced` on v0.47.0, and `sbx policy ls` then showed one policy, `local-policy`, with `network: 194 allow` (capture/out/03-policy-ls.txt). The wide JSON lists eight rules with `created_via: default`: six network groups and two filesystem rules that allow every path. The list changes between releases without a changelog ([conflict C23](#s-ref-sources-and-the-conflicts-register)), so this is the list as recorded on 2026-10-08:
+**policy init:** sets the first global policy, not a default for each sandbox {{help-sbx sbx policy init}}. It runs once, before the first sandbox, with `allow-all`, `balanced`, or `deny-all`, and `sbx policy reset` or `sbx daemon start --policy` starts over {{help-sbx sbx daemon start}}. The capture host chose `balanced` on v0.47.0, and `sbx policy ls` then showed one policy, `local-policy`, with `network: 194 allow` ([the capture](manuals/docker-sandboxes-101/capture/out/03-policy-ls.txt)). The wide JSON lists eight rules with `created_via: default`: six network groups and two filesystem rules that allow every path. The list changes between releases without a changelog ([conflict C23](#s-ref-sources-and-the-conflicts-register)), so this is the list as recorded on 2026-10-08:
 
 ```listing
 title: two of the six balanced network groups
@@ -46,7 +46,7 @@ note: Each group is cut after its first resources. The other groups are default-
 
 ## Rule grammar and scope
 
-**Allow rule:** a comma-separated list "of hostnames, domains, IP addresses, or CIDR prefixes" {{help-sbx sbx policy allow network}}. The forms are `example.com`, `*.example.com`, `**.example.com`, `api?.example.com`, `api[12].example.com`, `example.com:443`, `[2001:db8::1]:443`, a CIDR, and `**` for every host. A lone `*` and an escaped glob are rejected {{help-sbx sbx policy allow network}}. An allow rule covers TCP unless `--protocol` says otherwise, and a deny rule covers TCP and UDP {{help-sbx sbx policy deny network}}. The capture shows both: the allow came back as `(example.com [tcp])` and the deny as `(example.com [tcp,udp])` (capture/out/09-allow.txt, 09-deny.txt). The deny also warned that UDP egress stays off until `feature.udp-egress` is on.
+**Allow rule:** a comma-separated list of hostnames, domains, IP addresses, or CIDR prefixes {{help-sbx sbx policy allow network}}. The forms are `example.com`, `*.example.com`, `**.example.com`, `api?.example.com`, `api[12].example.com`, `example.com:443`, `[2001:db8::1]:443`, a CIDR, and `**` for every host. A lone `*` and an escaped glob are rejected {{help-sbx sbx policy allow network}}. An allow rule covers TCP unless `--protocol` says otherwise, and a deny rule covers TCP and UDP {{help-sbx sbx policy deny network}}. The capture shows both: the allow came back as `(example.com [tcp])` and the deny as `(example.com [tcp,udp])` ([the captures](manuals/docker-sandboxes-101/capture/out)). The deny also warned that UDP egress stays off until `feature.udp-egress` is on.
 
 Two scopes have existed since v0.29.0 ([conflict C41](#s-ref-sources-and-the-conflicts-register)): global, the default, and `local`, which `--sandbox` scopes to one sandbox {{help-sbx sbx policy allow network}}. A rule added with `--sandbox m101-policy` printed `Rule added to policy local (scope: sandbox:m101-policy): <uuid>`, and `sbx policy inspect` shows its scope, layer, origin, and provenance:
 
@@ -79,17 +79,17 @@ note: The outer policy object and the remove_command field are cut.
       ]
 ```
 
-`--deny-network HOST` on `create` or `run` adds the same kind of per-sandbox deny at creation. The help says why that is safe under governance: "a local deny can only narrow, never widen, egress" {{help-sbx sbx create}}. A kit adds rules with `created_via: provisioned`, and `sbx policy ls --source org` on the capture host printed `No policies match the selected filters.` (capture/out/03-policy-org.txt).
+`--deny-network HOST` on `create` or `run` adds the same kind of per-sandbox deny at creation. The help says why that is safe under governance: a local deny can only make egress narrower, never wider {{help-sbx sbx create}}. A kit adds rules with `created_via: provisioned`, and `sbx policy ls --source org` on the capture host printed `No policies match the selected filters.` ([the capture](manuals/docker-sandboxes-101/capture/out/03-policy-org.txt)).
 
-**Deny wins:** "Deny rules take precedence over allow rules for the same hostname or CIDR. An allowed hostname isn't checked against CIDR rules for its resolved IP address." {{help-sbx sbx policy deny network}}
+**Deny wins:** for the same hostname or CIDR, a deny rule wins over an allow rule. An allowed hostname is not checked against CIDR rules for the IP address it resolves to {{help-sbx sbx policy deny network}}.
 
-The CLI refuses a deny that conflicts with an allow in the same scope: `deny: "example.com" conflicts with existing allow rule "<uuid>"` (capture/out/09-deny-conflict.txt). The capture removed the allow with `sbx policy rm network --sandbox m101-policy --id <uuid> --force` before the deny was accepted. Under organization governance only organization allow rules grant access, while local and kit deny rules still apply {{docs-sbx Precedence}}, and [org policies](#s-org-policies-profiles-and-the-audit-log) prints that table.
+The CLI refuses a deny that conflicts with an allow in the same scope: `deny: "example.com" conflicts with existing allow rule "<uuid>"` ([the capture](manuals/docker-sandboxes-101/capture/out/09-deny-conflict.txt)). The capture removed the allow with `sbx policy rm network --sandbox m101-policy --id <uuid> --force` before the deny was accepted. Under organization governance only organization allow rules grant access, while local and kit deny rules still apply {{docs-sbx Precedence}}, and [org policies](#s-org-policies-profiles-and-the-audit-log) prints that table.
 
 `policy ls` filters with `--source local|org|kit`, `--decision`, `--type`, `--created-via default|added|provisioned|approval`, `--protocol`, `--wide` for `RULE_ID`, and `--json` {{help-sbx sbx policy ls}}. A wide row carries `METHOD` and `PATH` columns. The docs fill them with `--method` and `--path` flags. The v0.47.0 help of `sbx policy allow network` lists neither flag, so this manual marks local HTTP rules as unverified. [The proxy](#s-sbx-policy-log-and-the-proxy) returns to them.
 
 ## check network
 
-**policy check network:** a read-only call that "evaluates the same daemon-side policy authorizer used by sandbox network enforcement" {{help-sbx sbx policy check}}. A host without a port is evaluated with port 443, and the command "evaluates network authorization, not HTTP method or path" {{help-sbx sbx policy check network}}. It exits 1 on a denial. The capture ran it on `example.com` in the `m101-policy` context before any rule, after the allow, and after the deny:
+**policy check network:** a read-only call that runs the same policy authorizer in the daemon that enforces the sandbox network {{help-sbx sbx policy check}}. A host without a port is evaluated with port 443, and the command checks network access only, not the HTTP method or path {{help-sbx sbx policy check network}}. It exits 1 on a denial. The capture ran it on `example.com` in the `m101-policy` context before any rule, after the allow, and after the deny:
 
 ```listing
 title: the explicit denial after the deny rule
@@ -115,7 +115,7 @@ note: The implicit denial in 09-check-verbose.json has deny_kind implicit, no or
 }
 ```
 
-After the allow, the same call returned `"allowed": true` with no `rule` field (capture/out/09-check-allowed.json). The global check of `api.anthropic.com` did the same under `"context": "global"` (capture/out/03-policy-check-anthropic.json). The two denials differ in `deny_kind`: `implicit` names no rule, and `explicit` names `local:<uuid>`. An implicit denial is also what a sandbox turns into an approval request, which the next section shows. [Figure](#fig-3-3) walks the request through the same order.
+After the allow, the same call returned `"allowed": true` with no `rule` field ([the capture](manuals/docker-sandboxes-101/capture/out/09-check-allowed.json)). The global check of `api.anthropic.com` did the same under `"context": "global"` ([the capture](manuals/docker-sandboxes-101/capture/out/03-policy-check-anthropic.json)). The two denials differ in `deny_kind`: `implicit` names no rule, and `explicit` names `local:<uuid>`. An implicit denial is also what a sandbox turns into an approval request, which the next section shows. [Figure](#fig-3-3) walks the request through the same order.
 
 ```figure
 id: fig-3-3

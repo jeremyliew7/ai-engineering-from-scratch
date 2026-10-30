@@ -46,7 +46,7 @@ All three agents use the model `local`, which is `dmr/ai/qwen3:4b`. Neither `tra
 
 ## transfer_task: a child in a sub-session
 
-**Delegation:** a call of `transfer_task` with `agent`, `task`, and `expected_output`, which `sub_agents` adds to the parent. "The call blocks until the sub-agent returns its result, which becomes the tool's response" {{docs-agent Transfer Task Tool}}.
+**Delegation:** a call of `transfer_task` with `agent`, `task`, and `expected_output`, which `sub_agents` adds to the parent. The call waits until the sub-agent returns its result, and that result becomes the response of the tool {{docs-agent Transfer Task Tool}}.
 
 ```listing
 title: one delegation and one session move, as events
@@ -73,11 +73,11 @@ stream_stopped (stop, normal)
 
 The writer never saw the user's message. Its sub-session starts with a system message that holds `<task>` and `<expected_output>`. An implicit user message follows, "Please proceed." The sub-session ran under the writer's own `max_iterations: 3`, with `"tools_approved": false`. Then `agent_switching` returned control to `root`, and the sentence came back as the tool response.
 
-"Unlike other tools, `transfer_task` is always auto-approved" {{docs-agent Multi-Agent Systems}}, and the capture agrees: the call raised no confirmation under `--exec`. A delegation to an agent already in the chain fails, and the depth is capped at 10 nested delegations {{docs-agent Transfer Task Tool}}. A `sub_agents` entry can also be a registry reference. Its tag is resolved again on every run unless you pin it to a digest {{schema AgentConfig}}.
+`transfer_task` is the one tool that is always approved without a prompt {{docs-agent Multi-Agent Systems}}, and the capture agrees: the call raised no confirmation under `--exec`. A delegation to an agent already in the chain fails, and the depth is capped at 10 nested delegations {{docs-agent Transfer Task Tool}}. A `sub_agents` entry can also be a registry reference. Its tag is resolved again on every run unless you pin it to a digest {{schema AgentConfig}}.
 
 ## The session move
 
-**Session move:** a call of `handoff` with one argument, `agent`, which `handoffs` adds. The named agent "becomes the active agent and sees the full conversation history" {{docs-agent Multi-Agent Systems}}. In the capture, `root` called it in its next model turn, after the sentence came back. The tool response told `reviewer` which tools and agents it can use, and `reviewer` answered the user.
+**Session move:** a call of `handoff` with one argument, `agent`, which `handoffs` adds. The named agent becomes the active agent and sees the whole conversation history {{docs-agent Multi-Agent Systems}}. In the capture, `root` called it in its next model turn, after the sentence came back. The tool response told `reviewer` which tools and agents it can use, and `reviewer` answered the user.
 
 The second message shows the move. It went straight to `reviewer`, and the transcript has no `root` line after the move. `force_handoff` makes the same move on every final response without a tool call {{schema AgentConfig}}.
 
@@ -98,7 +98,7 @@ root <- tool_call_response Run Background Agent: The user rejected the tool call
 stderr: Error: Agent terminated: detected 5 consecutive identical calls to run_background_agent. This indicates a degenerate loop where the model is not making progress.
 ```
 
-Under `--exec` with no `--safety`, the call itself asked for approval, and with no terminal it was rejected. The model sent the same call again until the runtime stopped the run with exit 1. The limit is `max_consecutive_tool_calls`, and 0 "uses the default of 5" {{schema AgentConfig}}. Inside a running task, "any tool call that would normally prompt the user for approval will be automatically denied" {{docs-agent Background Agents Tool}}. A headless coordinator therefore needs an `allow` rule for `run_background_agent` and for the tools its sub-agents call. The capture did not test that.
+Under `--exec` with no `--safety`, the call itself asked for approval, and with no terminal it was rejected. The model sent the same call again until the runtime stopped the run with exit 1. The limit is `max_consecutive_tool_calls`, and 0 means the default of 5 {{schema AgentConfig}}. Inside a running task, a tool call that would normally ask the user for approval is denied automatically {{docs-agent Background Agents Tool}}. A headless coordinator therefore needs an `allow` rule for `run_background_agent` and for the tools its sub-agents call. The capture did not test that.
 
 The kit asks for one tool call per message. A turn with two parallel calls cannot be replayed from a cassette, as [session.db, sessions diff, and eval](#s-session-db-sessions-diff-and-eval) explains.
 

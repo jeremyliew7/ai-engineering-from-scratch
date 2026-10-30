@@ -39,7 +39,7 @@ Your home directory is `~` or `/home/your-username`. Almost everything you do ha
 
 ## Essential Commands
 
-These are the 15 commands that cover 95% of what you'll do on a remote GPU box.
+These are the 13 commands that cover most of what you'll do on a remote GPU box.
 
 ### Moving Around
 

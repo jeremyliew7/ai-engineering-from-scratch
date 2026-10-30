@@ -7,6 +7,12 @@
   </picture>
 </p>
 
+<p align="center">
+ <a href="https://www.star-history.com/rohitg00/ai-engineering-from-scratch">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=rohitg00/ai-engineering-from-scratch&type=rank&theme=dark" /><source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=rohitg00/ai-engineering-from-scratch&type=rank" /><img alt="स्टार इतिहास रैंक" src="https://api.star-history.com/badge?repo=rohitg00/ai-engineering-from-scratch&type=rank" /></picture> <picture><source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=rohitg00/ai-engineering-from-scratch&type=trending&theme=dark" /><source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=rohitg00/ai-engineering-from-scratch&type=trending" /><img alt="आज की GitHub ट्रेंडिंग रिपॉज़िटरी" src="https://api.star-history.com/badge?repo=rohitg00/ai-engineering-from-scratch&type=trending" /></picture>
+ </a>
+</p>
+
 मॉडल की आंतरिक गणनाएँ, रिट्रीवल पाइपलाइन और एजेंट रनटाइम लागू करें। उनका परीक्षण करें, विफलताएँ जाँचें और कोड तथा मूल्यांकन के परिणाम सहेजें।
 
 **[सीखना शुरू करें](https://aiengineeringfromscratch.com/lesson?path=phases/00-setup-and-tooling/01-dev-environment)** · **[अध्ययन-पथ चुनें](#learning-routes)** · **[प्रयोगशाला आज़माएँ](#interactive-lab)** · **[प्रोजेक्ट बनाएँ](#project-challenges)** · **[पाठ्यक्रम देखें](#contents)**

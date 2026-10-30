@@ -147,6 +147,14 @@ test('sponsors page is rendered from SPONSORS.md at build time', () => {
   assert.ok(generated.includes('<td class="align-right">65,223</td>'));
   assert.ok(generated.includes('<td class="align-right">11,000+</td>'));
   assert.ok(generated.includes('<li><strong>Open-source baseline</strong>'));
+  const mailto = '<a href="mailto:ghumare64@gmail.com">ghumare64@gmail.com</a>';
+  const howTo = between(generated, '<h2 id="how-to-sponsor">', '<h2 ', 'site/sponsors.html');
+  assert.ok(howTo.includes('github.com/sponsors/rohitg00'));
+  assert.ok(howTo.includes('GitHub Sponsors handles billing, receipts, and tax forms.'));
+  assert.ok(howTo.includes(`billing question, email ${mailto}`));
+  const steps = between(generated, '<h2 id="becoming-a-sponsor">', '</ol>', 'site/sponsors.html');
+  assert.ok(steps.includes(`For Silver and above, email ${mailto} with:`));
+  assert.ok(steps.includes(`invoice in your company&#39;s name, email ${mailto}.`));
   assert.doesNotMatch(generated, /\n\s*\[Babel\]/);
 });
 
@@ -156,6 +164,7 @@ test('sponsor markdown keeps only allowlisted HTML and safe links', () => {
     '<img src="https://example.com/logo.svg" onerror="alert(1)" alt="Logo" width="120">',
     '<script>alert(1)</script> <a href="javascript:alert(1)">bad</a>',
     '[plain](javascript:alert) [parent](../secret.md) [anchor](#tiers)',
+    '[mail](mailto:billing@example.com) [bad mail](mailto:a@b.com?bcc=c@d.com)',
   ].join('\n'));
   assert.ok(html.includes('<img src="https://example.com/logo.svg" alt="Logo" width="120">'));
   assert.doesNotMatch(html, /<script|<a href="javascript|onerror|href="[^"]*\.\./);
@@ -163,6 +172,7 @@ test('sponsor markdown keeps only allowlisted HTML and safe links', () => {
   assert.ok(html.includes('&lt;script&gt;'));
   assert.ok(html.includes('bad&lt;/a&gt;'));
   assert.ok(html.includes('plain parent <a href="#tiers">anchor</a>'));
+  assert.ok(html.includes('<a href="mailto:billing@example.com">mail</a> bad mail'));
 });
 
 test('the hamburger menu and every page footer link to the sponsors page', () => {

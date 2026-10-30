@@ -16,7 +16,7 @@
 
 ## The Problem
 
-One store is wrong for one of three query classes:
+Each store is right for only one of three query classes:
 
 - **Semantic similarity** — "what did we discuss about agent drift last week?" Vector wins; KV and graph miss.
 - **Fact lookup** — "what is the user's phone number?" KV wins; vector is wasteful, graph is overkill.

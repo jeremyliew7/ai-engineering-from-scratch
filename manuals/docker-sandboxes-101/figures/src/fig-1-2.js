@@ -16,13 +16,13 @@ const right = [
   { hue: 'violet', title: 'agent binary inside', sub: 'docker-agent version main' },
   { hue: 'green', title: 'agent file', sub: 'its directory mounted ro, kit ro' },
   { hue: 'indigo', title: 'network', sub: 'sbx policy, plus models.dev and allow hosts' },
-  { hue: 'grey', title: 'in this manual', sub: 'capture/out/27-*' },
+  { hue: 'grey', title: 'in this manual', sub: 'the recorded run' },
 ];
 
 module.exports = figure('fig-1-2', {
   height: 412,
   title: 'Two ways to start docker-agent in a sandbox',
-  desc: 'Two columns, one per launch path. Left: sbx run docker-agent on a project directory, where sbx creates the sandbox from docker/sandbox-templates:docker-agent, starts docker-agent run --yolo inside, reads only project config in the workspace, and applies the sbx policy; this manual has no capture of it. Right: docker-agent run --sandbox agent.yaml, where the host docker-agent drives sbx with docker/docker-agent-sbx-templates:latest, the binary inside reports version main, the agent file directory and the kit are mounted read-only, and models.dev and the sandbox allow hosts are opened; recorded in capture/out/27.',
+  desc: 'Two columns, one per launch path. Left: sbx run docker-agent on a project directory, where sbx creates the sandbox from docker/sandbox-templates:docker-agent, starts docker-agent run --yolo inside, reads only project config in the workspace, and applies the sbx policy; this manual has no capture of it. Right: docker-agent run --sandbox agent.yaml, where the host docker-agent drives sbx with docker/docker-agent-sbx-templates:latest, the binary inside reports version main, the agent file directory and the kit are mounted read-only, and models.dev and the sandbox allow hosts are opened; recorded in the capture.',
 }, f => {
   f.text(20, 20, 'A · sbx run docker-agent', { size: 12, weight: 700, hue: 'blue' });
   f.text(336, 20, 'B · docker-agent run --sandbox', { size: 12, weight: 700, hue: 'violet' });

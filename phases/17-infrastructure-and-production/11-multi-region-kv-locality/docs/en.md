@@ -51,7 +51,7 @@ Inter-region RTT:
 - us-east-1 ↔ eu-west-1: ~75 ms.
 - us-east-1 ↔ ap-southeast-1: ~220 ms.
 
-If routing takes a request from us-east-1 to a hot prefix in ap-southeast-1, the saved prefill (800 → 80 ms) is dwarfed by 440 ms round-trip. GORGO (2026 research) makes this explicit — minimize `prefill_time + network_latency` jointly, not prefill alone. Often the answer is to keep routing regional except on massive multi-MB prefixes where prefill dominates.
+If routing takes a request from us-east-1 to a hot prefix in ap-southeast-1, the saved prefill (800 → 80 ms, so 720 ms) shrinks to about 500 ms once the ~220 ms RTT is paid, and the margin disappears if the remote region queues the request or has already evicted the prefix. GORGO (2026 research) makes this explicit — minimize `prefill_time + network_latency` jointly, not prefill alone. Often the answer is to keep routing regional except on massive multi-MB prefixes where prefill dominates.
 
 ### Commercial "cross-region inference" does not help here
 

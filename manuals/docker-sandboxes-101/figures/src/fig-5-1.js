@@ -5,9 +5,9 @@ const { figure } = require('../../../_shared/figkit.js');
 module.exports = figure('fig-5-1', {
   height: 372,
   title: 'One docker-agent run from the agent file to its outputs',
-  desc: 'Top row: capture/fixtures/agents/files.yaml with one agent root, the model local, and two toolsets is loaded by docker-agent run with the exec flag and two messages; without exec the same run draws the TUI. Middle row: the agent loop of root sends model calls to dmr/ai/qwen3:4b on Model Runner at localhost:12434 and tool calls to the ten tools of filesystem and shell. Bottom row: the loop writes the final answer to stdout, 67 NDJSON events with the json flag, and one session to session.db. The record flag writes the model exchanges to the cassette 18-files.yaml, and the fake flag replays them in place of Model Runner.',
+  desc: 'Top row: files.yaml with one agent root, the model local, and two toolsets is loaded by docker-agent run with the exec flag and two messages; without exec the same run draws the TUI. Middle row: the agent loop of root sends model calls to dmr/ai/qwen3:4b on Model Runner at localhost:12434 and tool calls to the ten tools of filesystem and shell. Bottom row: the loop writes the final answer to stdout, 67 NDJSON events with the json flag, and one session to session.db. The record flag writes the model exchanges to the cassette 18-files.yaml, and the fake flag replays them in place of Model Runner.',
 }, f => {
-  f.kicker(20, 18, 'one run of capture/fixtures/agents/files.yaml');
+  f.kicker(20, 18, 'one run of files.yaml');
   const file = f.box({ x: 20, y: 34, w: 165, h: 56, hue: 'violet', title: 'files.yaml', sub: ['one agent, root', 'model local, 2 toolsets'] });
   const run = f.box({ x: 237, y: 34, w: 165, h: 56, hue: 'violet', title: 'docker-agent run', sub: ['--exec, two messages'] });
   const tui = f.box({ x: 455, y: 34, w: 165, h: 56, hue: 'grey', dash: 'dashed', title: 'TUI', sub: ['without --exec'] });
@@ -32,5 +32,5 @@ module.exports = figure('fig-5-1', {
   f.arrow([270, 210], [stdout.cx, 275], { style: 'reply' });
   f.arrow([370, 210], [events.cx, 275], { style: 'event' });
   f.arrow([402, 204], [db.cx, 275], { style: 'write' });
-  f.text(20, 360, 'Dashed box: not run in the capture. Every solid box is in capture/out/18-*.', { size: 11, serif: true, hue: 'ink-soft' });
+  f.text(20, 360, 'Dashed box: not run in the capture. Every solid box was captured.', { size: 11, serif: true, hue: 'ink-soft' });
 });

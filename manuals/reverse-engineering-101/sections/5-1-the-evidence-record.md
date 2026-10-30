@@ -2,11 +2,11 @@
 
 > Every successful rea observation is one strict record of sixteen fields, and its id is a SHA-256 over the semantic content with the file path left outside.
 
-An agent tells you that `_percent_change` returns 0 when `before` is 0. You want to know what rea observed, which engine said it, and whether the same claim from another machine would carry the same id. The capture holds the answer in `capture/out/10-mcp-09-analyze-function-percent-change-O1.json`: one Evidence record. When you finish this section, you can read all sixteen fields of an Evidence record and say which three carry the trust decision. You can also recompute an `ev_` id from a captured record.
+An agent tells you that `_percent_change` returns 0 when `before` is 0. You want to know what rea observed, which engine said it, and whether the same claim from another machine would carry the same id. The capture holds the answer in [one Evidence record](manuals/reverse-engineering-101/capture/out/10-mcp-09-analyze-function-percent-change-O1.json). When you finish this section, you can read all sixteen fields of an Evidence record and say which three carry the trust decision. You can also recompute an `ev_` id from a captured record.
 
 ## One record for every successful observation
 
-**Evidence record:** the one record type that rea returns for a successful observation. The schema is one strict object with sixteen fields. A record with an extra field is rejected, and so is a record that omits a field. An operation without caller or callee sets still writes `relationship_coverage`, with the value `null`. The MCP server returns the record as `structuredContent` and as a text copy: "Evidence-producing tools return the complete canonical Evidence record in both text and structured content." {{mcp Tool results}}
+**Evidence record:** the one record type that rea returns for a successful observation. The schema is one strict object with sixteen fields. A record with an extra field is rejected, and so is a record that omits a field. An operation without caller or callee sets still writes `relationship_coverage`, with the value `null`. The MCP server returns the full canonical record twice, as `structuredContent` and as a text copy {{mcp Tool results}}.
 
 ```listing
 title: the sixteen fields of the _percent_change dossier record
@@ -98,7 +98,7 @@ Three defaults fill in what a producer leaves out. When the producer names no co
 | `inspect_analysis_view`, provider `rea-analysis-view` | `derived` | `shipped-artifact` | `15-js-app-view-summary.json` |
 | `record_unknown`, provider `rea-unknown-registry` | `derived` | `analyst-inference` | none in the capture |
 
-Read `observed` with care. In the dossier it means that rea recorded what Ghidra returned, with the bytes on disk as the authority. It does not mean that the pseudocode is the program's source. The provider documentation says so: "Assembly is complete Ghidra Listing text; pseudocode is Ghidra decompiler output." {{ghidra Admitted function-analysis semantics}}
+Read `observed` with care. In the dossier it means that rea recorded what Ghidra returned, with the bytes on disk as the authority. It does not mean that the pseudocode is the program's source. The provider documentation says so. The assembly is the full Ghidra Listing text, and the pseudocode is what the Ghidra decompiler produced {{ghidra Admitted function-analysis semantics}}.
 
 The `binary_overview` record is `derived`, because a rea workflow computed it from provider calls. Its first limitation says so: "Derived by an REA composed workflow." The other eight are the Ghidra limitations it inherits. Each one starts with the provider, its version, and the operation, for example "Ghidra (ghidra 12.1.4) read_binary_inventory_summary:" (`05-analyze-arm64-O1.json`). [Lesson 35](phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns) builds a ledger in plain Python with the same three words and the same five authorities.
 
@@ -129,7 +129,7 @@ note: Of the 27 limitations, the first two are shown.
 
 `evidence_links` names the records a derived record was computed from. The comparison links the two dossiers it compared, and a view links its parent record. `locations` says where in the artifact the fact was seen. The JavaScript record in `15-js-app.json` carries one `artifact-path` location, `artifact-root`. The Ghidra dossier carries none, because its addresses live inside `normalized_result`.
 
-`analysis_profile` is part of the identity even when it is empty: "`analysis_profile` is always present: a concrete profile object or `null`; either value participates in semantic identity." {{mcp Tool results}}
+`analysis_profile` is part of the identity even when it is empty. The field is always present, as a profile object or as `null`, and both values count toward the identity of the record {{mcp Tool results}}.
 
 A profile whose provider differs from the record's `provider` is rejected with "Analysis profile provider does not match Evidence provider". The profile digest is a SHA-256 over the canonical JSON of its provider and parameters. [The snapshot cache](#s-snapshots-and-the-answer-cache) uses the same digest as part of its key.
 
@@ -176,8 +176,10 @@ id: fig-5-1
 kind: structure
 title: the sixteen fields of one Evidence record
 claim: The id hashes every field of the record except subject.name and subject.local_path, so the same observation of the same bytes gets the same id anywhere.
-caption: Read top to bottom. Solid rows enter the hash and dashed rows are display fields. Values are from capture/out/10-mcp-09-analyze-function-percent-change-O1.json, digests shown by their first hex digits.
+caption: Read top to bottom. Solid rows enter the hash and dashed rows are display fields. Values are from the function capture, digests shown by their first hex digits.
 ```
+
+The [Inside a Decompiler](https://aiengineeringfromscratch.com/inside-a-decompiler?symbols=off) machine files each stage of one decompilation in an evidence ledger. The ledger uses the same three confidence words and adds a tray for unknowns. This link opens the run with the symbol table switched off, so you can watch which facts move from observed to unknown.
 
 ```takeaways
 - Read `confidence`, `authority`, and `limitations` before `normalized_result`, and copy all three into your notes.
@@ -186,4 +188,4 @@ caption: Read top to bottom. Solid rows enter the hash and dashed rows are displ
 - Keep paths out of `normalized_result` and `locations` in your own records, or the id changes per machine.
 ```
 
-Sources: capture/out/10-mcp-09-analyze-function-percent-change-O1.json, capture/out/10-mcp-20-compare-functions-percent-change.json, capture/out/05-analyze-arm64-O1.json, capture/out/15-js-app.json, capture/out/15-js-app-view-summary.json, capture/out/11-bundle-O1.json; phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns; rea 6.7.0 at 27dc42d: src/domain/evidence.ts, src/domain/relationshipCoverage.ts, src/domain/canonicalDigest.ts, src/domain/analysisProfile.ts, src/domain/binaryTargetTypes.ts, src/server/registerEvidenceTools.ts, src/application/binary/BinarySession.ts, src/application/investigation/UnknownEvidence.ts; rea docs/mcp-contracts.md, rea docs/ghidra-provider.md
+Sources: capture/out/10-mcp-09-analyze-function-percent-change-O1.json, capture/out/10-mcp-20-compare-functions-percent-change.json, capture/out/05-analyze-arm64-O1.json, capture/out/15-js-app.json, capture/out/15-js-app-view-summary.json, capture/out/11-bundle-O1.json; phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns; rea 6.7.0 at 27dc42d: src/domain/evidence.ts, src/domain/relationshipCoverage.ts, src/domain/canonicalDigest.ts, src/domain/analysisProfile.ts, src/domain/binaryTargetTypes.ts, src/server/registerEvidenceTools.ts, src/application/binary/BinarySession.ts, src/application/investigation/UnknownEvidence.ts; rea docs/mcp-contracts.md, rea docs/ghidra-provider.md; the Inside a Decompiler machine: scripts/decompiler-machine/model.mjs

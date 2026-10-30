@@ -533,6 +533,29 @@ Requirements:
 
 Success means `grade` at `-O0` and `grade` at `-O1` produce the same output over the grid, with one `switch` and no `goto`.
 
+## Graded Lab
+
+Five questions about the fixtures of this lesson. Find each answer with the code you built, then write it into `code/lab_answers.json`. Write numbers as numbers or as hex strings such as `"0x40"`, and lists as JSON lists.
+
+1. `t1`: parameters that the calling convention gives percent_change at -O1.
+2. `t2`: phi functions in the SSA form of total at -O1.
+3. `t3`: the divisor that magic_divisor finds for 0x66666667 with shift 34.
+4. `t4`: the last statement of the percent_change pseudocode at -O1, as one line of text.
+5. `t5`: the recovered C type of param_1 of total at -O1.
+
+Check your answers:
+
+```bash
+cd phases/13-tools-and-protocols/34-lifting-to-pseudocode
+python3 code/lab.py
+```
+
+The checker computes each expected value from `code/main.py` on the committed fixtures. It prints `PASS`, `FAIL` or `TODO` for each task and a score, and it exits 0 only when all five pass. `python3 code/lab.py my-answers.json` checks another file. `code/tests/test_lab.py` proves that the checker accepts the right answers and rejects a wrong one.
+
+### See it run
+
+The [Inside a Decompiler](https://aiengineeringfromscratch.com/inside-a-decompiler?opt=O0) machine runs this lesson as its lift press, type pins, structuring jig and printer, with the IR, SSA and pseudocode that `code/main.py` prints. This link opens the `-O0` object: three stack slots become locals and the jig closes both jaws for the if/else.
+
 ## Artifact
 
 This lesson produces `outputs/skill-lifting-to-pseudocode.md`. Use it to lift one function with a derivation for every line and to fill the difference table against a decompiler's text. The artifact requires the reference disassembly, the relocations, the calling convention, the compile check, the behaviour comparison, and a verdict for every differing line.

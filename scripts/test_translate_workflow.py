@@ -19,7 +19,9 @@ from pathlib import Path
 
 from build_readme_i18n import render
 from readme_translations import HERO2, TRANSLATIONS
+import translate_lessons
 import translate_matrix
+import translation_freshness
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -671,6 +673,207 @@ class PushSelectionTest(unittest.TestCase):
         self.assertEqual(legs(outputs), [("fr", "02-beta"), ("de", "02-beta")])
         fetched = run("git", "cat-file", "-e", f"{self.base}^{{commit}}", cwd=shallow, check=False)
         self.assertEqual(fetched.returncode, 0)
+
+    def publish(
+        self,
+        caches: dict[tuple[str, str], dict[str, str]],
+        lessons: tuple[str, ...] = (),
+        unpublished: tuple[str, ...] = (),
+    ) -> None:
+        origin = self.base_dir / "origin.git"
+        published = self.base_dir / "published"
+        run("git", "init", "--bare", "--initial-branch=main", str(origin), cwd=self.base_dir)
+        run("git", "init", "--initial-branch=translations", str(published), cwd=self.base_dir)
+        run("git", "config", "user.name", "test", cwd=published)
+        run("git", "config", "user.email", "test@example.com", cwd=published)
+        for (lang, phase), cache in caches.items():
+            target = published / f"i18n/{lang}/.cache/{phase}.json"
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(json.dumps(cache) + "\n", encoding="utf-8")
+            for key in cache:
+                output = f"i18n/{lang}/{key[: -len('/docs/en.md')]}/docs/{lang}.md"
+                if output not in unpublished:
+                    lessons += (output,)
+        for lesson in lessons:
+            target = published / lesson
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text("# reviewed\n", encoding="utf-8")
+        run("git", "add", "-A", cwd=published)
+        run("git", "commit", "-m", "published", cwd=published)
+        run("git", "push", str(origin), "translations", cwd=published)
+        run("git", "remote", "add", "origin", str(origin), cwd=self.root)
+
+    def current_caches(self) -> dict[tuple[str, str], dict[str, str]]:
+        return {
+            (lang, phase): translation_freshness.lesson_sources(self.root, phase)
+            for lang in ("fr", "de")
+            for phase in FIXTURE_PHASES
+        }
+
+    def test_cancelled_run_is_repaired_by_the_next_push(self) -> None:
+        self.publish(self.current_caches())
+        self.write("phases/02-beta/01-first/docs/en.md", "# cancelled run\n")
+        cancelled = self.commit()
+        self.write("phases/03-gamma/01-first/docs/en.md", "# next run\n")
+        self.commit()
+        outputs, log = self.push(before=cancelled)
+        self.assertEqual(
+            legs(outputs),
+            [("fr", "02-beta"), ("fr", "03-gamma"), ("de", "02-beta"), ("de", "03-gamma")],
+        )
+        self.assertIn("published translations behind English: de/02-beta, fr/02-beta", log)
+
+    def test_missing_and_orphaned_records_rerun_their_leg(self) -> None:
+        caches = self.current_caches()
+        del caches[("fr", "01-alpha")]
+        caches[("de", "03-gamma")]["phases/03-gamma/09-removed/docs/en.md"] = "0" * 64
+        self.publish(caches)
+        self.write("phases/02-beta/01-first/code/main.py", "print('changed')\n")
+        self.commit()
+        outputs, _ = self.push()
+        self.assertEqual(legs(outputs), [("fr", "01-alpha"), ("de", "03-gamma")])
+
+    def test_recorded_lesson_without_its_file_reruns_its_leg(self) -> None:
+        self.publish(self.current_caches(), unpublished=("i18n/de/phases/02-beta/01-first/docs/de.md",))
+        self.write("phases/02-beta/01-first/code/main.py", "print('changed')\n")
+        self.commit()
+        outputs, _ = self.push()
+        self.assertEqual(legs(outputs), [("de", "02-beta")])
+
+    def test_current_translations_add_no_legs(self) -> None:
+        self.publish(self.current_caches())
+        self.write("phases/02-beta/01-first/docs/en.md", "# changed\n")
+        self.commit()
+        outputs, log = self.push()
+        self.assertEqual(legs(outputs), [("fr", "02-beta"), ("de", "02-beta")])
+        self.assertIn("published translations behind English: none", log)
+
+    def test_contributor_maintained_drift_never_adds_machine_legs(self) -> None:
+        caches = self.current_caches()
+        caches[("zh-TW", "01-alpha")] = {"phases/01-alpha/01-first/docs/en.md": "0" * 64}
+        self.publish(caches)
+        self.write("phases/02-beta/01-first/code/main.py", "print('changed')\n")
+        self.commit()
+        outputs, _ = self.push()
+        self.assertEqual(outputs, {"lessons": [], "ui_langs": []})
+
+    def test_missing_translations_branch_keeps_the_diff_selection(self) -> None:
+        self.write("phases/02-beta/01-first/docs/en.md", "# changed\n")
+        self.commit()
+        outputs, log = self.push()
+        self.assertEqual(legs(outputs), [("fr", "02-beta"), ("de", "02-beta")])
+        self.assertIn("translations branch unavailable", log)
+
+    def test_freshness_report_names_contributor_lessons_to_sync(self) -> None:
+        caches = self.current_caches()
+        caches[("zh-TW", "02-beta")] = translation_freshness.lesson_sources(self.root, "02-beta")
+        self.publish(caches)
+        self.write("phases/02-beta/01-first/docs/en.md", "# upstream fix\n")
+        self.commit()
+        run("git", "fetch", "origin", "+refs/heads/translations:refs/remotes/origin/translations", cwd=self.root)
+        summary = self.base_dir / "summary.md"
+        result = run(
+            sys.executable, str(ROOT / "scripts" / "translation_freshness.py"), "--summary", str(summary),
+            cwd=self.root, capture=True,
+        )
+        self.assertIn("| zh-TW | contributor-maintained | 0 | 1 | 2 | 0 | 0 |", result.stdout)
+        self.assertIn("zh-TW: 1 translation(s) predate their English lesson; review and sync them by hand: 02-beta/01-first", result.stdout)
+        self.assertIn("| fr | automatic | 2 | 1 | 0 | 0 | 0 |", summary.read_text(encoding="utf-8"))
+
+    def test_freshness_report_names_contributor_files_without_a_hash(self) -> None:
+        self.publish(self.current_caches(), lessons=("i18n/zh-TW/phases/01-alpha/01-first/docs/zh-TW.md",))
+        run("git", "fetch", "origin", "+refs/heads/translations:refs/remotes/origin/translations", cwd=self.root)
+        result = run(sys.executable, str(ROOT / "scripts" / "translation_freshness.py"), cwd=self.root, capture=True)
+        self.assertIn("| zh-TW | contributor-maintained | 0 | 0 | 3 | 0 | 1 |", result.stdout)
+        self.assertIn("zh-TW: 1 published translation(s) have no source hash", result.stdout)
+        self.assertIn("01-alpha/01-first", result.stdout)
+
+    def test_freshness_hash_matches_the_translator_cache(self) -> None:
+        for text in ("# plain\n", "# windows\r\nline\r\n", "# unicode \u2014 \u4e2d\n"):
+            with self.subTest(text=text):
+                path = self.root / "phases/01-alpha/01-first/docs/en.md"
+                path.write_bytes(text.encode("utf-8"))
+                expected = translate_lessons.source_hash(path.read_text(encoding="utf-8"))
+                found = translation_freshness.lesson_sources(self.root, "01-alpha")
+                self.assertEqual(found["phases/01-alpha/01-first/docs/en.md"], expected)
+
+
+class TranslateLessonsTest(unittest.TestCase):
+    def setUp(self) -> None:
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name)
+        for name, value in {
+            "ROOT": self.root,
+            "PHASES": self.root / "phases",
+            "OUT_ROOT": self.root / "i18n",
+            "AUTOMATIC": {"fr"},
+        }.items():
+            original = getattr(translate_lessons, name)
+            setattr(translate_lessons, name, value)
+            self.addCleanup(setattr, translate_lessons, name, original)
+        for lesson in ("01-first", "02-second"):
+            self.write(f"phases/01-alpha/{lesson}/docs/en.md", f"# {lesson}\n")
+
+    def write(self, path: str, text: str) -> Path:
+        target = self.root / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(text, encoding="utf-8")
+        return target
+
+    def translate(self, lang: str, *extra: str) -> None:
+        argv = ["translate_lessons.py", "--lang", lang, "--provider", "echo", "--phase", "01-alpha", *extra]
+        original = sys.argv
+        sys.argv = argv
+        try:
+            with open(os.devnull, "w", encoding="utf-8") as sink:
+                stdout, stderr = sys.stdout, sys.stderr
+                sys.stdout = sys.stderr = sink
+                try:
+                    translate_lessons.main()
+                finally:
+                    sys.stdout, sys.stderr = stdout, stderr
+        finally:
+            sys.argv = original
+
+    def cache(self, lang: str) -> dict[str, str]:
+        return json.loads((self.root / f"i18n/{lang}/.cache/01-alpha.json").read_text(encoding="utf-8"))
+
+    def test_contributor_translations_survive_an_english_change(self) -> None:
+        reviewed = self.write("i18n/zh-TW/phases/01-alpha/01-first/docs/zh-TW.md", "# reviewed\n")
+        self.write("i18n/zh-TW/.cache/01-alpha.json", json.dumps({"phases/01-alpha/01-first/docs/en.md": "0" * 64}))
+        self.translate("zh-TW")
+        self.assertEqual(reviewed.read_text(encoding="utf-8"), "# reviewed\n")
+        self.assertEqual(self.cache("zh-TW")["phases/01-alpha/01-first/docs/en.md"], "0" * 64)
+        added = self.root / "i18n/zh-TW/phases/01-alpha/02-second/docs/zh-TW.md"
+        self.assertEqual(added.read_text(encoding="utf-8"), "# 02-second\n")
+        self.translate("zh-TW", "--replace-maintained")
+        self.assertEqual(reviewed.read_text(encoding="utf-8"), "# 01-first\n")
+
+    def test_replace_flag_also_replaces_current_contributor_files(self) -> None:
+        reviewed = self.write("i18n/zh-TW/phases/01-alpha/01-first/docs/zh-TW.md", "# reviewed\n")
+        digest = translate_lessons.source_hash("# 01-first\n")
+        self.write("i18n/zh-TW/.cache/01-alpha.json", json.dumps({"phases/01-alpha/01-first/docs/en.md": digest}))
+        self.translate("zh-TW")
+        self.assertEqual(reviewed.read_text(encoding="utf-8"), "# reviewed\n")
+        self.translate("zh-TW", "--replace-maintained")
+        self.assertEqual(reviewed.read_text(encoding="utf-8"), "# 01-first\n")
+
+    def test_removed_lesson_leaves_the_automatic_slice(self) -> None:
+        self.translate("fr")
+        removed = self.root / "i18n/fr/phases/01-alpha/02-second/docs/fr.md"
+        self.assertTrue(removed.is_file())
+        (self.root / "phases/01-alpha/02-second/docs/en.md").unlink()
+        self.translate("fr")
+        self.assertFalse(removed.exists())
+        self.assertEqual(list(self.cache("fr")), ["phases/01-alpha/01-first/docs/en.md"])
+
+    def test_removed_lesson_keeps_contributor_files(self) -> None:
+        kept = self.write("i18n/zh-TW/phases/01-alpha/09-gone/docs/zh-TW.md", "# reviewed\n")
+        self.write("i18n/zh-TW/.cache/01-alpha.json", json.dumps({"phases/01-alpha/09-gone/docs/en.md": "0" * 64}))
+        self.translate("zh-TW")
+        self.assertTrue(kept.is_file())
+        self.assertIn("phases/01-alpha/09-gone/docs/en.md", self.cache("zh-TW"))
 
 
 if __name__ == "__main__":

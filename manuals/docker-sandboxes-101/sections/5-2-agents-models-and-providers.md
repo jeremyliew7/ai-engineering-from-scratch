@@ -8,9 +8,9 @@ When you finish this section, you can follow an agent's `model` value to the end
 
 ## The file and its schema
 
-**Agent file:** a YAML or HCL document that matches `agent-schema.json`, the schema of Docker Agent v16. Its root allows 16 keys and requires one: "Map of agent configurations. At least one agent is required" {{schema agents}}. A misspelled top-level key fails the load, because "the parser rejects unknown top-level keys" {{docs-agent Configuration Overview}}.
+**Agent file:** a YAML or HCL document that matches `agent-schema.json`, the schema of Docker Agent v16. Its root allows 16 keys and requires one: `agents`, a map of agent configurations with at least one agent {{schema agents}}. A misspelled top-level key fails the load, because the parser rejects unknown top-level keys {{docs-agent Configuration Overview}}.
 
-`version` is a string from `"0"` to `"16"` in the schema enum. The same docs page still says "The current version is `15`" {{docs-agent Configuration Overview}}. The capture files declare `"16"` and load, so this manual follows the schema. "When you load an older config, Docker Agent automatically migrates it to the latest schema" {{docs-agent Configuration Overview}}. The agent that `share pull` fetched from `agentcatalog/pirate` declares `version: "2"` and names `openai/gpt-4.1` inline (`16-share-pull-agent.yaml`).
+`version` is a string from `"0"` to `"16"` in the schema enum. The same docs page still gives `15` as the current version {{docs-agent Configuration Overview}}. The capture files declare `"16"` and load, so this manual follows the schema. When you load an older config, Docker Agent migrates it to the latest schema {{docs-agent Configuration Overview}}. The agent that `share pull` fetched from `agentcatalog/pirate` declares `version: "2"` and names `openai/gpt-4.1` inline (`16-share-pull-agent.yaml`).
 
 ```listing
 title: the agent file of the single-agent runs
@@ -59,9 +59,9 @@ models:
 
 - `provider/model` inline, such as `dmr/ai/qwen3` in `greeter.yaml` {{docs-agent Models}}.
 - a name under `models`, such as `local`, with `provider`, `model`, and parameters such as `temperature: 0`.
-- a `first_available` list: "At load time, Docker Agent selects the first candidate whose credentials are configured" {{docs-agent Models}}.
+- a `first_available` list: at load time, Docker Agent picks the first candidate that has its credentials configured {{docs-agent Models}}.
 - an alloy: two references with a comma between them, which the runtime alternates in one conversation.
-- `auto`: "the first cloud provider with a configured credential", then a pulled Model Runner model {{docs-agent Set Up a Model}}.
+- `auto`: the first cloud provider that has a configured credential, then a pulled Model Runner model {{docs-agent Set Up a Model}}.
 
 `run --model [agent=]provider/model` replaces the reference for one run {{help-agent docker-agent run}}. On the recording Mac, `doctor` resolved `auto` to `dmr/docker.io/ai/qwen3:4b` with only the 4B tag pulled (`25-doctor.txt`). With no Model Runner, it named `dmr/ai/qwen3:latest` and reported no usable model (`16-doctor.txt`).
 
@@ -90,9 +90,9 @@ models:
 …
 ```
 
-`files.yaml` names `provider: dmr` with no `base_url`, and then "Docker Agent auto-discovers the DMR endpoint" {{docs-agent Docker Model Runner}}. It runs `docker model status --json`, which `16-dry-run.txt` prints inside its error when no Docker daemon answers. An eval container has no `docker` CLI, so the same discovery fails there, as [eval](#s-session-db-sessions-diff-and-eval) shows.
+`files.yaml` names `provider: dmr` with no `base_url`, and then Docker Agent finds the DMR endpoint by itself {{docs-agent Docker Model Runner}}. It runs `docker model status --json`, which `16-dry-run.txt` prints inside its error when no Docker daemon answers. An eval container has no `docker` CLI, so the same discovery fails there, as [eval](#s-session-db-sessions-diff-and-eval) shows.
 
-With an explicit `base_url`, `dmr.yaml` answered `Hello` (`25-run-dmr.txt`). That run is live in every capture, because an explicit `base_url` bypasses the `--record` proxy and leaves the cassette empty (`capture/README.md`). Set `base_url` when discovery cannot work, and leave it out when you want a cassette.
+With an explicit `base_url`, `dmr.yaml` answered `Hello` ([the capture](manuals/docker-sandboxes-101/capture/out/25-run-dmr.txt)). That run is live in every capture, because an explicit `base_url` bypasses the `--record` proxy and leaves the cassette empty ([kit notes](manuals/docker-sandboxes-101/capture/README.md)). Set `base_url` when discovery cannot work, and leave it out when you want a cassette.
 
 Provider ids changed too. `doctor` prints `fireworks-ai`, `togetherai`, and `moonshotai`, and the docs Models table lists `fireworks`, `together`, and `moonshot`. This manual prints the ids that `doctor` prints ([conflict C58](#s-ref-sources-and-the-conflicts-register)), and [the providers table](#s-ref-providers-and-models) has the rest. A named patch under `flavors` changes any of these blocks at run time with `--flavor` {{help-agent docker-agent run}}, and the capture ran none.
 

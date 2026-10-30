@@ -8,11 +8,11 @@ When you finish this section, you can read a v3 descriptor line by line and say 
 
 ## One image, one annotation
 
-**Kit:** one OCI image whose manifest annotation `vnd.docker.sandbox.kit.descriptor` carries the kit's declarations, while its layers carry the content {{kitspec §1}}. "a Kit pulls, inspects, and `FROM`s with stock tooling, and an engine that does not read the annotation runs it as an ordinary image" {{kitspec §1}}.
+**Kit:** one OCI image whose manifest annotation `vnd.docker.sandbox.kit.descriptor` carries the kit's declarations, while its layers carry the content {{kitspec §1}}. Stock tooling can pull a kit, inspect it, and use it in `FROM`. An engine that does not read the annotation runs it as an ordinary image {{kitspec §1}}.
 
 **Workload:** a kit whose layers are a root filesystem and whose image config carries the launch command. A composition has exactly one {{kitspec §1}}.
 
-**Mixin:** a kit whose layers are an overlay applied on a workload's filesystem, zero or more per composition {{kitspec §1}}. A third `kind`, `set`, exists only while authoring: "publishing derives `workload` or `mixin` from the Kits it lists" {{kitspec §4}}.
+**Mixin:** a kit whose layers are an overlay applied on a workload's filesystem, zero or more per composition {{kitspec §1}}. A third `kind`, `set`, exists only while you write the kit. Publishing turns it into `workload` or `mixin` from the kits that it lists {{kitspec §4}}.
 
 ## The descriptor, line by line
 
@@ -41,18 +41,18 @@ capabilities:
           - example.com
 ```
 
-The frontend is "dispatched by the descriptor's first line, `# syntax=docker/sandbox-kit:3`" {{kitspec §1.1}}. `schemaVersion` must be exactly the string `"3"`, and `kind` is `workload`, `mixin`, or `set` {{kitspec §4}}. `displayName`, `description`, `version`, and `licenses` are optional display metadata. No `name` field exists, because identity is the reference that a kit is consumed by {{kitspec §1}}.
+The first line of the descriptor, `# syntax=docker/sandbox-kit:3`, selects the frontend {{kitspec §1.1}}. `schemaVersion` must be exactly the string `"3"`, and `kind` is `workload`, `mixin`, or `set` {{kitspec §4}}. `displayName`, `description`, `version`, and `licenses` are optional display metadata. No `name` field exists, because identity is the reference that a kit is consumed by {{kitspec §1}}.
 
-The `build:` field "carries literal Dockerfile text" {{kitspec §3.2}}. `capabilities` is a list of entries with `type` and `config` {{kitspec §7}}. Here one `network-policy@2` entry allows `example.com` in the `runtime` phase, the agent's steady state {{kitcap network-policy@2}}.
+The `build:` field holds plain Dockerfile text {{kitspec §3.2}}. `capabilities` is a list of entries with `type` and `config` {{kitspec §7}}. Here one `network-policy@2` entry allows `example.com` in the `runtime` phase, the agent's steady state {{kitcap network-policy@2}}.
 
-Decoding is strict: "Any unrecognized field anywhere in the document is an error" {{kitspec §1.2}}. The reason is policy: "A misspelled key silently ignored would be a policy silently absent" {{kitspec §1.2}}. [Figure](#fig-4-1) puts the file beside the manifest that the build pushed.
+Decoding is strict: a field that the parser does not know is an error anywhere in the document {{kitspec §1.2}}. The reason is policy. A misspelled key that the parser ignored would be a policy that is missing without a warning {{kitspec §1.2}}. [Figure](#fig-4-1) puts the file beside the manifest that the build pushed.
 
 ```figure
 id: fig-4-1
 kind: structure
 title: a v3 descriptor and the image manifest that carries it
 claim: The frontend copies the hello-kit descriptor into one manifest annotation, derives six more annotations from its fields, and records its own release in built-by.
-caption: Read left to right. The left column is capture/fixtures/kits/hello-kit/kit.yaml, and each note says what the row becomes. The right column is the index and the arm64 manifest that the local registry returned, from capture/out/28-index.json and 28-manifest.json. Teal lines are the writes of the frontend.
+caption: Read left to right. The left column is the hello kit's kit.yaml, and each note says what the row becomes. The right column is the index and the arm64 manifest that the local registry returned, from the index and manifest captures. Teal lines are the writes of the frontend.
 ```
 
 ## What the frontend publishes
@@ -86,7 +86,7 @@ note: The config, the layers, and most of the descriptor are cut. The registry s
     "vnd.docker.sandbox.kit.schema-version": "3"
 ```
 
-The descriptor annotation is "The published descriptor as compact JSON" {{kitspec §9.3}}, with the `build:` text kept. For a workload, the frontend also reads the package database and adds one `deb/` entry per installed package {{kitspec §9.6}}. `schema-version` and `capabilities` repeat two fields, and the `org.opencontainers.image.*` keys copy the display fields {{kitspec §9.3}}. The build staged the sources at `/usr/share/sandbox/kit/kit`, after the stem of `kit.yaml` {{kitspec §10}}.
+The descriptor annotation holds the published descriptor as compact JSON {{kitspec §9.3}}, with the `build:` text kept. For a workload, the frontend also reads the package database and adds one `deb/` entry per installed package {{kitspec §9.6}}. `schema-version` and `capabilities` repeat two fields, and the `org.opencontainers.image.*` keys copy the display fields {{kitspec §9.3}}. The build staged the sources at `/usr/share/sandbox/kit/kit`, after the stem of `kit.yaml` {{kitspec §10}}.
 
 ## Which commands accept a v3 kit
 
@@ -114,9 +114,9 @@ error: build kit ./fixtures/kits/hello-kit: exit status 1 ERROR: failed to build
 [exit 1]
 ```
 
-The ruling: `sbx kit validate`, `pack`, `push`, and `pull` are v1 and v2 tooling. `pack` refused the directory too, for lack of a `spec.yaml` (`13-kit-v3-pack.txt`). The documentation agrees: "Use Buildx for v3 kits. The `sbx kit pack`, `push`, and `pull` commands are for v1 and v2 kits" {{docs-sbx Publish an image}}.
+The ruling: `sbx kit validate`, `pack`, `push`, and `pull` are v1 and v2 tooling. `pack` refused the directory too, for lack of a `spec.yaml` (`13-kit-v3-pack.txt`). The documentation agrees: use Buildx for v3 kits, because `sbx kit pack`, `push`, and `pull` are for v1 and v2 kits {{docs-sbx Publish an image}}.
 
-A v3 kit is consumed by `sbx run` and `--kit`, since "`sbx run` and `sbx create` now accept sandbox kit references as the agent positional" {{rel-sbx v0.42.0}}. The pushed hello-kit still never reached a sandbox, because `kit.allowedSources` defaults to `["docker.io/"]` ([C40](#s-ref-sources-and-the-conflicts-register), `02-settings.txt`) {{rel-sbx v0.34.0}}:
+A v3 kit is consumed by `sbx run` and `--kit`, since `sbx run` and `sbx create` accept a kit reference in the place of the agent name {{rel-sbx v0.42.0}}. The pushed hello-kit still never reached a sandbox, because `kit.allowedSources` defaults to `["docker.io/"]` ([C40](#s-ref-sources-and-the-conflicts-register), `02-settings.txt`) {{rel-sbx v0.34.0}}:
 
 ```listing
 title: sbx refuses a kit from outside docker.io
@@ -131,7 +131,7 @@ error: resolve kits: kit "localhost:15000/m101/hello-kit:v1": kit "localhost:150
 [exit 1]
 ```
 
-The capture kit never changes `sbx settings`, so no capture shows sbx running a v3 kit. Two rules bound the mix. "V3 kits cannot be combined with v1 or v2 kits in the same sandbox" {{docs-sbx Version compatibility}}. And "The built-in agent names, such as `claude` and `codex`, select v2 kits" {{docs-sbx Version compatibility}}. Docker publishes its v3 workloads as `docker/sbx-kit-*`, such as `docker.io/docker/sbx-kit-codex:0.155.1` {{docs-sbx Run a kit}}.
+The capture kit never changes `sbx settings`, so no capture shows sbx running a v3 kit. Two rules limit the mix. A sandbox cannot combine v3 kits with v1 or v2 kits {{docs-sbx Version compatibility}}. The built-in agent names, such as `claude` and `codex`, select v2 kits {{docs-sbx Version compatibility}}. Docker publishes its v3 workloads as `docker/sbx-kit-*`, such as `docker.io/docker/sbx-kit-codex:0.155.1` {{docs-sbx Run a kit}}.
 
 ## Where the run and the pages disagree
 
@@ -140,10 +140,10 @@ Five results of the run contradict the specification or the documentation, and r
 | The page says | The capture shows | Files |
 |---|---|---|
 | `docker buildx build -f kit.yaml --push` publishes the kit {{docs-sbx Publish an image}} | the default `docker` driver of Desktop 4.94.0 pushed a Docker schema 2 manifest with no annotations | `28-buildx-docker-driver.txt`, `28-manifest-docker-driver.json` |
-| the frontend "promotes all four onto the image index whenever the export produces one" {{kitspec §9.3}} | the index has an attestation manifest and no annotations, and the arm64 manifest carries all eight | `28-index.json`, `28-manifest.json` |
+| the frontend copies all four onto the image index whenever the export makes one {{kitspec §9.3}} | the index has an attestation manifest and no annotations, and the arm64 manifest carries all eight | `28-index.json`, `28-manifest.json` |
 | the floating `docker/sandbox-kit:3` never moves for a milestone (the README of the specification) | `:3` resolved to the milestone `3.0.0-m.8` of 2026-10-02 | `28-buildx.txt` |
-| "During development, you can pass a local source directory to `sbx` instead" {{docs-sbx Publish an image}} | `sbx kit inspect` of the directory failed: the OCI exporter is not supported for the `docker` driver | `13-kit-v3-inspect.txt`, `28-kit-inspect-source.txt` |
-| source-form builds "run inside a shared builder sandbox named sbx-kit-builder" {{help-sbx sbx kit builder}} | that build ran in the host Docker daemon, and the builder status recorded after it reads "not created" | `13-kit-v3-inspect.txt`, `13-kit-builder-status.txt` |
+| during development, `sbx` takes a local source directory instead {{docs-sbx Publish an image}} | `sbx kit inspect` of the directory failed: the OCI exporter is not supported for the `docker` driver | `13-kit-v3-inspect.txt`, `28-kit-inspect-source.txt` |
+| source-form builds run in a shared builder sandbox named `sbx-kit-builder` {{help-sbx sbx kit builder}} | that build ran in the host Docker daemon, and the builder status recorded after it reads "not created" | `13-kit-v3-inspect.txt`, `13-kit-builder-status.txt` |
 
 An image without the descriptor annotation is not a kit to any consumer {{kitspec §10}}, so build with a `docker-container` builder. A consumer that finds no annotation on the index reads the platform manifest {{kitspec §9.3}}. The specification calls itself experimental, with a final version targeted for Q4 2026.
 

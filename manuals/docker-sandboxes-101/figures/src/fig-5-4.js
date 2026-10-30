@@ -23,7 +23,7 @@ const rows = [
 module.exports = figure('fig-5-4', {
   height: 456,
   title: 'A delegation that returns, then a move that stays',
-  desc: 'Four lifelines: you running docker-agent run with exec, root, writer, and reviewer from capture/fixtures/agents/team.yaml. Message 1 asks root for one sentence from the writer. Root calls transfer_task with agent writer, a task and an expected output, the writer runs in its own sub-session that holds only the task, and its sentence, MicroVMs are lightweight virtual machines, returns to root as the tool response. Root then calls the session-moving tool with agent reviewer, and reviewer answers APPROVED with the sentence. Message 2 goes straight to reviewer, which answers the same way, and root is not asked again.',
+  desc: 'Four lifelines: you running docker-agent run with exec, root, writer, and reviewer from team.yaml. Message 1 asks root for one sentence from the writer. Root calls transfer_task with agent writer, a task and an expected output, the writer runs in its own sub-session that holds only the task, and its sentence, MicroVMs are lightweight virtual machines, returns to root as the tool response. Root then calls the session-moving tool with agent reviewer, and reviewer answers APPROVED with the sentence. Message 2 goes straight to reviewer, which answers the same way, and root is not asked again.',
 }, f => {
   for (const lane of lanes) {
     f.box({ x: lane.x, y: 10, w: 100, h: 30, hue: lane.hue, title: lane.name, titleSize: 11.5 });

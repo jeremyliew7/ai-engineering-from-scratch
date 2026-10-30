@@ -33,7 +33,7 @@ note: The Installation and Storage groups are cut. The capture kit masks byte an
 
 `kern.hv_support is 1` is the macOS flag for hardware virtualization. The guest runs on the host hypervisor: Hypervisor.framework on macOS, Windows Hypervisor Platform on Windows, and KVM on Linux ([conflict C3](#s-ref-sources-and-the-conflicts-register)). The `mkfs.erofs` line names the guest root filesystem format and its page size, which `getconf PAGESIZE` inside reports as `16384` ([conflict C45](#s-ref-sources-and-the-conflicts-register)). The last line is the sign-in check. `sbx` runs without Docker Desktop, and it still refuses to create a sandbox without a Docker account ([conflict C15](#s-ref-sources-and-the-conflicts-register)).
 
-The FAQ gives Docker's reasons: "Tie sandboxes to a real person" and "Authenticate against Docker infrastructure" {{docs-sbx FAQ}}. It also lists the product's own egress hosts, starting with `login.docker.com`.
+The FAQ gives two reasons: a sandbox belongs to a real person, and it authenticates against Docker infrastructure {{docs-sbx FAQ}}. It also lists the product's own egress hosts, starting with `login.docker.com`.
 
 ## Five layers, from the kernel up
 
@@ -69,10 +69,10 @@ The docs name five isolation layers: hypervisor, network, Docker Engine, workspa
 label: where the boundary is
 source: docs-sbx Isolation layers
 ---
-"The agent runs as a non-root user with sudo privileges inside the VM. The hypervisor boundary is the isolation control, not in-VM privilege separation."
+The agent runs as a non-root user with sudo rights inside the VM. The hypervisor boundary isolates the agent. Privilege separation inside the VM does not.
 ```
 
-Docker Engine 29.8.1 and containerd v2.3.5 in the listing belong to the VM, and so does every image the agent builds. The docs state the consequence in one sentence: "The agent has no path to your host Docker daemon." {{docs-sbx Docker Engine isolation}}
+Docker Engine 29.8.1 and containerd v2.3.5 in the listing belong to the VM, and so does every image the agent builds. The docs state the consequence: the agent cannot reach the Docker daemon on your host {{docs-sbx Docker Engine isolation}}.
 
 The host side has no Docker API for the sandbox either. Kevin Wittek said on 2026-04-23 that the Moby API is not offered from the host {{talk 2026-04-23 T06}}. REST clients that expect it do not work against a sandbox, and `sbx exec` is the way in, as [sbx exec, cp, and ports](#s-sbx-exec-cp-and-ports) shows.
 
@@ -80,11 +80,11 @@ The host side has no Docker API for the sandbox either. Kevin Wittek said on 202
 
 ## The doors through the boundary
 
-Kevin Wittek named four entry points into a sandbox on 2026-09-04: bind mounts, network, secret injection, and MCP {{talk 2026-09-04 T02}}. The capture shows each as one line in the guest. The workspace is `host on $CAPTURE/fixtures/repo type virtiofs (rw,...)`, a mount at the same path as on the host. `/etc/resolv.conf` is a second, read-only virtiofs bind from the host, so the resolver is the host's. The network door is `HTTPS_PROXY=http://gateway.docker.internal:3128` in the environment (capture/out/04-env.txt). The secret door is `ANTHROPIC_API_KEY=proxy-managed`, a sentinel.
+Kevin Wittek named four entry points into a sandbox on 2026-09-04: bind mounts, network, secret injection, and MCP {{talk 2026-09-04 T02}}. The capture shows each as one line in the guest. The workspace is `host on $CAPTURE/fixtures/repo type virtiofs (rw,...)`, a mount at the same path as on the host. `/etc/resolv.conf` is a second, read-only virtiofs bind from the host, so the resolver is the host's. The network door is `HTTPS_PROXY=http://gateway.docker.internal:3128` in the environment ([the capture](manuals/docker-sandboxes-101/capture/out/04-env.txt)). The secret door is `ANTHROPIC_API_KEY=proxy-managed`, a sentinel.
 
 The MCP door is `MCP_GATEWAY_URL=http://mcp-gateway.docker.internal/mcp`. A fifth line, `SSH_AUTH_SOCK=/run/ssh-agent.sock` with `SSH_AUTH_SOCK_GATEWAY=gateway.docker.internal:3129`, is the forwarded SSH agent, a door that the talk did not name. The docs turn that forwarding on by default {{docs-sbx Credential isolation}}, and [secrets](#s-sbx-secret-set-import-and-set-custom) returns to it. [Figure](#fig-3-1) stacks the layers and draws the doors.
 
-The VM has limits of its own. `--memory` defaults to 50% of host memory, clamped to 512 MiB to 32 GiB {{help-sbx sbx create}}. `--cpus 0` means all host CPUs, at most 16 on Linux arm64 {{help-sbx sbx create}}. `m101-policy` got `cpu 10` and `memory 32 GiB` on the capture Mac (capture/out/09-create.txt).
+The VM has limits of its own. `--memory` defaults to 50% of host memory, clamped to 512 MiB to 32 GiB {{help-sbx sbx create}}. `--cpus 0` means all host CPUs, at most 16 on Linux arm64 {{help-sbx sbx create}}. `m101-policy` got `cpu 10` and `memory 32 GiB` on the capture Mac ([the capture](manuals/docker-sandboxes-101/capture/out/09-create.txt)).
 
 ```figure
 id: fig-3-1

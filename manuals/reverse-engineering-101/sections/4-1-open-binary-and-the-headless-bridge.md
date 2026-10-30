@@ -36,7 +36,7 @@ note: The request and the result. The text copy of the result is cut by the capt
 
 The handler calls `session.open` with the path and the provider id, then returns five fields: `path`, `format`, `kind`, `sha256`, and `architecture`. To fill them rea reads the magic bytes: `7f 45 4c 46` for ELF, `MZ` for DOS and PE, and four Mach-O values. It hashes the whole file in 64 KiB chunks. A file with no header needs an explicit `format`. With `format: "raw-binary"` you also give `architecture` and `entry_point`, and the result adds `entry_point`. rea refuses a WebAssembly module here and sends it to `inspect_wasm_artifact`. For every other target, rea selects the provider you asked for, and `binary_session` records that choice.
 
-The selection waits for the provider's readiness checks. On the capture Mac, the server log shows about 1.6 s for the first `open_binary` and about 0.4 s for the second. The design docs allow the wait: "Readiness observations may await owned prerequisite commands." Release 6.5.0 answered the same calls in 36 ms and 1 ms. Neither version imports the target at this step.
+The selection waits for the provider's readiness checks. On the capture Mac, the server log shows about 1.6 s for the first `open_binary` and about 0.4 s for the second. The design docs allow the wait: a readiness check can wait for the commands that it owns. Release 6.5.0 answered the same calls in 36 ms and 1 ms. Neither version imports the target at this step.
 
 ```listing
 title: the binding that binary_session reports
@@ -80,7 +80,7 @@ note: Cut to the provider binding and the server identity. The capabilities, can
 label: what open_binary does not do
 source: mcp §Ghidra first-query deadlines and recovery
 ---
-"open_binary then selects a target and provider binding; it does not establish that Ghidra has finished importing the target."
+`open_binary` picks the target and binds the provider. It does not prove that Ghidra has finished the import of the target.
 ```
 
 ## The first Ghidra-backed call
@@ -121,7 +121,9 @@ The capture kit records the pattern in its README. The first Ghidra-backed call 
 5. Write `session.json` with `transport`, `endpoint_path`, `token`, `run_id`, `target_sha256`, `provider_version`, and `profile_digest`.
 6. Start Java and wait for the bridge to accept a connection.
 
-**Headless import:** a Ghidra run with no window that imports one file into a project and runs the default analyzers. On macOS and Linux, rea does not run the `analyzeHeadless` shell script. It asks Ghidra's `LaunchSupport.jar` for the environment and the JVM arguments, then runs `java` itself. The heap is `-Xmx2G` unless `GHIDRA_HEADLESS_MAXMEM` or `GHIDRA_MAXMEM` is set. The command adds `-Djava.awt.headless=true` and names the class `ghidra.Ghidra` with `ghidra.app.util.headless.AnalyzeHeadless`. The docs give the reason: "Apple platform shell wrappers hide their environments from ownership inspection, so retaining those wrappers would prevent verified process-group cancellation during startup." {{install §Ghidra}}
+**Headless import:** a Ghidra run with no window that imports one file into a project and runs the default analyzers. On macOS and Linux, rea does not run the `analyzeHeadless` shell script. It asks Ghidra's `LaunchSupport.jar` for the environment and the JVM arguments, then runs `java` itself. The heap is `-Xmx2G` unless `GHIDRA_HEADLESS_MAXMEM` or `GHIDRA_MAXMEM` is set. The command adds `-Djava.awt.headless=true` and names the class `ghidra.Ghidra` with `ghidra.app.util.headless.AnalyzeHeadless`.
+
+The docs give the reason for the direct start. On Apple platforms the shell wrappers hide their environment from ownership checks. With the wrappers in place, rea could not cancel the process group safely during startup {{install §Ghidra}}.
 
 The headless arguments come in one fixed order:
 
@@ -139,7 +141,7 @@ id: fig-4-1
 kind: sequence
 title: one open and three questions over MCP
 claim: The open call returns after the readiness checks with no import, the first question waits seconds for the headless import, and the next takes under 100 ms.
-caption: Time runs down. Solid arrows are calls, dashed arrows are replies. The violet lanes are rea's Ghidra client and the Java bridge inside analyzeHeadless. The times are the ranges in capture/README.md. From capture/out/10-mcp-server.log and 10-mcp-session.txt.
+caption: Time runs down. Solid arrows are calls, dashed arrows are replies. The violet lanes are rea's Ghidra client and the Java bridge inside analyzeHeadless. The times are the ranges that the kit notes record. From capture/out/10-mcp-server.log and 10-mcp-session.txt.
 ```
 
 ## The bridge on the Java side
@@ -158,11 +160,11 @@ caption: Read top to bottom. Each entry names the file or directory and what wri
 
 ## Deadlines and the close
 
-rea allows 330,000 ms for the start, set by `REA_GHIDRA_STARTUP_TIMEOUT_MS`. On the capture Mac the start took 5 to 7 s, and the client limit is the one to watch: "The pinned client SDK 2.3.1 defaults to 60,000 ms and can cancel earlier than REA's startup deadline." {{mcp §Ghidra first-query deadlines and recovery}}
+rea allows 330,000 ms for the start, set by `REA_GHIDRA_STARTUP_TIMEOUT_MS`. On the capture Mac the start took 5 to 7 s, and the client limit is the one to watch. The pinned client SDK 2.3.1 waits 60,000 ms by default, so it can cancel before the REA startup deadline {{mcp §Ghidra first-query deadlines and recovery}}.
 
 The docs record about 64 s on a Linux fixture and about 163 s on Windows. Set the client deadline from your own first run on your own machine.
 
-`close_binary` takes a fraction of a second in the log. The client sends `shutdown` to the bridge with a 10 s limit, the bridge disposes the decompiler, and `-deleteProject` removes the project. The next `open_binary` on `ledger-arm64-O2` took about 0.4 s, and its first `analyze_function` again took seconds, because "Each new provider session still imports the target into a fresh temporary project." {{mcp §Ghidra first-query deadlines and recovery}}
+`close_binary` takes a fraction of a second in the log. The client sends `shutdown` to the bridge with a 10 s limit, the bridge disposes the decompiler, and `-deleteProject` removes the project. The next `open_binary` on `ledger-arm64-O2` took about 0.4 s. Its first `analyze_function` again took seconds, because every new provider session imports the target again into a new temporary project {{mcp §Ghidra first-query deadlines and recovery}}.
 
 ```takeaways
 - Expect the first Ghidra-backed call after `open_binary` to take seconds and the rest milliseconds.

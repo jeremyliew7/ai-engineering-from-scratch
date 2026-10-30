@@ -32,9 +32,9 @@ models:
 
 ## serve api: a session, then a run
 
-**serve api:** the command that "exposes your agents through a REST-style API with Server-Sent Events (SSE) streaming" {{docs-agent API Server}}. It listens on `127.0.0.1:8080`, and an empty `--auth-token` means no authentication {{help-agent docker-agent serve api}}. `--max-request-size` rejects a body over 1 MiB with HTTP 413, and `--session-workingdir-root` confines the `working_dir` of new sessions {{help-agent docker-agent serve api}}.
+**serve api:** the command that serves your agents through a REST-style API with Server-Sent Events (SSE) streaming {{docs-agent API Server}}. It listens on `127.0.0.1:8080`, and an empty `--auth-token` means no authentication {{help-agent docker-agent serve api}}. `--max-request-size` rejects a body over 1 MiB with HTTP 413, and `--session-workingdir-root` confines the `working_dir` of new sessions {{help-agent docker-agent serve api}}.
 
-The session database has a different default here. `serve api -s` writes `session.db` in the current directory, while `run`, `serve a2a`, and `serve acp` use `<data-dir>/session.db` {{help-agent docker-agent serve api}} ([conflict C63](#s-ref-sources-and-the-conflicts-register)). The capture passed `-s work/api-session.db` and `--fake work/cassettes/23-api`, so a recorded cassette gave the model answer (capture/out/23-serve-api.log).
+The session database has a different default here. `serve api -s` writes `session.db` in the current directory, while `run`, `serve a2a`, and `serve acp` use `<data-dir>/session.db` {{help-agent docker-agent serve api}} ([conflict C63](#s-ref-sources-and-the-conflicts-register)). The capture passed `-s work/api-session.db` and `--fake work/cassettes/23-api`, so a recorded cassette gave the model answer ([the capture](manuals/docker-sandboxes-101/capture/out/23-serve-api.log)).
 
 ```listing
 title: list the agents, create a session, start a run
@@ -91,7 +91,7 @@ data: {"agent_name": "root", "session_id": "<uuid>", "timestamp": "<ts>", "type"
 data: {"agent_name": "root", "finish_reason": "stop", "reason": "normal", "session_id": "<uuid>", "timestamp": "<ts>", "type": "stream_stopped"}
 ```
 
-The docs list eight event types, from `stream_started` to `error` {{docs-agent API Server}}. The capture adds six more: `team_info`, `toolset_info`, `user_message`, `agent_info`, `message_added`, and `token_usage`. The pong agent has no tools, so no `tool_call` frame appears. The last request of the file reads the session back, and the stored assistant message keeps the model's `reasoning_content` beside the answer (capture/out/23-api.http). [Figure](#fig-6-1) draws the whole exchange.
+The docs list eight event types, from `stream_started` to `error` {{docs-agent API Server}}. The capture adds six more: `team_info`, `toolset_info`, `user_message`, `agent_info`, `message_added`, and `token_usage`. The pong agent has no tools, so no `tool_call` frame appears. The last request of the file reads the session back, and the stored assistant message keeps the model's `reasoning_content` beside the answer ([the capture](manuals/docker-sandboxes-101/capture/out/23-api.http)). [Figure](#fig-6-1) draws the whole exchange.
 
 ```figure
 id: fig-6-1
@@ -105,7 +105,7 @@ A run is one request, and the session outlives it. `/steer` injects messages int
 
 ## serve chat: the OpenAI-compatible subset
 
-**serve chat:** the command that "exposes the agent through an OpenAI-compatible API at /v1/chat/completions and /v1/models" {{help-agent docker-agent serve chat}}. The model id is the agent name, so the capture lists `root`, the name inside the file, where `serve api` used `pong`, the file name.
+**serve chat:** the command that serves the agent through an OpenAI-compatible API at `/v1/chat/completions` and `/v1/models` {{help-agent docker-agent serve chat}}. The model id is the agent name, so the capture lists `root`, the name inside the file, where `serve api` used `pong`, the file name.
 
 ```listing
 title: the model list, one completion, and a request without the token

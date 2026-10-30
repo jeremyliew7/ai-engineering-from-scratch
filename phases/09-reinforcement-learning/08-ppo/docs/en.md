@@ -38,7 +38,7 @@ L^{\text{CLIP}}(\theta) = \mathbb{E}_t \left[ \min\left( r_t(\theta) A_t, \matho
 Two terms:
 
 - If the advantage $A_t > 0$ and the ratio tries to grow past $1 + \epsilon$, the clip flattens the gradient — don't push a good action further than $+\epsilon$ above old probability.
-- If the advantage $A_t < 0$ and the ratio tries to grow past $1 - \epsilon$ (meaning we would make a bad action more likely compared to its clipped reduction), the clip caps the gradient — don't push a bad action below $-\epsilon$.
+- If the advantage $A_t < 0$ and the ratio tries to fall below $1 - \epsilon$ (meaning we would make a bad action much less likely than the old policy did), the clip flattens the gradient: don't push a bad action further than $-\epsilon$ below old probability.
 
 The `min` handles the other direction: if the ratio has moved in the *beneficial* direction, you still get the gradient (no clipping on the side that would hurt you).
 

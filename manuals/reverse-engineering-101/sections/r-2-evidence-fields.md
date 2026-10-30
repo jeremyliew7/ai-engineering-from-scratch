@@ -4,7 +4,7 @@
 
 The Evidence schema is one strict Zod object with 16 fields. The schema rejects a record with an unknown field. `relationship_coverage` is the sixteenth field. A record must carry it, as an object or as `null`, and the id hash covers it in both cases.
 
-The dossier column takes its values from the `analyze_function` record of `_percent_change` in `ledger-arm64-O1`, `ev_b492c85e` (capture/out/10-mcp-09-analyze-function-percent-change-O1.json). The derived column takes them from the `verify_reconstruction` record `ev_ccbaea4b` (capture/out/10-mcp-22-verify-reconstruction.json). [Section 5.1](#s-the-evidence-record) reads the record in prose.
+The dossier column takes its values from the `analyze_function` record of `_percent_change` in `ledger-arm64-O1`, `ev_b492c85e` ([the capture](manuals/reverse-engineering-101/capture/out/10-mcp-09-analyze-function-percent-change-O1.json)). The derived column takes them from the `verify_reconstruction` record `ev_ccbaea4b` ([the capture](manuals/reverse-engineering-101/capture/out/10-mcp-22-verify-reconstruction.json)). [Section 5.1](#s-the-evidence-record) reads the record in prose.
 
 ## The 16 fields
 
@@ -44,9 +44,9 @@ The format owns the architecture claim. rea knows ten families. `6502` and `m68k
 
 ## The id
 
-The id hashes the semantic projection of the record. That projection keeps the subject's `digest`, `format`, and `architecture` and every other field except `evidence_id`, and leaves out the subject's `name` and `local_path`. The same observation of the same bytes therefore gets the same id in any directory on any machine. The capture check compares ids unmasked (capture/README.md). `parseEvidence` recomputes the hash of every record it reads and rejects a mismatch. A record without a subject gets the limitation "Artifact identity is unavailable for this observation." appended at creation.
+The id hashes the semantic projection of the record. That projection keeps the subject's `digest`, `format`, and `architecture` and every other field except `evidence_id`, and leaves out the subject's `name` and `local_path`. The same observation of the same bytes therefore gets the same id in any directory on any machine. The capture check compares ids unmasked ([the capture](manuals/reverse-engineering-101/capture/README.md)). `parseEvidence` recomputes the hash of every record it reads and rejects a mismatch. A record without a subject gets the limitation "Artifact identity is unavailable for this observation." appended at creation.
 
-The projection keeps `relationship_coverage` also when it is `null`. An earlier release left a `null` coverage out of the hash, so its records fail this check. `evidence-import` refuses such a bundle with `evidence_integrity_mismatch` (capture/out/13-evidence-import-rea-6.5.0.json). Regenerate saved Evidence with the release you run.
+The projection keeps `relationship_coverage` also when it is `null`. An earlier release left a `null` coverage out of the hash, so its records fail this check. `evidence-import` refuses such a bundle with `evidence_integrity_mismatch` ([the capture](manuals/reverse-engineering-101/capture/out/13-evidence-import-rea-6.5.0.json)). Regenerate saved Evidence with the release you run.
 
 Two other id prefixes appear in the captures. `unk_` ids name residual unknowns and hash `{ domain, question, scope_digest }`, and `comparison_conclusion_scope` when the unknown has one ([Section 5.2](#s-residual-unknowns-and-coverage)). The `analysis_profile.digest` is the SHA-256 of the canonical JSON of the provider and its parameters. Two records with different digests are not comparable in `compare_functions`.
 

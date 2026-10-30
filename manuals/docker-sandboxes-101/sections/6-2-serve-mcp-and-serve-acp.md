@@ -8,7 +8,7 @@ When you finish this section, you can serve an agent as an MCP tool, read its sc
 
 ## serve mcp: one agent, one tool
 
-**serve mcp:** "Start an MCP server that exposes the agent via the Model Context Protocol. By default, uses stdio transport" {{help-agent docker-agent serve mcp}}. `--http` switches to streaming HTTP on `127.0.0.1:8081`. Without `-a`, every agent of a team file becomes its own tool, and `--tool-name` renames the tool when one agent is exposed {{help-agent docker-agent serve mcp}}.
+**serve mcp:** starts an MCP server that serves the agent over the Model Context Protocol, with stdio transport by default {{help-agent docker-agent serve mcp}}. `--http` switches to streaming HTTP on `127.0.0.1:8081`. Without `-a`, every agent of a team file becomes its own tool, and `--tool-name` renames the tool when one agent is exposed {{help-agent docker-agent serve mcp}}.
 
 `--attach` exposes the session of a running TUI, found by pid, address, or session id. `--mcp-keepalive` works over stdio only, while `--auth-token`, `--insecure-no-auth`, and `--safety` work with `--http` only {{help-agent docker-agent serve mcp}}. Over HTTP the safety policy defaults to `restricted` {{docs-agent MCP Mode}}.
 
@@ -36,13 +36,13 @@ data: {"jsonrpc":"2.0","id":2,"result":{"ttlMs":0,"cacheScope":"public","tools":
 data: {"jsonrpc":"2.0","id":3,"result":{"content":[{"type":"text","text":"{\"response\":\"pong\"}"}],"structuredContent":{"response":"pong"}}}
 ```
 
-The client asked for revision `2026-07-28`, which v1.129.0 added with "stateless Streamable HTTP transport" {{rel-agent v1.129.0}}. The server answered `2025-11-25`, so read the version from the result, never from your request. No response carried an `Mcp-Session-Id` header. Each answer came as one SSE `message` event, and the notification got `202 Accepted` (capture/out/23-mcp.http).
+The client asked for revision `2026-07-28`, which v1.129.0 added together with a stateless Streamable HTTP transport {{rel-agent v1.129.0}}. The server answered `2025-11-25`, so read the version from the result, never from your request. No response carried an `Mcp-Session-Id` header. Each answer came as one SSE `message` event, and the notification got `202 Accepted` ([the capture](manuals/docker-sandboxes-101/capture/out/23-mcp.http)).
 
-The tool takes one string, `message`, and returns `structuredContent.response`, with the same text as a JSON string in `content`. Its annotations mark it read-only and idempotent, and its title is the agent's `description`. The `tools/call` answer came as one event after the whole turn, with no progress notification before it. The kit README adds that the server answered on `/` as well as `/mcp` (capture/README.md). The docs register the stdio form in Claude Code with `claude mcp add --transport stdio`, followed by `-- docker agent serve mcp` and the agent reference {{docs-agent MCP Mode}}.
+The tool takes one string, `message`, and returns `structuredContent.response`, with the same text as a JSON string in `content`. Its annotations mark it read-only and idempotent, and its title is the agent's `description`. The `tools/call` answer came as one event after the whole turn, with no progress notification before it. The kit README adds that the server answered on `/` as well as `/mcp` ([the capture](manuals/docker-sandboxes-101/capture/README.md)). The docs register the stdio form in Claude Code with `claude mcp add --transport stdio`, followed by `-- docker agent serve mcp` and the agent reference {{docs-agent MCP Mode}}.
 
 ## serve acp: JSON-RPC lines to an editor
 
-**serve acp:** a server that "communicates over stdio (standard input/output)" {{docs-agent ACP}}. The editor spawns `docker-agent serve acp FILE`, writes JSON-RPC requests to its stdin, and reads responses and notifications from its stdout. Sessions persist in `<data-dir>/session.db` unless `-s` names another file {{help-agent docker-agent serve acp}}. A team file works as well, and the docs say its sub-agents need no change for ACP {{docs-agent ACP}}.
+**serve acp:** a server that talks over stdio, the standard input and output {{docs-agent ACP}}. The editor spawns `docker-agent serve acp FILE`, writes JSON-RPC requests to its stdin, and reads responses and notifications from its stdout. Sessions persist in `<data-dir>/session.db` unless `-s` names another file {{help-agent docker-agent serve acp}}. A team file works as well, and the docs say its sub-agents need no change for ACP {{docs-agent ACP}}.
 
 ```listing
 title: initialize and session/new over stdio

@@ -8,7 +8,7 @@ When you finish this section, you can read a doctor report, name the check that 
 
 ## What the Ghidra provider needs
 
-**Ghidra provider:** the rea adapter that drives an existing Ghidra install through `analyzeHeadless`. It needs two absolute paths from the environment, `GHIDRA_INSTALL_DIR` and `JAVA_HOME`, and it rejects relative ones. The policy fixes the versions: `SUPPORTED_GHIDRA_VERSION = "12.1.4"` and `SUPPORTED_GHIDRA_JAVA_MAJOR = 21`. The docs say what that means in practice: "It accepts Ghidra 12.1.x and the 64-bit full JDK declared by that installation's `application.java.min` and `application.java.max`." {{install Ghidra}}. The install must also hold the native decompiler for the host, under `Ghidra/Features/Decompiler/os/<platform>/`, and "REA does not build or install native tools, or change Gatekeeper quarantine settings." {{install Ghidra}}.
+**Ghidra provider:** the rea adapter that drives an existing Ghidra install through `analyzeHeadless`. It needs two absolute paths from the environment, `GHIDRA_INSTALL_DIR` and `JAVA_HOME`, and it rejects relative ones. The policy fixes the versions: `SUPPORTED_GHIDRA_VERSION = "12.1.4"` and `SUPPORTED_GHIDRA_JAVA_MAJOR = 21`. In practice, the provider accepts Ghidra 12.1.x with a 64-bit full JDK inside the range that the install declares in `application.java.min` and `application.java.max` {{install Ghidra}}. The install must also hold the native decompiler for the host, under `Ghidra/Features/Decompiler/os/<platform>/`. REA does not build or install native tools, and it does not change the Gatekeeper quarantine settings {{install Ghidra}}.
 
 On the capture Mac, Homebrew put both tools in place:
 
@@ -33,7 +33,7 @@ OpenJDK 64-Bit Server VM Homebrew (build 21.0.12.1, mixed mode, sharing)
 …
 ```
 
-The install docs give the same shape for any host: "Extract Ghidra and install the JDK outside REA, then export absolute paths:" {{install Ghidra}}. On a Mac with Homebrew, that is:
+The install docs give the same steps for any host: extract Ghidra, install the JDK outside REA, and export the two absolute paths {{install Ghidra}}. On a Mac with Homebrew, that is:
 
 ```bash
 export GHIDRA_INSTALL_DIR=/opt/homebrew/Cellar/ghidra/12.1.4/libexec
@@ -106,7 +106,7 @@ note: Cut to the head, the first check, and the two checks that read the install
 | `ghidra-java` | the JDK, its major version against `application.java.min`, 64-bit, `javac` present | `21.0.12.1`, 64-bit, JDK | one code for each failed property |
 
 
-The native decompiler check reads the executable header of the `decompile` binary and compares it with the host. A build for another platform is therefore "reported as incompatible instead of being admitted from its directory name" {{install Ghidra}}. The docs summarize the set: "Doctor validates the platform, architecture, Ghidra 12.1.x application version, `support/analyzeHeadless` or `support/analyzeHeadless.bat`, the installation's Java major range, 64-bit JDK bitness, and the presence of `javac`/`javac.exe`." {{install Ghidra}}. [Figure](#fig-2-2) draws the nine in order.
+The native decompiler check reads the executable header of the `decompile` binary and compares it with the host. A build for another platform is therefore reported as incompatible, even when its directory name looks right {{install Ghidra}}. The doctor checks the platform, the architecture, and the Ghidra 12.1.x version. It also checks `support/analyzeHeadless` or `support/analyzeHeadless.bat`, the Java major range of the install, a 64-bit JDK, and `javac` or `javac.exe` {{install Ghidra}}. [Figure](#fig-2-2) draws the nine in order.
 
 ```figure
 id: fig-2-2
@@ -120,7 +120,7 @@ caption: Read left to right, then down, and the two boxes at the bottom are the 
 
 The report has two verdicts. `healthy` is the verdict for the selected scope, here `explicit` with `providers: ["ghidra"]`, and `scope_checks` lists only the checks in that scope. `environment_healthy` is the verdict for the audit-wide set. It is true only when every check outside the providers passes, every configured provider passes, and at least one provider is available.
 
-On the capture Mac `healthy` is true and `environment_healthy` is false. Hopper, IDA, and Kuna are not configured there, so the formula ignores them, and Ghidra is configured and passes. The false verdict therefore comes from a check outside the Ghidra scope. That check is in the set the capture's `--filter-output` left out, which names this user's skill install and agent registrations (capture/README.md). The exit status follows the scope: `rea doctor` returned 0 (capture/out/00-commands.txt), because "unavailable optional providers remain informational for unrelated tasks" {{cli Output and exit status}}.
+On the capture Mac `healthy` is true and `environment_healthy` is false. Hopper, IDA, and Kuna are not configured there, so the formula ignores them, and Ghidra is configured and passes. The false verdict therefore comes from a check outside the Ghidra scope. That check is in the set the capture's `--filter-output` left out, which names this user's skill install and agent registrations ([the capture](manuals/reverse-engineering-101/capture/README.md)). The exit status follows the scope. `rea doctor` returned 0 ([the capture](manuals/reverse-engineering-101/capture/out/00-commands.txt)), because a missing optional provider only produces a note for tasks that do not use it {{cli Output and exit status}}.
 
 ## When a check fails
 
@@ -128,7 +128,7 @@ The capture kit did not record a failing doctor, because Ghidra was installed. T
 
 A `rea function --provider ghidra` on such a machine fails selection with the code `provider_unavailable`, the category `unavailable`, and `retryable: true`. The message is `The selected analysis provider is unavailable. Review the reported local diagnostics or run rea doctor, then retry.`. Its `details.rejections[].diagnostics.checks[]` holds the same eight checks as the doctor. [Section 2.3](#s-rea-capabilities) shows those diagnostics inside `rea capabilities`, and [the errors reference](#s-ref-errors) lists the codes.
 
-One check has no fix in rea. Every Ghidra record on macOS carries the limitation that "macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state." (capture/out/06-function-percent-change.json). If the Homebrew build of `decompile` is missing or quarantined, you repair Ghidra, not rea.
+One check has no fix in rea. Every Ghidra record on macOS carries the limitation that "macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state." ([the capture](manuals/reverse-engineering-101/capture/out/06-function-percent-change.json)). If the Homebrew build of `decompile` is missing or quarantined, you repair Ghidra, not rea.
 
 ```takeaways
 - Export `GHIDRA_INSTALL_DIR` and `JAVA_HOME` as absolute paths before the first rea command.

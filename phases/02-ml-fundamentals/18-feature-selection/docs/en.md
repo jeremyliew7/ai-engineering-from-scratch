@@ -9,7 +9,7 @@
 
 ## Learning Objectives
 
-- Implement filter methods (variance threshold, mutual information, chi-squared) and wrapper methods (RFE, forward selection) from scratch
+- Implement filter methods (variance threshold, mutual information), a wrapper method (RFE), and embedded methods (L1, tree importance) from scratch, then add forward selection in the exercises
 - Explain why mutual information captures nonlinear feature-target relationships that correlation misses
 - Compare L1 regularization (embedded selection) with RFE (wrapper selection) and evaluate their computational tradeoffs
 - Build a feature selection pipeline that combines multiple methods and demonstrate improved generalization on held-out data

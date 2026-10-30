@@ -24,11 +24,11 @@ const annotations = [
 module.exports = figure('fig-4-1', {
   height: 612,
   title: 'A v3 descriptor and the image manifest that carries it',
-  desc: 'Left: the nine top-level entries of capture/fixtures/kits/hello-kit/kit.yaml, from the syntax line to the capabilities list, each with a note on what it becomes. Right: what the local registry returned for m101/hello-kit:v1, an OCI image index with no annotations and the linux/arm64 image manifest. The manifest carries four vnd.docker.sandbox.kit annotations, the descriptor as JSON with 402 derived deb provides, schema-version 3, the network-policy@2 capability, and built-by sandbox-kit 3.0.0-m.8, plus four org.opencontainers.image keys, the OCI config, and 16 layers with the sources staged at /usr/share/sandbox/kit/kit. Teal lines connect each descriptor row to the annotation or layer it becomes.',
+  desc: 'Left: the nine top-level entries of the kit.yaml of the hello kit, from the syntax line to the capabilities list, each with a note on what it becomes. Right: what the local registry returned for m101/hello-kit:v1, an OCI image index with no annotations and the linux/arm64 image manifest. The manifest carries four vnd.docker.sandbox.kit annotations, the descriptor as JSON with 402 derived deb provides, schema-version 3, the network-policy@2 capability, and built-by sandbox-kit 3.0.0-m.8, plus four org.opencontainers.image keys, the OCI config, and 16 layers with the sources staged at /usr/share/sandbox/kit/kit. Teal lines connect each descriptor row to the annotation or layer it becomes.',
 }, f => {
   f.kicker(20, 18, 'kit.yaml of hello-kit, as written');
   f.kicker(356, 18, 'what the registry returned');
-  f.box({ x: 20, y: 28, w: 306, h: 26, hue: 'green', title: 'capture/fixtures/kits/hello-kit/kit.yaml', titleSize: 11.5, align: 'left', pad: 8 });
+  f.box({ x: 20, y: 28, w: 306, h: 26, hue: 'green', title: 'hello-kit/kit.yaml', titleSize: 11.5, align: 'left', pad: 8 });
 
   const rowTops = [];
   let y = 54;

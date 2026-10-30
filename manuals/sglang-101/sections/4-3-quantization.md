@@ -40,9 +40,45 @@ PR #32114 deleted the plain GPTQ CUDA kernel on 2026-09-10, and on a CUDA build 
 
 `--kv-cache-dtype` accepts `auto`, `bf16`, `fp8_e4m3`, `fp8_e5m2`, `mxfp8` (FA4 only), `nvfp4`, and `fp4_mx_block16`. FP8 halves the bytes per token and FP4 quarters them, so the same pool holds two or four times as many tokens. [Section 3.1](#s-kv-bytes-per-token-and-the-kv-pool) shows how to compute bytes per token for your model.
 
-FP8 needs a scale for each tensor. The help text of `--quantization-param-path` says the file "should generally be supplied, when KV cache dtype is FP8" and that without it the scales "default to 1.0, which may cause accuracy issues" {{code}}. Run an accuracy check whenever you change the KV cache dtype.
+FP8 needs a scale for each tensor. The help text of `--quantization-param-path` says to supply the scales file when the KV cache dtype is FP8. Without it, every scale is 1.0, and accuracy can drop {{code}}. Run an accuracy check whenever you change the KV cache dtype.
+
+The vLLM team treats a scale of 1.0 as the worst case for accuracy. They tested uncalibrated FP8 KV caches in 2026, and most models stayed close to BF16 in their tests. They named Kimi-K2.5 on the FlashMLA backend as a model that needs calibrated scales. We did not measure these results ourselves.
 
 Cloudflare published its check. On Kimi K2.6, BF16 against FP8 KV scored 94.24 and 94.09 on GSM8K, 89.11 and 89.04 on MMLU, and 80.29 and 79.29 on MMLU-Pro {{field Cloudflare 2026-08}}. Those are their numbers on their model, and your model can differ.
+
+We ran our own check on 2026-10-23, on our L4: the first 500 GSM8K questions, 8-shot and greedy, with `Qwen/Qwen3-8B` and `Qwen/Qwen3-8B-FP8`. Neither checkpoint has KV scales, so the FP8 KV runs used a scale of 1.0.
+
+```listing
+title: GSM8K accuracy, 500 questions, 8-shot, Qwen3-8B on SGLang 0.5.22
+source: capture/gpu/out-l4/gsm8k-fp8-accuracy.txt
+lang: text
+note: The SGLang rows. The vLLM rows of the same file are cut.
+---
+engine   config                     correct   accuracy   Wilson 95% interval
+SGLang   BF16                       458/500   91.6%      88.8 to 93.7
+SGLang   FP8 weights                456/500   91.2%      88.4 to 93.4
+SGLang   FP8 KV cache               458/500   91.6%      88.8 to 93.7
+SGLang   FP8 weights + FP8 KV       460/500   92.0%      89.3 to 94.1
+…
+```
+
+All four intervals overlap, so this run did not show a difference. With 500 questions, it cannot rule out a loss of a few points. That is one model and one benchmark, so it does not remove the check on your model.
+
+### Check that your scales load
+
+The warning `Using FP8 KV cache but no scaling factors provided` prints whenever you pass no `--quantization-param-path` {{code}}. A checkpoint can also carry its scales in its weight files. So the warning alone does not tell you which scales the server uses.
+
+First, look for scales in the checkpoint. Search the weight index for tensor names that end in `k_scale` or `v_scale`:
+
+```bash
+grep -oE '"[^"]*(k|v)_scale"' model.safetensors.index.json | sort -u
+```
+
+We ran this search on the index of `Qwen/Qwen3-30B-A3B-Instruct-2507-FP8` on 2026-10-22. It lists weight scales and no KV scales, so our FP8 server below used a KV scale of 1.0.
+
+Then read the load log. Before PR #35455, SGLang dropped the KV scales of compressed-tensors checkpoints, and the log reported each `k_scale` parameter as not found {{issue #35455}}. The fix is in the v0.5.22 source {{code}}. A warning about a missing `k_scale` or `v_scale` still means that the loader skipped those scales. On a checkpoint with scales close to 1.0, the PR measured GSM8K at 0.960 with dropped scales and 0.965 with loaded scales.
+
+Last, run your own prompts with and without FP8, and compare the answers before you go to production.
 
 ## Quantization is a capacity decision
 
@@ -76,11 +112,11 @@ note: Four lines from the startup log. Timestamps are cut.
 
 **We measured** what the two choices bought. The weights went from 57.75 GB to 29.75 GB, and the load time went from 323.61 s to 152.29 s. The pool went from 227,243 tokens to 1,083,008 tokens, 4.77 times as many.
 
-Two effects multiply in that number. The smaller weights left 28.00 GB more memory for the pool, which grew from 20.80 GB to 49.58 GB in the units of the log. Each token then took half the bytes, 49,152 against 98,304 for 48 layers with 4 KV heads of size 128.
+Two effects multiply in that number. The smaller weights freed 28.00 GB, and the pool grew by 28.78 GB, from 20.80 GB to 49.58 GB in the units of the log. Each token then took half the bytes, 49,152 against 98,304 for 48 layers with 4 KV heads of size 128.
 
 The second line of the listing is the warning from the previous subsection. We gave no scale file, so every scale is 1.0. Both servers wrote the same 12 tokens for our first request at temperature 0. That is one prompt, and it is not an accuracy check.
 
-Speed changed at every load. The sweep ran three seeds at each concurrency:
+Speed changed at every load. The table comes from the sweep servers, which had pools of 234,600 and 1,084,458 tokens. The sweep ran three seeds at each concurrency:
 
 | Concurrency | BF16 output tok/s | FP8 output tok/s | BF16 median TPOT | FP8 median TPOT |
 |---|---|---|---|---|
@@ -140,7 +176,7 @@ claim: On one L4, BF16 throughput stopped at 270 tokens per second at concurrenc
 caption: Output throughput against max concurrency, three seeds per point. Plum is BF16 and green is FP8 weights with an FP8 KV cache. From capture/gpu/summary/l4.json.
 ```
 
-The scheduler log shows the cause at concurrency 64. The BF16 server ran at most 38 requests, with token usage at 0.99 and 26 requests in the queue. The FP8 server ran all 64 requests at token usage 0.29 with an empty queue. The BF16 throughput fell from 32 to 64 because more requests waited, and each waiting request added its wait to TTFT.
+The scheduler log of the sweep shows the cause at concurrency 64. The BF16 server ran at most 38 requests, with token usage at 0.99 and 26 requests in the queue. The FP8 server ran all 64 requests at token usage 0.29 with an empty queue. The BF16 throughput fell from 32 to 64 because more requests waited, and each waiting request added its wait to TTFT.
 
 At concurrency 1 the pool size does not matter, and FP8 was still faster: 39.66 ms per token against 60.16 ms. That is the GB10 effect again. Decode on an L4 reads every weight for every token, and FP8 weights are half the bytes.
 
@@ -169,15 +205,17 @@ note: The BF16 pool and the FP8 pool at the same memory fraction of 0.74.
 
 **We measured** a cliff for BF16 and none for FP8. The BF16 pool held 6,559 tokens, so at 2,048 shared tokens the four prefixes no longer fitted. Its median first token went from 470 ms to 12.6 s. The FP8 pool held 107,299 tokens and kept every prefix, with a first token under 400 ms at every length. At 2,048 shared tokens, FP8 gave 6.0 times the output of BF16.
 
-One caveat belongs with the last row. The BF16 runs at 4,096 shared tokens stayed under our 1,000 MHz clock floor after three tries, at a median of 390 MHz. Read the 2,048 row as the result. The FP8 runs had a median clock of 1,200 to 1,260 MHz.
+One caveat belongs with the last row. The BF16 runs at 4,096 shared tokens stayed under our 1,000 MHz clock floor after three tries, at a median of 390 MHz. Read the 2,048 row as the result. Its BF16 runs had a median clock of 1,275 MHz, above the floor, but half of their samples had the thermal flag set. The FP8 runs had a median clock of 1,200 to 1,260 MHz.
+
+The [Inside an LLM Serving GPU](https://aiengineeringfromscratch.com/inside-an-llm-serving-gpu?workload=shared&shared=2048&frac=0.74) machine runs the small-pool test on an L4. This link opens BF16 at a fraction of 0.74 with 2,048 shared tokens. The four prefixes do not fit in 6,559 tokens together, so the tree evicts prefixes and requests compute them again. Switch the weights to FP8 to keep every prefix in 107,299 tokens.
 
 ## Our position
 
-Use an offline-quantized checkpoint and pass no `--quantization` flag. The docs say the same: "offline quantization is recommended over online quantization" {{docs}}. Online quantization adds load time and gives you a checkpoint that nobody evaluated.
+Use an offline-quantized checkpoint and pass no `--quantization` flag. The SGLang docs give the same advice {{docs}}. Online quantization adds load time and gives you a checkpoint that nobody evaluated.
 
-Choose a KV cache dtype from memory, not from speed. If your server queues requests because the pool is full, an FP8 cache with a scale file is the cheapest capacity you can buy. If the pool has room, keep the model dtype.
+Choose a KV cache dtype from memory, not from speed. If your server queues requests because the pool is full, FP8 is the cheapest capacity we measured. Our runs changed the weights and the KV cache together. For an FP8 KV cache alone, the evidence is the field report in [section 3.1](#s-kv-bytes-per-token-and-the-kv-pool), and you need a scale file. If the pool has room, keep the model dtype.
 
-On a GPU where decode waits for memory, such as the GB10, FP8 weights are also the cheapest speed you can buy. We measured almost twice the throughput at every concurrency. Check accuracy on your own tasks before you serve it.
+On our GB10 with Qwen3-30B-A3B, FP8 weights with an FP8 KV cache gave 1.73 to 1.88 times the throughput at every concurrency. Decode on that card waits for memory, so smaller weights are faster. Check accuracy on your own tasks before you serve it.
 
 Quantize per phase when you run prefill and decode on separate servers. Smaller weights help decode, and they can slow prefill.
 
@@ -193,8 +231,9 @@ Quantize per phase when you run prefill and decode on separate servers. Smaller 
 - Load quantized checkpoints without --quantization and let SGLang read the method.
 - Replace --quantization gptq with no flag or gptq_marlin on CUDA builds.
 - Supply a KV scale file and run an accuracy check before serving an FP8 KV cache.
+- Search the checkpoint index for k_scale and v_scale, and read the load log for scales that were not found.
 - Choose KV cache dtype by queue length and pool usage, then measure speed.
 - Read the KV Cache is allocated line to see the pool size each choice buys.
 ```
 
-Sources: capture/gpu/out-gb10/server-default.log, server-fp8.log, server-fp8.command.txt, generate.txt, fp8-generate.txt, capture/gpu/summary/gb10.json, capture/gpu/summary/l4.json, capture/gpu/out-l4/server-load-default.log, server-load-fp8.log, python/sglang/srt/arg_groups/choices.py (QUANTIZATION_CHOICES), arg_groups/fields/model.py (kv_cache_dtype, quantization_param_path), configs/model_config.py (_verify_quantization), layers/quantization/__init__.py (get_quantization_config), layers/quantization/gptq/gptq.py (override_quantization_method), layers/quantization/fp8.py, and docs/docs/advanced_features/quantization.mdx at v0.5.22; PR #32114; field reports by Cloudflare (2026-08-03), joshua8.ai (2026-01-10), and Pivot News (2026-05-19); capture/gpu/out-l4/server-small-pool-bf16-fp8.log, capture/gpu/summary/l4.json (prefix.small-pool, prefix.fp8-small-pool).
+Sources: capture/gpu/out-gb10/server-default.log, server-fp8.log, server-fp8.command.txt, generate.txt, fp8-generate.txt, capture/gpu/summary/gb10.json, capture/gpu/summary/l4.json, capture/gpu/out-l4/server-load-default.log, server-load-fp8.log, python/sglang/srt/arg_groups/choices.py (QUANTIZATION_CHOICES), arg_groups/fields/model.py (kv_cache_dtype, quantization_param_path), configs/model_config.py (_verify_quantization), layers/quantization/__init__.py (get_quantization_config), layers/quantization/gptq/gptq.py (override_quantization_method), layers/quantization/fp8.py, and docs/docs/advanced_features/quantization.mdx at v0.5.22; model_executor/model_runner_components/load_model_utils.py (load_kv_cache_scales) and layers/quantization/compressed_tensors/compressed_tensors.py (kv_cache_scheme) at v0.5.22; PR #32114; PR #35455 (compressed-tensors KV scales, merged 2026-08-20); the model.safetensors.index.json of Qwen/Qwen3-30B-A3B-Instruct-2507-FP8 (read 2026-10-22); the vLLM team, The State of FP8 KV-Cache and Attention Quantization in vLLM (2026-04-22); field reports by Cloudflare (2026-08-03), joshua8.ai (2026-01-10), and Pivot News (2026-05-19); capture/gpu/out-l4/server-small-pool-bf16-fp8.log, capture/gpu/summary/l4.json (prefix.small-pool, prefix.fp8-small-pool), capture/gpu/out-l4/server-load-c64-scheduler.log, capture/gpu/out-l4/gsm8k-fp8-accuracy.txt

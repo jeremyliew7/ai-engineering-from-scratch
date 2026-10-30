@@ -20,7 +20,7 @@ BLIP-2 feeds 32 visual tokens into a frozen LLM's input layer. Works for one ima
 
 Flamingo's answer: do not change the LLM's input stream at all. Insert extra cross-attention layers between existing LLM blocks. Text tokens still flow through the LLM's causal self-attention as always. Between every few LLM blocks, text tokens also cross-attend to image features via a new gated layer. The gate (initialized to zero) means at step zero the new layers are no-ops — the model behaves exactly like the pretrained LLM. As training progresses the gate opens and visual information starts flowing.
 
-The second question Flamingo answered: how do you handle a variable number of images (0, 1, or many) per prompt? A Perceiver resampler — a small cross-attention module that takes whatever number of patches you have and produces a fixed number of visual latent tokens. The LLM cross-attention layer sees the same shape regardless of how many images are in the prompt.
+The second question Flamingo answered: how do you handle a variable number of images (0, 1, or many) per prompt? A Perceiver resampler — a small cross-attention module that takes whatever number of patches you have and produces a fixed number of visual latent tokens per image. The total grows with the image count, but each text token reads only one image's latents, so what any single text token sees in cross-attention has the same shape regardless of how many images are in the prompt.
 
 ## The Concept
 
@@ -59,7 +59,7 @@ This is the single most important design choice in Flamingo: visual conditioning
 
 ### Masked cross-attention for interleaved inputs
 
-In a prompt like "<image A> caption A <image B> caption B <image C> ?", each text token should only see images that came before it in the sequence. The cross-attention mask enforces: text token at position `t` attends only to image resampler tokens whose image index `i < i_t` where `i_t` is the most recent image before position `t`. "Sees only the last preceding image" or "sees all preceding images" are both valid choices; Flamingo chose the former.
+In a prompt like "<image A> caption A <image B> caption B <image C> ?", each text token should only see images that came before it in the sequence. The cross-attention mask enforces: text token at position `t` attends only to the resampler tokens of image `i_t`, where `i_t` is the most recent image before position `t`; tokens from every other image are masked. "Sees only the last preceding image" or "sees all preceding images" are both valid choices; Flamingo chose the former.
 
 ### In-context few-shot learning
 
@@ -76,7 +76,7 @@ The model sees the completion pattern and outputs "bird" (or whatever image3 sho
 Flamingo trained on three datasets:
 
 1. MultiModal MassiveWeb (M3W): 43M web pages with interleaved images and text, reconstructing reading order.
-2. Image-Text Pairs (ALIGN + LTIP): 4.4B pairs.
+2. Image-Text Pairs: ALIGN (1.8B pairs) plus LTIP (312M pairs), about 2.1B pairs in total.
 3. Video-Text Pairs (VTP): 27M short video clips.
 
 OBELICS (2023) is an open reproduction of the interleaved web corpus, which Idefics, Idefics2, and most open "Flamingo-like" models train on.
@@ -102,7 +102,7 @@ Otter (2023) builds on OpenFlamingo with instruction tuning on MIMIC-IT (a datas
 | Frozen LLM | Yes | Yes |
 | Few-shot in-context | Weak | Strong — the paper's centerpiece |
 | Interleaved inputs | No native support | Yes, the design target |
-| Training data | 130M pairs | 1.3B pairs + 43M interleaved pages |
+| Training data | 130M pairs | ~2.1B pairs + 27M video clips + 43M interleaved pages |
 | Parameter count | 188M trained | ~10B trained (cross-attn layers) |
 | Compute | Days on 8 A100s | Weeks on thousands of TPUv4 |
 

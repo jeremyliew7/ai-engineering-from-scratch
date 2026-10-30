@@ -2,7 +2,9 @@
 
 > These are the flags this manual changes or explains, with the default the code sets, the value our Mac resolved, and when to change it.
 
-`sglang serve --help` lists 535 options at 0.5.22 (capture/out/serve-help.txt). Most of them never matter to you. The table below holds the ones this manual uses. Many defaults are `None` in the code. A startup hook replaces them with a value that depends on the GPU, the model, and the free memory. The "On our Mac" column shows that resolved value, from the `server_args` line of capture/out/server-default.log.
+`sglang serve --help` lists 535 options at 0.5.22 ([the captured help output](manuals/sglang-101/capture/out/serve-help.txt)). Most of them never matter to you. The table below holds the main ones this manual uses. The sections name a few more flags where they apply.
+
+Many defaults are `None` in the code. A startup hook replaces them with a value that depends on the GPU, the model, and the free memory. The "On our Mac" column shows that resolved value, from the `server_args` line of [the default server log](manuals/sglang-101/capture/out/server-default.log).
 
 ## Memory and admission
 
@@ -38,9 +40,9 @@
 
 | Flag | Default in the code | On our Mac | Change it when | Section |
 |---|---|---|---|---|
-| `--attention-backend` | `None`, chosen per GPU and model | `torch_native` | you measured a better backend for your model | [4.2](#s-attention-backend) |
+| `--attention-backend` | `None`, chosen per GPU and model | `torch_native`, which MLX does not use | you measured a better backend for your model | [4.2](#s-attention-backend) |
 | `--grammar-backend` | `None`, which resolves to `xgrammar` | `xgrammar` | a grammar fails to compile | [4.5](#s-structured-outputs-with-xgrammar) |
-| `--disable-cuda-graph` | `False` | `True`, as the Apple instructions say | on Apple silicon, where CUDA graphs do not exist | [4.1](#s-forwardmode-and-cuda-graphs) |
+| `--disable-cuda-graph`, deprecated | `False` | `True`, as the Apple instructions say | on Apple silicon, where CUDA graphs do not exist. Prefer `--cuda-graph-backend-decode disabled` and `--cuda-graph-backend-prefill disabled` | [4.1](#s-forwardmode-and-cuda-graphs) |
 | `--speculative-algorithm` | `None` | `None` | decode latency at low concurrency matters most | [4.4](#s-speculative-decoding) |
 | `--enable-deterministic-inference` | `False` | `False` | you need the same output for the same input in any batch | [4.6](#s-deterministic-inference-and-logprobs) |
 
@@ -54,7 +56,7 @@
 | `--dp-size` | 1 | 1 | one copy of the model is saturated and you have GPUs for another | [6.1](#s-tp-size-dp-size-and-attn-dp-size) |
 | `--attn-dp-size` | 1 | 1 | you serve an MLA model such as DeepSeek on many GPUs | [6.1](#s-tp-size-dp-size-and-attn-dp-size) |
 | `--ep-size` | 1 | 1 | you serve a large MoE model | [6.2](#s-moe-serving-deepep-and-eplb) |
-| `--enable-metrics` | `None`, which resolves to off | `True`, set by the kit | always in production | [5.2](#s-the-metrics-endpoint) |
+| `--enable-metrics` | `False` | `True`, set by the kit | always in production | [5.2](#s-the-metrics-endpoint) |
 | `--watchdog-timeout` | 300 s | 300 s | a single forward pass can take longer than five minutes | [7.1](#s-operating-sglang) |
 
 Sources: python/sglang/srt/arg_groups/fields/schedule.py, memory.py, exec_.py, model.py, parallel.py, spec.py, serving.py, observability.py, device.py at v0.5.22; capture/out/serve-help.txt, server-default.log, server-small-pool.log.

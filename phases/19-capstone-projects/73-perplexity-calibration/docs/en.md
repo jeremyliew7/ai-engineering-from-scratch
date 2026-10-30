@@ -87,7 +87,7 @@ The harness does not assume confidence comes from softmax. It accepts any number
 
 - All predictions wrong: ECE is the average confidence, Brier is high, perplexity is whatever the model thinks of the text.
 - All predictions correct with high confidence: ECE near zero, Brier near zero.
-- Perfectly uncertain predictor at p=0.5: ECE is 0.5 minus accuracy, Brier is 0.25 minus a correction term.
+- Perfectly uncertain predictor at p=0.5: every prediction lands in one bin, so ECE is `|0.5 - accuracy|`. Brier is exactly 0.25, because `(0.5 - y)^2 = 0.25` whether `y` is 0 or 1.
 - Empty input: ECE, Brier, and reliability return `0.0` (or zero-filled arrays). Perplexity returns `NaN` for the zero-token case. None of these paths emit a warning; the runner inspects the values and decides whether to report or skip.
 
 These cases are baked into the tests. A real model on a real benchmark will not hit them, but a buggy adapter or a tiny sample will, and the runner should not crash.

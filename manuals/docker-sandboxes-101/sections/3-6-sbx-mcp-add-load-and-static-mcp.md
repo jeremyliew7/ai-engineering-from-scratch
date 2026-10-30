@@ -8,7 +8,7 @@ When you finish this section, you can register a server, pick static or dynamic 
 
 ## Register on the host
 
-**sbx mcp add:** "Register an MCP server by name. The server is validated and its specification is stored for use with sbx create/run --static-mcp." {{help-sbx sbx mcp add}}
+**sbx mcp add:** registers an MCP server by name. `sbx` validates the server and stores its specification for `--static-mcp` on `sbx create` and `sbx run` {{help-sbx sbx mcp add}}.
 
 `--url` takes four forms: a remote endpoint, a community-registry URL, a `server.json` or `server.yaml` manifest URL, and a `dhi.io/` image reference. Other image references are rejected, and `--local` runs a registry OCI server on the host with `docker run` {{help-sbx sbx mcp add}}. The capture registered one remote server and listed it:
 
@@ -36,7 +36,7 @@ lang: json
 }
 ```
 
-The help's own registry example did not resolve on 2026-10-08: the add of `https://registry.modelcontextprotocol.io/v0/servers/fetch-mcp/versions/latest` failed with `registry returned status 404` (capture/out/11-mcp-add-registry.txt). `--command` is the other input, and it runs on the host: "The process runs with your host user's full permissions" {{help-sbx sbx mcp add}}. A local server that starts a container uses host Docker, outside the engine boundary of [the microVM](#s-sbx-diagnose-and-the-microvm-boundary) {{docs-sbx Local stdio server}}.
+The help's own registry example did not resolve on 2026-10-08: the add of `https://registry.modelcontextprotocol.io/v0/servers/fetch-mcp/versions/latest` failed with `registry returned status 404` ([the capture](manuals/docker-sandboxes-101/capture/out/11-mcp-add-registry.txt)). `--command` is the other input, and it runs on the host with all the permissions of your host user {{help-sbx sbx mcp add}}. A local server that starts a container uses host Docker, outside the engine boundary of [the microVM](#s-sbx-diagnose-and-the-microvm-boundary) {{docs-sbx Local stdio server}}.
 
 OAuth metadata is discovered through RFC 9728 and RFC 8414, or supplied by hand with `--oauth-authorization-server`. `--client-id` names a pre-registered client, and dynamic registration follows RFC 7591. `--scope` records default scopes with a documented precedence, `--resource` sets the RFC 8707 indicator, and `--callback-port` pins the listener {{help-sbx sbx mcp add}}. Tokens stay on the host, and `sbx mcp auth [server|--all]`, `auth status`, and `auth rm` manage them {{help-sbx sbx mcp auth}}.
 
@@ -44,7 +44,7 @@ The deepwiki server needs none: `sbx mcp inspect` reports `requires_oauth: false
 
 ## One gateway per sandbox
 
-**MCP gateway:** a host-side endpoint that "brokers access to registered MCP servers" {{docs-sbx MCP gateway}}. Inside `m101-mcp` the environment holds `MCP_GATEWAY_URL=http://mcp-gateway.docker.internal/mcp` and `MCP_SENTINEL_TOKEN_NAME=proxy-managed` (capture/out/11-static-inside.txt). The docs list the agents that read that URL at start: Claude Code, Codex, Devin, Gemini, Kiro, and OpenCode {{docs-sbx Prerequisites}}. Docker Agent is absent from that list. A plain `shell` sandbox reached the gateway with curl all the same (capture/fixtures/mcp-probe.sh):
+**MCP gateway:** an endpoint on the host that gives agents access to the registered MCP servers {{docs-sbx MCP gateway}}. Inside `m101-mcp` the environment holds `MCP_GATEWAY_URL=http://mcp-gateway.docker.internal/mcp` and `MCP_SENTINEL_TOKEN_NAME=proxy-managed` ([the capture](manuals/docker-sandboxes-101/capture/out/11-static-inside.txt)). The docs list the agents that read that URL at start: Claude Code, Codex, Devin, Gemini, Kiro, and OpenCode {{docs-sbx Prerequisites}}. Docker Agent is absent from that list. A plain `shell` sandbox reached the gateway with curl all the same ([the capture](manuals/docker-sandboxes-101/capture/fixtures/mcp-probe.sh)):
 
 ```listing
 title: the initialize answer of the gateway inside m101-mcp
@@ -65,7 +65,7 @@ data: {"jsonrpc":"2.0","id":1,"result":{"capabilities":{"logging":{},"prompts":{
 
 The gateway names itself `mcp-gateway-m101-mcp`, one per sandbox, answers protocol version `2025-11-25`, and declares `tools.listChanged: true`. `sbx mcp ls` adds a `GATEWAY` column, `LOCAL, managed by you`, with `signed_in_as` in the JSON {{help-sbx sbx mcp ls}}. `mcp.forceLocalGateway`, default `false`, and `SBX_MCP_URL=none` select the local data plane when an account would otherwise use the hosted gateway {{docs-sbx mcp.forceLocalGateway}}.
 
-The docs separate it from the Desktop product: "You don't need the Docker Desktop MCP Toolkit to use `sbx mcp`" {{docs-sbx MCP gateway}}. Network policy does not apply to a server the host registered, as Kevin Wittek said on 2026-09-04 {{talk 2026-09-04 T02}}. A server the agent starts inside the VM is subject to it. [DMR, Compose models, and the MCP gateway service](#s-dmr-compose-models-and-the-mcp-gateway-service) covers the Toolkit gateway.
+The docs separate it from the Desktop product: `sbx mcp` works without the Docker Desktop MCP Toolkit {{docs-sbx MCP gateway}}. Network policy does not apply to a server the host registered, as Kevin Wittek said on 2026-09-04 {{talk 2026-09-04 T02}}. A server the agent starts inside the VM is subject to it. [DMR, Compose models, and the MCP gateway service](#s-dmr-compose-models-and-the-mcp-gateway-service) covers the Toolkit gateway.
 
 ## Static and dynamic
 
@@ -73,9 +73,9 @@ The docs separate it from the Desktop product: "You don't need the Docker Deskto
 
 | Sandbox and moment | `tools/list` names | Capture |
 |---|---|---|
-| `m101-mcp`, static | `ask_wiki_question code-mode mcp-exec read_wiki_contents read_wiki_structure` | capture/out/11-gateway-probe-static.txt |
-| `m101-mcp-dyn`, before load | `code-mode mcp-add mcp-config-set mcp-exec mcp-find` | capture/out/11-gateway-probe-dynamic-before.txt |
-| `m101-mcp-dyn`, after load | `ask_wiki_question code-mode mcp-add mcp-config-set mcp-exec mcp-find read_wiki_contents read_wiki_structure` | capture/out/11-gateway-probe-dynamic-after.txt |
+| `m101-mcp`, static | `ask_wiki_question code-mode mcp-exec read_wiki_contents read_wiki_structure` | [capture](manuals/docker-sandboxes-101/capture/out/11-gateway-probe-static.txt) |
+| `m101-mcp-dyn`, before load | `code-mode mcp-add mcp-config-set mcp-exec mcp-find` | [capture](manuals/docker-sandboxes-101/capture/out/11-gateway-probe-dynamic-before.txt) |
+| `m101-mcp-dyn`, after load | `ask_wiki_question code-mode mcp-add mcp-config-set mcp-exec mcp-find read_wiki_contents read_wiki_structure` | [capture](manuals/docker-sandboxes-101/capture/out/11-gateway-probe-dynamic-after.txt) |
 
 ```listing
 title: loading a registered server into a running sandbox
@@ -86,7 +86,7 @@ $ sbx mcp load m101-deepwiki --sandbox m101-mcp-dyn
 MCP server "m101-deepwiki" loaded into sandbox "m101-mcp-dyn" (live)
 ```
 
-The help promises the notice: "Connected agents see the new server's tools immediately via the standard MCP tools/list_changed notification" {{help-sbx sbx mcp load}}. The probe opened a new session for each run, so it recorded the two lists and not the notification itself. The built-in tools belong to the gateway: `mcp-exec`, `code-mode`, `mcp-find`, `mcp-add`, `mcp-config-set`, and `<server>-authorize` for OAuth servers {{docs-sbx Built-in gateway tools}}. In Cedar MCP policies those are `MCP::Primordial` resources and a server's tools are `MCP::Tool` resources {{docs-sbx Built-in gateway tools}}, which [org policies](#s-org-policies-profiles-and-the-audit-log) returns to.
+The help promises the notice: connected agents see the tools of the new server at once, through the standard MCP `tools/list_changed` notification {{help-sbx sbx mcp load}}. The probe opened a new session for each run, so it recorded the two lists and not the notification itself. The built-in tools belong to the gateway: `mcp-exec`, `code-mode`, `mcp-find`, `mcp-add`, `mcp-config-set`, and `<server>-authorize` for OAuth servers {{docs-sbx Built-in gateway tools}}. In Cedar MCP policies those are `MCP::Primordial` resources and a server's tools are `MCP::Tool` resources {{docs-sbx Built-in gateway tools}}, which [org policies](#s-org-policies-profiles-and-the-audit-log) returns to.
 
 `sbx mcp catalog` was removed in v0.45.0 {{rel-sbx v0.45.0}}, and the `sbx mcp enable` of the product page never existed ([conflict C11](#s-ref-sources-and-the-conflicts-register)). [Figure](#fig-3-7) draws the store, the two gateways, and the load. For the protocol itself, read [the MCP lesson](phases/13-tools-and-protocols/06-mcp-fundamentals).
 

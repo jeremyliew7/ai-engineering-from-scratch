@@ -6,9 +6,11 @@ You have a repository with two commits and a README, and you want a shell agent 
 
 ## The agent and the workspace
 
-**Agent:** the first positional argument of `sbx run` and `sbx create`, "a built-in agent name or a sandbox kit reference" {{help-sbx sbx run}}. The built-in names are claude, codex, copilot, cursor, devin, docker-agent, droid, gemini, kiro, opencode, and shell. A kit reference is a directory, a ZIP file, a git repository, or an OCI reference, and relative paths "must be explicit paths such as ./my-kit or ../my-kit.zip" {{help-sbx sbx run}}. So `sbx run my-kit` looks for an agent called `my-kit`, and `sbx run ./my-kit` reads a kit, as [the kit descriptor](#s-syntax-docker-sandbox-kit-3-and-kit-yaml) explains.
+**Agent:** the first positional argument of `sbx run` and `sbx create`: either a built-in agent name or a reference to a sandbox kit {{help-sbx sbx run}}. The built-in names are claude, codex, copilot, cursor, devin, docker-agent, droid, gemini, kiro, opencode, and shell. A kit reference is a directory, a ZIP file, a git repository, or an OCI reference. A relative path must be explicit, such as `./my-kit` or `../my-kit.zip` {{help-sbx sbx run}}. So `sbx run my-kit` looks for an agent called `my-kit`, and `sbx run ./my-kit` reads a kit, as [the kit descriptor](#s-syntax-docker-sandbox-kit-3-and-kit-yaml) explains.
 
-**Workspace:** the directory after the agent, mounted inside the microVM at the same absolute path. Inside `m101-demo`, `pwd` prints `$CAPTURE/fixtures/repo`, and `mount` lists that path as a `virtiofs` mount. `sbx run` mounts the current directory when you give no path, and `sbx create` without a path makes a sandbox with no mount, where "the agent then works in the container's own filesystem instead of on your files" {{help-sbx sbx create}}. Extra paths follow the first one, and `:ro` mounts one of them read-only. A read-only argument can name a single file, "which holds that one path out of reach inside a workspace the sandbox can otherwise write" {{help-sbx sbx run}}.
+**Workspace:** the directory after the agent, mounted inside the microVM at the same absolute path. Inside `m101-demo`, `pwd` prints `$CAPTURE/fixtures/repo`, and `mount` lists that path as a `virtiofs` mount. `sbx run` mounts the current directory when you give no path. `sbx create` without a path makes a sandbox with no mount.
+
+There the agent works in the filesystem of the container instead of on your files {{help-sbx sbx create}}. Extra paths follow the first one, and `:ro` mounts one of them read-only. A read-only argument can name a single file. That keeps one path out of reach in a workspace that the sandbox can otherwise write {{help-sbx sbx run}}.
 
 ```listing
 title: the create command and its summary
@@ -51,11 +53,11 @@ c7dfd56 second
 
 ## Names and re-attach
 
-**Name:** the key of a sandbox in every later command, by default `<agent>-<workdir>`, the agent name and the workspace directory name. The rule is "at least two characters, starting with a letter or number, containing only letters, numbers, hyphens and periods (periods are rejected with --cloud); 'default' is reserved" {{help-sbx sbx create}}. Since v0.43.0 the daemon also rejects "names longer than 63 characters or ending in a hyphen or period" {{rel-sbx v0.43.0}}. The 2025 plugin allowed `_` and `+` in a name, and [conflict C25](#s-ref-sources-and-the-conflicts-register) records the change.
+**Name:** the key of a sandbox in every later command, by default `<agent>-<workdir>`, the agent name and the workspace directory name. A name has at least two characters and starts with a letter or a number. It contains only letters, numbers, hyphens, and periods, and `--cloud` rejects periods. The name `default` is reserved {{help-sbx sbx create}}. Since v0.43.0 the daemon also rejects a name that is longer than 63 characters or that ends in a hyphen or a period {{rel-sbx v0.43.0}}. The 2025 plugin allowed `_` and `+` in a name, and [conflict C25](#s-ref-sources-and-the-conflicts-register) records the change.
 
 Two sandboxes can share one workspace. The capture creates `m101-demo-2` on the same `fixtures/repo`, and `sbx ls --json` lists both as running. A blog post of 2026-03-11 said that Docker enforces one sandbox per workspace {{blog 2026-03-11}}. A talk of 2026-08-13 runs claude and codex on one workspace in two terminals {{talk 2026-08-13}}, and [S27](#s-ref-sources-and-the-conflicts-register) rules that the names decide.
 
-`--name` on `sbx run` re-attaches to an existing sandbox, and then "the agent positional is optional when the named sandbox already exists and is read from its spec" {{help-sbx sbx run}}. Give the agent too, and `sbx run` checks it against the stored one. `sbx create` prints that re-attach command at the end of its output.
+`--name` on `sbx run` re-attaches to an existing sandbox, and then you can leave out the agent. `sbx run` reads it from the spec of the existing sandbox {{help-sbx sbx run}}. Give the agent too, and `sbx run` checks it against the stored one. `sbx create` prints that re-attach command at the end of its output.
 
 ```listing
 title: two sandboxes on one workspace
@@ -103,11 +105,11 @@ Some flags act on every attach, and most act once, when the sandbox is created. 
 | `-d` | prints the sandbox id and exits without a session | `sbx run` |
 | `--rm` | removes the sandbox after the agent session exits, new in v0.47.0 | `sbx run` |
 
-The recording Mac gave `m101-demo` `cpu 10` and `memory 32 GiB`, the upper bound of the memory clamp. `--rm` "cannot be combined with --detached" {{rel-sbx v0.47.0}}, because a detached run has no session to end.
+The recording Mac gave `m101-demo` `cpu 10` and `memory 32 GiB`, the upper bound of the memory clamp. `--rm` does not work together with `--detached` {{rel-sbx v0.47.0}}, because a detached run has no session to end.
 
 ## stop, rm, and prune
 
-`sbx stop` keeps the sandbox and ends its microVM. The capture prints `state preserved` with the restart command, and the docs list what persists: "installed packages, Docker images, configuration changes, command history, and mountless workspace files all persist across stops and restarts" {{docs-sbx usage}}. The daemon also stops a sandbox on its own. After the capture closed its last session and waited, `sbx ls` showed `m101-demo` as `stopped`, and `daemon.log` gives the reason.
+`sbx stop` keeps the sandbox and ends its microVM. The capture prints `state preserved` with the restart command. The docs list what persists across a stop and a restart {{docs-sbx usage}}. That is the installed packages, the Docker images, the configuration changes, the command history, and the workspace files that are not on a mount. The daemon also stops a sandbox on its own. After the capture closed its last session and waited, `sbx ls` showed `m101-demo` as `stopped`, and `daemon.log` gives the reason.
 
 ```listing
 title: the daemon stops an idle sandbox
@@ -120,11 +122,11 @@ $ grep auto-stop daemon.log | grep m101-demo | tail -2
 {"time":"<ts>","level":"INFO","msg":"auto-stopped runtime after last session disconnected","version":"v0.47.0 0411f50ee4700fe7bd37e6e7e3aced563e850ca9","runtime":"m101-demo"}
 ```
 
-`sbx run -d` against an existing sandbox "keeps it running after sessions disconnect, until you stop or remove it" {{docs-sbx release-notes}}, and a kit can declare `com.docker.sandbox/long-running@1` for the same effect, as [the capabilities](#s-com-docker-sandbox-capabilities) show.
+`sbx run -d` against an existing sandbox keeps it running after the sessions disconnect, until you stop or remove it {{docs-sbx release-notes}}. A kit can declare `com.docker.sandbox/long-running@1` for the same effect, as [the capabilities](#s-com-docker-sandbox-capabilities) show.
 
-`sbx rm` is the opposite of stop. For a local sandbox it "stops them, removes their containers, cleans up any Git worktrees, deletes sandbox state, and deletes secrets scoped to each removed sandbox" {{help-sbx sbx rm}}. `--force` skips the prompt and removes a sandbox with an open SSH connection, and `--all` removes every local sandbox.
+`sbx rm` is the opposite of stop. For a local sandbox it stops the sandbox, removes its containers, and cleans up its Git worktrees. It also deletes the state and the secrets of that sandbox {{help-sbx sbx rm}}. `--force` skips the prompt and removes a sandbox with an open SSH connection, and `--all` removes every local sandbox.
 
-`sbx prune` removes stopped sandboxes only, because "a running sandbox is never removed" {{help-sbx sbx prune}}. `--filter until=168h` keeps anything stopped within the last week, and a sandbox whose stop time the daemon cannot report is left alone. `--dry-run --json` shows both sets before you commit.
+`sbx prune` removes stopped sandboxes only, because prune never removes a running sandbox {{help-sbx sbx prune}}. `--filter until=168h` keeps anything stopped within the last week, and a sandbox whose stop time the daemon cannot report is left alone. `--dry-run --json` shows both sets before you commit.
 
 ```listing
 title: a dry run after one stop

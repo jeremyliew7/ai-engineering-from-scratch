@@ -1,6 +1,6 @@
 # RL for Games — AlphaZero, MuZero, and the LLM-Reasoning Era
 
-> 1992: TD-Gammon beat human champions at backgammon with pure TD. 2016: AlphaGo beat Lee Sedol. 2017: AlphaZero dominated chess, shogi, and Go from scratch. 2024: DeepSeek-R1 proved the same recipe, with GRPO replacing PPO, works on reasoning. Games are the benchmark that drives every breakthrough in this phase.
+> 1992: TD-Gammon beat human champions at backgammon with pure TD. 2016: AlphaGo beat Lee Sedol. 2017: AlphaZero dominated chess, shogi, and Go from scratch. 2025: DeepSeek-R1 proved the same recipe, with GRPO replacing PPO, works on reasoning. Games are the benchmark that drives every breakthrough in this phase.
 
 **Type:** Build
 **Languages:** Python
@@ -60,7 +60,7 @@ Zero human knowledge. Zero handcrafted heuristics. A single recipe that mastered
 
   $L_{\text{GRPO}}(\theta) = -\mathbb E_{q, \lbrace o_i \rbrace} \left[ \frac{1}{G} \sum_i A_i \cdot \log \pi_\theta(o_i \mid q) \right] + \beta \cdot \mathrm{KL}(\pi_\theta \Vert \pi_{\text{ref}})$
 
-No reward model, no critic, no MCTS. Group-relative baseline replaces all three. Matches or exceeds PPO-RLHF quality on reasoning benchmarks at a fraction of the compute.
+No learned reward model, no critic, no MCTS. A rule-based verifier supplies the reward, the group-relative baseline replaces the critic, and the search step is dropped. Matches or exceeds PPO-RLHF quality on reasoning benchmarks at a fraction of the compute.
 
 **The R1 recipe in full.** DeepSeek-R1 (DeepSeek 2025) is two models in one paper:
 
@@ -86,7 +86,7 @@ f3-selfplay-ladder
 
 ## Build It
 
-The code in `code/main.py` implements **GRPO in miniature** — a bandit with multiple groups of samples. The algorithm is the same as on an LLM; only the policy and environment are simpler. It teaches the *loss* and the *group-relative advantage*, which is the 2025 innovation.
+The code in `code/main.py` implements **GRPO in miniature**: a bandit with multiple groups of samples. The algorithm is the same as on an LLM; only the policy and environment are simpler. It teaches the *loss* and the *group-relative advantage*, which is the 2024 innovation from DeepSeekMath.
 
 ### Step 1: a tiny verifier environment
 
@@ -144,7 +144,7 @@ Same diagnostics as RLHF: mean KL to reference, policy entropy, reward-over-time
 ## Pitfalls
 
 - **Reward hacking via verifier gaming.** GRPO inherits RLHF's risk: if the verifier is wrong or exploitable, the LLM will find the exploit. Robust verifiers (multiple test cases, formal proofs) matter.
-- **Group size too small.** Variance of the group baseline goes like $1/\sqrt{G}$. Below $G = 4$, the advantage signal is noisy; standard choice is $G = 8$ to 64.
+- **Group size too small.** Variance of the group-mean baseline goes like $1/G$ (its standard error like $1/\sqrt{G}$). Below $G = 4$, the advantage signal is noisy; standard choice is $G = 8$ to 64.
 - **Length bias.** LLM completions of different lengths have different log-probabilities. Normalize by token count, or use sequence-level log-prob, or truncate to max length.
 - **Pure self-play cycles.** AlphaZero-style training can get stuck in dominance loops on general-sum games. Mitigated by diverse opponent pools (league play, Lesson 10).
 - **Search-policy mismatch.** AlphaZero trains the policy to mimic search output. If the policy net is too small to represent the search's distribution, training stalls.

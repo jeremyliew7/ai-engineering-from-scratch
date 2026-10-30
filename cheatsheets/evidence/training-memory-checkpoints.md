@@ -82,7 +82,7 @@ Abbreviations: L34 = phases/10-llms-from-scratch/34-gradient-checkpointing, L45 
 
 ## Memory and cost numbers (concepts, 7)
 - `12 * B * L * d` floats per layer: L34/d:12
-- d=8192, L=8192, B=1: 800 MB/layer BF16, 64 layers 51 GB: L34/d:14
+- d=8192, L=8192, B=1: 1.6 GB/layer BF16, 64 layers 103 GB: L34/d:14
 - Full checkpointing 33%, 4 units vs 3: L34/d:38, L34/d:69
 - Selective 5% overhead, attention only: L34/d:46, L34/d:72-76
 - sqrt(L) rule, 8 checkpoints for L=64: L34/d:40

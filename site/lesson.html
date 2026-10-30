@@ -29,7 +29,8 @@
   <link href="https://fonts.googleapis.com/css2?family=VT323&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=20261015a">
   <link rel="stylesheet" href="certifications.css?v=20260925a">
-  <link rel="stylesheet" href="highlights.css?v=20261018a">
+  <link rel="stylesheet" href="highlights.css?v=20261023a">
+  <link rel="stylesheet" href="lesson-walkthrough.css?v=20261021b">
   <style>
     .scroll-progress {
       position: fixed;
@@ -2468,11 +2469,15 @@
       .lesson-layout { padding-top: 56px; }
       .lesson-sidebar { transform: translateX(-100%); }
       .lesson-sidebar.open { transform: translateX(0); }
+      body {
+        --aifs-hl-launch-right: 16px;
+        --aifs-hl-launch-bottom: 72px;
+      }
       .lesson-sidebar-toggle {
         display: flex;
         top: auto;
-        right: 16px;
-        bottom: 18px;
+        right: calc(16px + env(safe-area-inset-right, 0px));
+        bottom: calc(18px + env(safe-area-inset-bottom, 0px));
         left: auto;
         width: auto;
         height: 44px;
@@ -2637,9 +2642,13 @@
 
     @media (max-width: 480px) {
       .lesson-main { padding: 36px 12px 56px; }
+      body {
+        --aifs-hl-launch-right: 12px;
+        --aifs-hl-launch-bottom: 68px;
+      }
       .lesson-sidebar-toggle {
-        right: 12px;
-        bottom: 14px;
+        right: calc(12px + env(safe-area-inset-right, 0px));
+        bottom: calc(14px + env(safe-area-inset-bottom, 0px));
         height: 44px;
         padding: 0 12px;
       }
@@ -2715,6 +2724,7 @@
         <a href="roadmap.html">Roadmap</a>
         <a href="glossary.html">Glossary</a>
         <a href="about.html">About</a>
+        <a href="manuals.html">Manuals</a>
         <a href="https://github.com/rohitg00/ai-engineering-from-scratch" target="_blank" rel="noopener" class="header-github">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
           <svg class="star-icon" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.896l-7.416 3.517 1.48-8.279L0 9.306l8.332-1.151z"/></svg>
@@ -2796,11 +2806,12 @@
     }());
   </script>
   <script src="content-source.js?v=20260821a"></script>
-  <script src="lesson-markdown.js?v=20261015a"></script>
+  <script src="lesson-markdown.js?v=20261022a"></script>
   <script src="progress.js?v=20260822a"></script>
   <script src="highlights-anchor.js?v=20261018a"></script>
   <script src="highlights-store.js?v=20261018a"></script>
-  <script src="highlights.js?v=20261018a"></script>
+  <script src="highlights.js?v=20261023a"></script>
+  <script src="lesson-walkthrough.js?v=20261021b"></script>
   <script id="learningPathProgressRuntime">
     (function (root) {
       'use strict';
@@ -2900,10 +2911,10 @@
       root.AIFSLearningPathProgress = createStore(root.localStorage);
     }(window));
   </script>
-  <script src="header.js?v=20261018a" defer></script>
+  <script src="header.js?v=20261021a" defer></script>
   <script src="cmdpalette.js?v=20260821a" defer></script>
   <script src="lesson-figures.js?v=843871fd2942"></script>
-  <script src="figure-manifest.js?v=7a6920409faa"></script>
+  <script src="figure-manifest.js?v=46acdc251607"></script>
   <script>
     (function () {
       var root = document.documentElement;
@@ -2936,6 +2947,9 @@
           updateMermaidThemeAndRerender();
         });
       }
+      document.addEventListener('aifs:themechange', function () {
+        updateMermaidThemeAndRerender();
+      });
 
       // lang-picker.js renders the switcher into #langPicker; when the reader
       // chooses a language, re-fetch the current lesson in it (quiz stays English).
@@ -3043,16 +3057,6 @@
       function findLearningPath(id) {
         if (!id || typeof LEARNING_PATHS === 'undefined' || !Array.isArray(LEARNING_PATHS)) return null;
         return LEARNING_PATHS.find(function (path) { return path && path.id === id; }) || null;
-      }
-
-      function inferLearningPath(target) {
-        if (!target || typeof LEARNING_PATHS === 'undefined' || !Array.isArray(LEARNING_PATHS)) return null;
-        var preferredIds = ['agent-skills', 'model-context-protocol'];
-        for (var i = 0; i < preferredIds.length; i++) {
-          var preferred = findLearningPath(preferredIds[i]);
-          if (preferred && learningPathContains(preferred, target)) return preferred;
-        }
-        return LEARNING_PATHS.find(function (path) { return learningPathContains(path, target); }) || null;
       }
 
       function learningPathEntries(path, includeOptional) {
@@ -3380,10 +3384,9 @@
         certificationMode = !!(certificationTrack && certificationTrackContains(certificationTrack, lessonPath));
         certificationSupplementalMode = !!(certificationOriginTrack && !certificationMode);
         learningPath = !certificationMode && !certificationSupplementalMode
-          ? (requestedLearningPathId ? findLearningPath(requestedLearningPathId) : inferLearningPath(lessonPath))
+          ? findLearningPath(requestedLearningPathId)
           : null;
         learningPathMode = !!(learningPath && learningPathContains(learningPath, lessonPath));
-        if (learningPathMode && !incomingLearningPathId) replaceLearningPathInUrl(learningPath.id);
 
         syncCertificationQuizProgressVersion();
 
@@ -3552,7 +3555,8 @@
             pathReturnHref = 'learning-paths.html#career-route-' + encodeURIComponent(learningPath.id);
             pathReturnLabel = 'Back to career route';
           }
-          var pathHtml = '<div class="sidebar-phase-nav"><a href="' + pathReturnHref + '">&larr; ' + pathReturnLabel + '</a></div>';
+          var pathHtml = '<div class="sidebar-phase-nav"><a href="' + pathReturnHref + '">&larr; ' + pathReturnLabel + '</a>' +
+            '<a href="lesson?path=' + encodeURIComponent(lessonPath) + '">Phase view</a></div>';
           var requiredPathLessons = flatLessons.filter(function (item) { return item.required !== false; });
           var optionalPathLessons = flatLessons.filter(function (item) { return item.required === false; });
           pathHtml += '<div class="sidebar-phase-header">' + escapeHtml(learningPath.title || learningPath.id) + ' · ' + requiredPathLessons.length + ' lessons</div>';
@@ -3803,11 +3807,28 @@
               showError('Render error', 'Loaded the lesson markdown but failed to render it. Details in the browser console.');
               return;
             }
-            quizPromiseForRequest
-              .then(function (data) {
+            var englishSections = documentResult.lang === 'en'
+              ? null
+              : fetchRepositoryFile(enPath)
+                .then(function (res) { return res.text(); })
+                .then(function (english) { return window.AIFSLessonMarkdown.sectionIds(english); })
+                .catch(function () { return null; });
+            var referencePromise = englishSections
+              ? Promise.race([englishSections, new Promise(function (resolve) { setTimeout(function () { resolve(null); }, 4000); })])
+              : Promise.resolve(null);
+            Promise.all([quizPromiseForRequest, referencePromise])
+              .then(function (results) {
+                var data = results[0];
                 if (!data || requestSequence !== lessonFetchSequence) return;
-                try { renderQuiz(data); }
+                try { renderQuiz(data, results[1]); }
                 catch (err) { console.error('renderQuiz failed', err); }
+                if (results[1] || !englishSections) return;
+                englishSections.then(function (lateIds) {
+                  if (!lateIds || requestSequence !== lessonFetchSequence) return;
+                  document.querySelectorAll('.lesson-article .quiz-section').forEach(function (section) { section.remove(); });
+                  try { renderQuiz(data, lateIds); }
+                  catch (err) { console.error('renderQuiz failed', err); }
+                });
               });
           })
           .catch(function () {
@@ -3933,6 +3954,7 @@
 
       function disposeRenderedLesson(root) {
         if (window.AIFSHighlights) window.AIFSHighlights.unmount();
+        if (window.AIFSWalkthrough) window.AIFSWalkthrough.unmount();
         if (window.AIFSFigureRuntime && root) window.AIFSFigureRuntime.disposeRoot(root);
         disposeTocRuntime();
         mermaidRenderSeq++;
@@ -3993,6 +4015,7 @@
           });
         }
         restoreHeadingHash();
+        if (window.AIFSWalkthrough) window.AIFSWalkthrough.mount(article, { path: lessonPath });
 
         document.querySelectorAll('a[href^="#"]').forEach(function (link) {
           link.addEventListener('click', function (e) {
@@ -4780,7 +4803,24 @@
         }
       }
 
-      function renderQuiz(data) {
+      function lessonSectionHeadings(article) {
+        return Array.prototype.slice.call(article.querySelectorAll('h2')).filter(function (h) {
+          return !h.closest('#aiPanels, #lessonActionPanel');
+        });
+      }
+
+      function insertQuizAt(article, headings, index, html) {
+        if (!html) return;
+        if (index < headings.length) {
+          headings[index].insertAdjacentHTML('beforebegin', html);
+          return;
+        }
+        var panels = article.querySelector('#aiPanels');
+        if (panels) panels.insertAdjacentHTML('beforebegin', html);
+        else article.insertAdjacentHTML('beforeend', html);
+      }
+
+      function renderQuiz(data, referenceIds) {
         var questions = data.questions || data;
         if (!questions || !questions.length) return;
         lessonQuizCorrectAnswers = Object.create(null);
@@ -4788,51 +4828,23 @@
         var article = document.querySelector('.lesson-article');
         if (!article) return;
 
-        var conceptH2 = article.querySelector('#the-concept, #concept');
-        var buildH2 = article.querySelector('#build-it, #build');
-        var keyTermsH2 = article.querySelector('#key-terms');
+        var headings = lessonSectionHeadings(article);
+        var place = window.AIFSLessonMarkdown.quizPlacement(headings.map(function (h) { return h.id; }), referenceIds);
 
         var preQuizHtml = buildQuizHtml(questions.filter(function (q) { return q.stage === 'pre'; }), 'pre', 'Pre-Lesson Check');
         var checkQuizHtml = buildQuizHtml(questions.filter(function (q) { return q.stage === 'check'; }), 'check', 'Mid-Lesson Check');
         var postQuizHtml = buildQuizHtml(questions.filter(function (q) { return q.stage === 'post'; }), 'post', 'Post-Lesson Quiz');
 
         if (!preQuizHtml && !checkQuizHtml && !postQuizHtml) {
-          var allHtml = buildQuizHtml(questions, 'all', 'Quiz');
-          if (allHtml && keyTermsH2) {
-            keyTermsH2.insertAdjacentHTML('beforebegin', allHtml);
-          } else if (allHtml) {
-            article.insertAdjacentHTML('beforeend', allHtml);
-          }
+          insertQuizAt(article, headings, place.post, buildQuizHtml(questions, 'all', 'Quiz'));
           restoreQuizAnswers();
           restoreHeadingHash();
           return;
         }
 
-        if (preQuizHtml && conceptH2) {
-          conceptH2.insertAdjacentHTML('beforebegin', preQuizHtml);
-        } else if (preQuizHtml && buildH2) {
-          buildH2.insertAdjacentHTML('beforebegin', preQuizHtml);
-        }
-
-        // Mid-lesson check: land between Build It and Use It if possible,
-        // otherwise fall back to before Use It / Ship It / Key Terms.
-        var useH2 = article.querySelector('#use-it, #use');
-        var shipH2 = article.querySelector('#ship-it, #ship');
-        if (checkQuizHtml && useH2) {
-          useH2.insertAdjacentHTML('beforebegin', checkQuizHtml);
-        } else if (checkQuizHtml && shipH2) {
-          shipH2.insertAdjacentHTML('beforebegin', checkQuizHtml);
-        } else if (checkQuizHtml && keyTermsH2) {
-          keyTermsH2.insertAdjacentHTML('beforebegin', checkQuizHtml);
-        } else if (checkQuizHtml) {
-          article.insertAdjacentHTML('beforeend', checkQuizHtml);
-        }
-
-        if (postQuizHtml && keyTermsH2) {
-          keyTermsH2.insertAdjacentHTML('beforebegin', postQuizHtml);
-        } else if (postQuizHtml) {
-          article.insertAdjacentHTML('beforeend', postQuizHtml);
-        }
+        insertQuizAt(article, headings, place.pre, preQuizHtml);
+        insertQuizAt(article, headings, place.check, checkQuizHtml);
+        insertQuizAt(article, headings, place.post, postQuizHtml);
 
         restoreQuizAnswers();
         restoreHeadingHash();
@@ -5392,11 +5404,13 @@
       }
 
       function getQuizQuestions() {
-        var pathLower = (lessonPath || '').toLowerCase();
-        var lessonName = '';
-        if (currentLessonIndex >= 0) lessonName = flatLessons[currentLessonIndex].lessonName;
+        var pathParts = (lessonPath || '').toLowerCase().split('/');
+        var phaseTokens = pathParts[0] === 'phases' && pathParts[1] ? pathParts[1].split('-') : [];
+        function phaseHas(words) {
+          return words.some(function (word) { return phaseTokens.indexOf(word) >= 0; });
+        }
 
-        if (pathLower.indexOf('math') >= 0 || pathLower.indexOf('linear-algebra') >= 0 || pathLower.indexOf('calculus') >= 0) {
+        if (phaseHas(['math', 'linear', 'algebra', 'calculus'])) {
           return [
             { q: 'What does a dot product measure between two vectors?', opts: ['Their sum', 'How aligned they are', 'Their cross product', 'The distance between them'], answer: 1, explain: 'The dot product measures the similarity or alignment between two vectors. When it is zero, the vectors are orthogonal.' },
             { q: 'What does the gradient of a function point toward?', opts: ['The minimum', 'The steepest ascent', 'The nearest saddle point', 'A random direction'], answer: 1, explain: 'The gradient always points in the direction of steepest increase. Gradient descent moves opposite to the gradient to find minima.' },
@@ -5404,7 +5418,7 @@
           ];
         }
 
-        if (pathLower.indexOf('ml') >= 0 || pathLower.indexOf('regression') >= 0 || pathLower.indexOf('classification') >= 0 || pathLower.indexOf('supervised') >= 0) {
+        if (phaseHas(['ml', 'regression', 'classification', 'supervised'])) {
           return [
             { q: 'What is the purpose of a loss function in machine learning?', opts: ['To generate data', 'To measure how wrong predictions are', 'To select features', 'To split data'], answer: 1, explain: 'A loss function quantifies the difference between predicted and actual values. The optimizer minimizes this value during training.' },
             { q: 'Why do we split data into train and test sets?', opts: ['To save memory', 'To evaluate generalization on unseen data', 'To make training faster', 'To reduce the dataset size'], answer: 1, explain: 'The test set acts as unseen data, revealing whether the model memorized training data or learned generalizable patterns.' },
@@ -5412,7 +5426,7 @@
           ];
         }
 
-        if (pathLower.indexOf('deep-learning') >= 0 || pathLower.indexOf('neural') >= 0 || pathLower.indexOf('backprop') >= 0 || pathLower.indexOf('activation') >= 0) {
+        if ((phaseHas(['deep']) && phaseHas(['learning'])) || phaseHas(['neural', 'backprop', 'activation', 'vision'])) {
           return [
             { q: 'What does backpropagation compute?', opts: ['Forward predictions', 'The gradient of the loss with respect to each weight', 'The learning rate', 'New training data'], answer: 1, explain: 'Backpropagation uses the chain rule to compute how much each weight contributed to the error, then adjusts weights accordingly.' },
             { q: 'Why do neural networks need non-linear activation functions?', opts: ['To speed up training', 'Without them, stacking layers is equivalent to a single linear layer', 'To reduce memory usage', 'To normalize outputs'], answer: 1, explain: 'Without non-linearities, any composition of linear layers collapses to a single linear transformation. Activations like ReLU let the network learn complex patterns.' },
@@ -5420,7 +5434,7 @@
           ];
         }
 
-        if (pathLower.indexOf('llm') >= 0 || pathLower.indexOf('transformer') >= 0 || pathLower.indexOf('attention') >= 0 || pathLower.indexOf('tokeniz') >= 0 || pathLower.indexOf('fine-tun') >= 0) {
+        if (phaseHas(['llm', 'llms', 'transformer', 'transformers', 'attention', 'nlp', 'tokenization'])) {
           return [
             { q: 'What does self-attention allow a transformer to do?', opts: ['Process tokens in order', 'Weight the importance of every token relative to every other token', 'Reduce vocabulary size', 'Compress the model'], answer: 1, explain: 'Self-attention computes pairwise relevance scores across all positions, allowing the model to relate distant tokens without recurrence.' },
             { q: 'Why do LLMs use tokenizers instead of raw characters?', opts: ['Characters are too large', 'Tokens compress frequent patterns into single units, reducing sequence length', 'Tokenizers are faster to train', 'Characters cannot be embedded'], answer: 1, explain: 'Subword tokenizers like BPE balance vocabulary size against sequence length, making common words single tokens while handling rare words as pieces.' },
@@ -5428,7 +5442,7 @@
           ];
         }
 
-        if (pathLower.indexOf('rag') >= 0 || pathLower.indexOf('retrieval') >= 0 || pathLower.indexOf('embed') >= 0 || pathLower.indexOf('vector') >= 0) {
+        if (phaseHas(['rag', 'retrieval', 'embeddings', 'vector'])) {
           return [
             { q: 'What is the core idea behind RAG?', opts: ['Training a larger model', 'Retrieving relevant context before generating a response', 'Using more GPUs', 'Reducing model size'], answer: 1, explain: 'RAG (Retrieval-Augmented Generation) grounds LLM responses in retrieved documents, reducing hallucination and enabling knowledge updates without retraining.' },
             { q: 'What do embedding models produce?', opts: ['Text summaries', 'Dense vector representations of text', 'Token counts', 'Grammar corrections'], answer: 1, explain: 'Embedding models map text into fixed-dimensional vectors where semantic similarity corresponds to geometric proximity.' },
@@ -5436,7 +5450,7 @@
           ];
         }
 
-        if (pathLower.indexOf('agent') >= 0 || pathLower.indexOf('tool') >= 0 || pathLower.indexOf('mcp') >= 0) {
+        if (phaseHas(['agent', 'agents', 'tool', 'tools', 'mcp', 'protocols', 'autonomous', 'swarms'])) {
           return [
             { q: 'What distinguishes an AI agent from a simple chatbot?', opts: ['Agents are faster', 'Agents can take actions and use tools autonomously', 'Agents use bigger models', 'There is no difference'], answer: 1, explain: 'Agents have a loop: observe, decide, act. They can call tools, read files, search the web, and chain multiple steps to complete complex tasks.' },
             { q: 'What is MCP (Model Context Protocol)?', opts: ['A model training format', 'A standardized protocol for connecting AI models to tools and data sources', 'A compression algorithm', 'A testing framework'], answer: 1, explain: 'MCP provides a universal interface between AI assistants and external tools/data, replacing one-off integrations with a standard protocol.' },
@@ -5444,7 +5458,7 @@
           ];
         }
 
-        if (pathLower.indexOf('eval') >= 0 || pathLower.indexOf('safety') >= 0 || pathLower.indexOf('alignment') >= 0 || pathLower.indexOf('deploy') >= 0) {
+        if (phaseHas(['eval', 'evals', 'safety', 'alignment', 'ethics', 'deploy', 'production'])) {
           return [
             { q: 'Why are evals critical for production AI systems?', opts: ['To save money', 'To measure performance objectively before and after changes', 'To make the model bigger', 'Evals are optional'], answer: 1, explain: 'Evals are the tests of AI engineering. Without them, you cannot know if a change improved or regressed quality. They should run on every code change.' },
             { q: 'What does "alignment" mean in AI safety?', opts: ['Aligning text on screen', 'Ensuring AI systems act according to human intentions and values', 'Making models faster', 'Using the same training data'], answer: 1, explain: 'Alignment ensures that as AI systems become more capable, they remain helpful, honest, and harmless, acting in accordance with human goals.' },
@@ -5455,21 +5469,8 @@
         return [
           { q: 'What does "from scratch" mean in this course?', opts: ['Using no computer', 'Building each concept by implementing it yourself, not just reading theory', 'Starting from assembly language', 'Only using pen and paper'], answer: 1, explain: 'This course follows a Build-Use-Ship methodology: first understand by building it, then apply it, then ship it as a real artifact.' },
           { q: 'Why does this course combine math, ML, and engineering?', opts: ['To make it longer', 'Because real AI engineering requires all three to build production systems', 'Math is just for fun', 'Engineering is optional'], answer: 1, explain: 'Production AI systems require mathematical foundations (for understanding), ML knowledge (for modeling), and engineering skills (for deployment and reliability).' },
-          { q: 'What is the "Ship" step in the Build-Use-Ship framework?', opts: ['Mailing physical goods', 'Creating a reusable artifact like a prompt, skill, or tool from what you learned', 'Publishing a paper', 'Deleting your code'], answer: 2, explain: 'The Ship step turns your learning into something tangible: a prompt, skill file, MCP tool, or CLI utility that others (or future you) can use immediately.' }
+          { q: 'What is the "Ship" step in the Build-Use-Ship framework?', opts: ['Mailing physical goods', 'Creating a reusable artifact like a prompt, skill, or tool from what you learned', 'Publishing a paper', 'Deleting your code'], answer: 1, explain: 'The Ship step turns your learning into something tangible: a prompt, skill file, MCP tool, or CLI utility that others (or future you) can use immediately.' }
         ];
-      }
-
-      function lessonQuizPanelQuestions(data) {
-        var source = data && (data.questions || data);
-        if (!Array.isArray(source)) return [];
-        var valid = source.filter(function (q) {
-          return q && q.question && Array.isArray(q.options) &&
-            typeof q.correct === 'number' && q.correct >= 0 && q.correct < q.options.length;
-        });
-        var post = valid.filter(function (q) { return q.stage === 'post'; });
-        return (post.length ? post : valid).slice(0, 3).map(function (q) {
-          return { q: q.question, opts: q.options, answer: q.correct, explain: q.explanation || '' };
-        });
       }
 
       function renderQuizPanel(container) {
@@ -5480,9 +5481,12 @@
 
         if (lessonQuizPromise) {
           lessonQuizPromise.then(function (data) {
-            var questions = lessonQuizPanelQuestions(data);
-            if (!questions.length) questions = getQuizQuestions();
-            fillQuizPanel(panel.querySelector('#quizContent'), questions);
+            var questions = window.AIFSLessonMarkdown.quizPanelQuestions(data);
+            if (questions && !questions.length) {
+              panel.remove();
+              return;
+            }
+            fillQuizPanel(panel.querySelector('#quizContent'), getQuizQuestions());
           });
         } else {
           fillQuizPanel(panel.querySelector('#quizContent'), getQuizQuestions());

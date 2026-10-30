@@ -129,7 +129,7 @@ Report IoU per class, not just mIoU. Mean IoU hides a class at 15% when nine oth
 
 ### Input resolution trade-off
 
-U-Net's encoder halves resolution four times, so the input must be divisible by 16. Medical images are often 512x512 or 1024x1024. Autonomous-driving crops are 2048x1024. The memory cost of U-Net scales with `H * W * C_max`, and at 1024x1024 with 1024 bottleneck channels the forward pass already uses gigabytes of VRAM.
+U-Net's encoder halves resolution four times, so the skip connections line up exactly only when the input is divisible by 16. Other sizes need padding or the resize in the up block (Step 2). Medical images are often 512x512 or 1024x1024. Autonomous-driving crops are 2048x1024. The memory cost of U-Net scales with `H * W * C_max`, and at 1024x1024 with 1024 bottleneck channels the forward pass already uses gigabytes of VRAM.
 
 Two standard workarounds:
 1. Tile the input — process 256x256 tiles with overlap and stitch.

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 350" role="img" aria-labelledby="fig-4-4b-title fig-4-4b-desc" font-family="JetBrains Mono, ui-monospace, monospace">
-  <title id="fig-4-4b-title">On a mixture-of-experts model the EAGLE-3 gain grows with the batch</title>
-  <desc id="fig-4-4b-desc">Speedup of median time per output token with EAGLE-3 over the BF16 default for Qwen3-30B-A3B on a GB10. It is 1.60 times at concurrency 1, rises to 1.89 at 32 and is 1.84 at 64, while the accept length stays near 2.7 tokens per step.</desc>
+  <title id="fig-4-4b-title">On a mixture-of-experts model the EAGLE-3 gain holds as the batch grows</title>
+  <desc id="fig-4-4b-desc">Speedup of median time per output token with EAGLE-3 over the BF16 default for Qwen3-30B-A3B on a GB10. It is 1.60 times at concurrency 1 and 1.56 at 2, peaks at 1.89 at 32 and is 1.84 at 64, while the accept length stays near 2.7 tokens per step.</desc>
   <line x1="66" y1="276" x2="606" y2="276" stroke="var(--m-ink-mute, #6f6f6a)" stroke-width="1" stroke-opacity="0.25"/>
   <text x="60" y="280" font-size="11" text-anchor="end" fill="var(--m-ink-soft, #4a4a4a)">x0</text>
   <line x1="66" y1="202.67" x2="606" y2="202.67" stroke="var(--m-ink-mute, #6f6f6a)" stroke-width="1" stroke-opacity="0.25"/>

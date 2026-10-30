@@ -33,6 +33,8 @@ on:
       - "scripts/test_skill_artifact_bundles.py"
       - "scripts/test_translate_workflow.py"
       - "scripts/translate_matrix.py"
+      - "scripts/translation_freshness.py"
+      - "scripts/translate_lessons.py"
       - "scripts/translate_ui_strings.py"
       - "scripts/test_translate_ui_strings.py"
       - "site/test_learning_paths.js"
@@ -50,6 +52,8 @@ on:
       - "site/build.js"
       - "site/**"
       - "scripts/agent-machine/**"
+      - "scripts/decompiler-machine/**"
+      - "scripts/gpu-machine/**"
       - "api/**"
       - "lib/**"
       - "scripts/test_agent_api.js"
@@ -90,6 +94,8 @@ on:
       - "scripts/test_skill_artifact_bundles.py"
       - "scripts/test_translate_workflow.py"
       - "scripts/translate_matrix.py"
+      - "scripts/translation_freshness.py"
+      - "scripts/translate_lessons.py"
       - "scripts/translate_ui_strings.py"
       - "scripts/test_translate_ui_strings.py"
       - "site/test_learning_paths.js"
@@ -107,6 +113,8 @@ on:
       - "site/build.js"
       - "site/**"
       - "scripts/agent-machine/**"
+      - "scripts/decompiler-machine/**"
+      - "scripts/gpu-machine/**"
       - "api/**"
       - "lib/**"
       - "scripts/test_agent_api.js"
@@ -160,14 +168,28 @@ jobs:
         run: node --test site/test_intelligence_check.js
       - name: the skills page stays in sync with the skills folder
         run: node --test site/test_skills_page.js
+      - name: lesson screen serves screens locally, records clicks, and checks machine specs
+        run: node --test site/test_lesson_screen.js
       - name: the star note asks engaged readers at most twice
         run: node --test site/test_star_nudge.js
+      - name: the theme menu offers system, light, and dark on every page
+        run: node --test site/test_theme_menu.js
+      - name: lesson walkthrough syncs steps and schedules revisits
+        run: node --test site/test_lesson_walkthrough.js
+      - name: lesson quizzes are placed once, before the footer, in every language
+        run: node --test site/test_quiz_placement.js
       - name: agent machine simulation and page stay in sync
         run: node --test site/test_agent_machine.js
+      - name: decompiler machine simulation and page stay in sync
+        run: node --test site/test_decompiler_machine.js
+      - name: GPU machine simulation and page stay in sync
+        run: node --test site/test_gpu_machine.js
       - name: lesson highlights re-anchor and survive storage faults
         run: node --test site/test_highlights.js site/test_highlights_store.js
       - name: my highlights page filters, exports, and stays local
         run: node --test site/test_highlights_page.js
+      - name: practice pages hide the solution and progress survives storage faults
+        run: node --test site/test_practice.js site/test_practice_store.js
       - name: build the static site
         run: node site/build.js && node site/build-projects.js --strict && node site/build-agents.js
       - name: deployment bundles stay small and preserve runtime assets

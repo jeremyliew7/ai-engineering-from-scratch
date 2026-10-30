@@ -131,7 +131,7 @@ Every function operation takes a `procedure` string. The rule for reading it:
 label: names before addresses
 source: native §Exact CLI selectors
 ---
-"an exact database symbol name takes precedence over a bare hexadecimal address"
+When a selector matches an exact symbol name in the database, the name wins over a bare hexadecimal address.
 ```
 
 A string with a `0x` prefix or an address-space prefix is an address. Any other string is tried as a symbol name first. A name that matches more than one function fails with `ambiguous` and the list of entry addresses. A name that matches nothing fails with `not_found`, which [section 4.6](#s-analyze-function-and-pseudocode) shows as the MCP error `invalid_request`.

@@ -56,7 +56,7 @@ All four failures come from one fact. SGLang, Triton, and FlashInfer compile ker
 
 The fifth start served requests. Our GB10 never had this problem, because its DGX operating system has a full toolkit in `/usr/local/cuda`.
 
-The benchmark client has one more dependency that a firewall exposes. Its `random` dataset takes its text from ShareGPT and downloads that file from the Hugging Face Hub {{code}}. With `HF_HUB_OFFLINE=1` our first GPU benchmark failed although every model was on disk. Use `--dataset-name random-ids` on a machine without network access, or pass a local ShareGPT file with `--dataset-path`.
+The benchmark client has one more dependency that a firewall exposes. Its `random` dataset takes its text from ShareGPT and downloads that file from the Hugging Face Hub {{code}}. With `HF_HUB_OFFLINE=1`, our first GPU benchmark failed although every model was on disk. We did not keep that log. Use `--dataset-name random-ids` on a machine without network access, or pass a local ShareGPT file with `--dataset-path`.
 
 **Our position:** run SGLang from the pinned image or on a host with a full CUDA toolkit. A pip install on a host with only a driver works after our four repairs. Each SGLang upgrade can need them again.
 
@@ -77,7 +77,7 @@ note: One line from the startup log. The CUDA graph fields are all 0.00 because 
 
 The code helps with the cheap part of that work. When Python imports `sglang`, it points the Triton, TorchInductor, CUDA, TileLang, and FlashInfer caches into one directory, `SGLANG_CACHE_DIR`, which defaults to `~/.cache/sglang` {{code}}. Mount that directory and the Hugging Face cache on volumes that survive the pod. Then a restart reuses compiled kernels and downloaded weights.
 
-The same field report defends the slow start: "SGLang getting 10% more tokens per second is worth way more than launching 10s faster." {{field Doubleword 2026-04}} We agree for a fleet that runs for days. For a fleet that scales to zero every night, startup time is a real cost, and the persistent caches are the first fix.
+The same field report defends the slow start. To them, 10 percent more tokens per second is worth more than a start that is 10 seconds faster {{field Doubleword 2026-04}}. We agree for a fleet that runs for days. For a fleet that scales to zero every night, startup time is a real cost, and the persistent caches are the first fix.
 
 ## Health checks: /ready, /health, and /health_generate
 
@@ -119,7 +119,7 @@ note: Four consecutive lines from the end of the default run.
 [2026-10-16 14:01:46] Sleeping 5 seconds before crash diagnostics to let GPU activity settle.
 ```
 
-The parent saw a crashed child, took the crash path, and killed the process tree. No request was running at that moment, so nothing was lost. Under load, every running request would have failed. We then started a server, sent it a 3,000-token request, and sent SIGTERM to the main process only:
+The parent saw a crashed child, took the crash path, and killed the process tree. No request was running at that moment, so nothing was lost. Under load, every running request would have failed. We then started a server, sent it a request for 3,000 output tokens, and sent SIGTERM to the main process only:
 
 ```listing
 title: SIGTERM to the main process, with one request running
@@ -152,13 +152,51 @@ in-flight request: {"status": 200, "completion_tokens": 3000, "finish_reason": {
 server exit code: 0
 ```
 
-The request finished with all 3,000 tokens, and `/health` returned 503 during the drain. The server exited with code 0, thirteen seconds after the signal. `docker stop` and Kubernetes send SIGTERM to the main process of the container, which is the correct target. A wrapper script that forwards the signal to a process group, or a supervisor that kills the group, gives you the first log instead.
+The request finished with all 3,000 tokens, and `/health` returned 503 during the drain. The server exited with code 0, thirteen seconds after the signal. `docker stop` and Kubernetes send SIGTERM to the main process of the container. That is the correct target when `sglang serve` is the main process, so start it with `exec` or as the entrypoint. The interactive command above makes `bash` the main process, and `bash` does not pass the signal on. A wrapper script that forwards the signal to a process group, or a supervisor that kills the group, gives you the first log instead.
 
 The code has two exits that skip the drain. If the server is already `UnHealthy`, the watchdog exits at once. It also exits at once if the environment variable `SGL_FORCE_SHUTDOWN` is true. At v0.5.22 the watchdog reads that old name directly {{code}}.
 
 The environment module declares the new name `SGLANG_FORCE_SHUTDOWN`. Its compatibility code copies `SGL_` variables to `SGLANG_` names, never the other way. **The code shows** that setting only `SGLANG_FORCE_SHUTDOWN` does not reach the watchdog. We read this in the code and did not run it, so we call it a likely bug. If you need a forced stop, set `SGL_FORCE_SHUTDOWN=1`.
 
 **Our position:** set the termination grace period longer than your longest request at your output cap. A 32K-token answer at 30 tokens per second needs more than 18 minutes. Cap `max_tokens` before you set the grace period, or a drain can never finish in time.
+
+## Before you trust a measurement
+
+Three checks prevent most of the false results that we found on our own machines:
+
+1. Flush the prefix cache before each run that you compare, and record the cached tokens, as in [section 5.1](#s-sglang-benchmark-serving). In our kit, a warm cache made a run at a higher load look faster. In a later test with `Qwen/Qwen3-0.6B` at a cap of 16, a repeat with no flush read a median TTFT about 4.8 times lower.
+2. Record the SM clock and the temperature with every run, as in [section 5.1](#s-sglang-benchmark-serving). A hot L4 reported up to 28 percent less throughput.
+3. On a shared GB10, run SGLang in a container with a memory limit, and log free memory during startup, as in [section 3.2](#s-mem-fraction-static-and-startup-sizing).
+
+When a greedy output changes between two runs, check the cache first. A request that finds its prompt in the cache runs a different prefill path, as [section 4.6](#s-deterministic-inference-and-logprobs) shows. One request at a time, a warm cache changed 21 of 32 of our greedy outputs, and a flush brought exact repeats back. These two tests ran on a shared L4 GPU with no clock lock, so trust the ratio and the counts, not the times.
+
+## The server aborts or hangs under heavy eviction
+
+**Symptom:** in the middle of a multi-turn load, the server stops with `CUDA error: an illegal memory access was encountered`. Or the log stops with no error while the GPU stays at 100 percent.
+
+We saw this on SGLang 0.5.22 with `Qwen/Qwen3-0.6B`, a pool of 8,192 tokens, and the trace of [section 3.5](#s-eviction-policies-and-hicache). From the fourth turn, the pool evicted prefixes on almost every step. CUDA graphs and the overlap scheduler were on, which is the default. The runs were on the second GPU of our L4 node on 2026-10-23, which its owner shares and which had no clock lock.
+
+```listing
+title: aborts and hangs by variant, same server and trace
+source: capture/gpu/out-l4/small-pool-crash.txt
+lang: text
+note: The tally from the summary. A hang is a log with no new line for 5 minutes, or a run longer than 15 minutes.
+---
+variant                                          runs   aborts   hangs   clean
+lru, CUDA graph and overlap on (default)         6      1        3       2
+lru, CUDA_LAUNCH_BLOCKING=1                      3      0        0       3
+lru, --disable-cuda-graph                        4      0        0       4
+lru, --enable-hierarchical-cache                 3      1        0       2
+lru, HiCache, CUDA_LAUNCH_BLOCKING=1             2      0        0       2
+```
+
+With the defaults, 4 of 6 runs failed. HiCache did not prevent it, and 1 of its 3 runs aborted. The abort and every hang stopped in the same place: the scheduler waited for the copy of a decode result to finish. With CUDA graphs off, 0 of 4 runs failed. With `CUDA_LAUNCH_BLOCKING=1`, 0 of 3 failed.
+
+We did not find the kernel that faults, because the fault did not occur with blocking launches. Nothing was filed upstream.
+
+**Workaround:** add `--disable-cuda-graph`. On our L4 with an 8B model, graphs saved about 1 percent of each decode step, as [section 4.1](#s-forwardmode-and-cuda-graphs) shows. A small model spends a larger share of each step on launches, so measure the cost on your model. `CUDA_LAUNCH_BLOCKING=1` also hid the fault, but it makes every kernel launch wait for the one before it. Use it to debug, never to serve.
+
+**Also test:** a larger pool. With a pool of 16,384 tokens or more, the same trace stopped thrashing, as section 3.5 shows. We did not count crashes at the larger pools, so this is not a proven fix.
 
 ## The order to change settings
 
@@ -175,7 +213,7 @@ caption: Read top to bottom. Each row is one setting or action, with the measure
 1. Measure with `sglang.benchmark.serving` at three concurrency levels, as in [section 5.1](#s-sglang-benchmark-serving). Without a baseline, no later change has a number.
 2. Set `--mem-fraction-static` for the machine you share, as in [section 3.2](#s-mem-fraction-static-and-startup-sizing). On our Mac the automatic value crashed the server at concurrency 32.
 3. Put shared text first in every prompt, as in [section 3.4](#s-prefix-friendly-prompts). One request id at the start of a system prompt cost us about 14 times the time to first token.
-4. Cap `--max-running-requests` at the knee you measured. Past the knee, our throughput fell while time to first token grew.
+4. Cap `--max-running-requests` at the knee you measured. Past the knee on our L4, throughput fell while time to first token grew. Our GB10 kept rising to 64 users, and we did not measure a cap itself.
 5. Only now change CUDA graph settings and `--attention-backend`, one change per run, as in [section 4.1](#s-forwardmode-and-cuda-graphs) and [section 4.2](#s-attention-backend). At v0.5.22 `--disable-cuda-graph` is deprecated in favour of `--cuda-graph-backend-decode` and `--cuda-graph-backend-prefill`.
 6. Add tensor, data, or attention-data parallelism when one replica is saturated, as in [section 6.1](#s-tp-size-dp-size-and-attn-dp-size).
 7. Split prefill from decode last, and only after you measured that prefill delays decode, as in [section 6.3](#s-prefill-decode-disaggregation).
@@ -203,6 +241,8 @@ Batch tokenization took P99 latency from 4,583 ms to 464 ms. A scoring path that
 - Set `SGL_FORCE_SHUTDOWN` for a forced stop at v0.5.22, never only `SGLANG_FORCE_SHUTDOWN`.
 - Cap output length before you choose the termination grace period.
 - Change settings in the order of figure 7.1b, one change per measured run.
+- Flush the prefix cache and record the clock before every run that you compare.
+- On an illegal memory access under heavy eviction, grow the pool or add --disable-cuda-graph.
 ```
 
-Sources: python/sglang/srt/entrypoints/http_server.py (ready, health_generate, HEALTH_CHECK_TIMEOUT), python/sglang/srt/managers/tokenizer_manager.py (sigterm_watchdog, _SCHEDULER_EXIT_TIMEOUT_SECS), python/sglang/srt/environ.py (SGLANG_FORCE_SHUTDOWN, SGLANG_ENABLE_HEALTH_ENDPOINT_GENERATION, SGLANG_CACHE_DIR, redirect_third_party_caches, _handle_deprecated_envs) and python/sglang/__init__.py at v0.5.22; docs/docs/get-started/install.mdx at v0.5.22; capture/out/server-default.log, capture/out/server-default.command.txt, capture/out/shutdown-exploratory.log, capture/out/shutdown-exploratory.txt, capture/shutdown_probe.py, capture/gpu/incidents/l4-toolchain-failures.txt; python/sglang/benchmark/datasets/random.py at v0.5.22; issues #22511 and #35884; field reports: Doubleword, fergusfinn.com/blog/fast-sglang-starts (2026-04-06), LinkedIn Engineering, linkedin.com/blog/engineering/ai/scaling-llm-based-ranking-systems-with-sglang-at-linkedin (2026-02-20), CERIT-SC, blog.cerit.io/blog/run-llm2 (2025-10-19) and blog-dev.cerit.io/blog/llm3 (2026-04-27), Ant Group on the LMSYS blog, lmsys.org/blog/2025-09-26-sglang-ant-group (2025-09-26).
+Sources: python/sglang/srt/entrypoints/http_server.py (ready, health_generate, HEALTH_CHECK_TIMEOUT), python/sglang/srt/managers/tokenizer_manager.py (sigterm_watchdog, _SCHEDULER_EXIT_TIMEOUT_SECS), python/sglang/srt/environ.py (SGLANG_FORCE_SHUTDOWN, SGLANG_ENABLE_HEALTH_ENDPOINT_GENERATION, SGLANG_CACHE_DIR, redirect_third_party_caches, _handle_deprecated_envs) and python/sglang/__init__.py at v0.5.22; docs/docs/get-started/install.mdx at v0.5.22; capture/out/server-default.log, capture/out/server-default.command.txt, capture/out/shutdown-exploratory.log, capture/out/shutdown-exploratory.txt, capture/shutdown_probe.py, capture/gpu/incidents/l4-toolchain-failures.txt; python/sglang/benchmark/datasets/random.py at v0.5.22; issues #22511 and #35884; field reports: Doubleword, fergusfinn.com/blog/fast-sglang-starts (2026-04-06), LinkedIn Engineering, linkedin.com/blog/engineering/ai/scaling-llm-based-ranking-systems-with-sglang-at-linkedin (2026-02-20), CERIT-SC, blog.cerit.io/blog/run-llm2 (2025-10-19) and blog-dev.cerit.io/blog/llm3 (2026-04-27), Ant Group on the LMSYS blog, lmsys.org/blog/2025-09-26-sglang-ant-group (2025-09-26), capture/gpu/out-l4/os-release.txt, sections 3.2, 4.6, and 5.1 of this manual (the cache, clock, and memory checks), capture/gpu/out-l4/prefix-cache-flush.txt, capture/gpu/out-l4/greedy-output-cache-batch-dtype.txt, capture/gpu/out-l4/small-pool-crash.txt, capture/gpu/out-l4/eviction-multiturn.txt, section 4.1 of this manual (the cost of CUDA graphs on the L4).

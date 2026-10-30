@@ -8,7 +8,7 @@ When you finish this section, you can constrain output with a JSON schema, a reg
 
 ## The obvious fix, and why it fails
 
-The obvious fix is to validate after generation and retry on failure. That works and stays slow. It also fails in the cases you care about most. A model that broke the schema once on a prompt tends to break it again on that prompt.
+The obvious fix is to validate after generation and retry on failure. That works and stays slow. It also fails in the cases you care about most. At temperature 0, a retry of the same prompt gives the same broken reply.
 
 **Constrained decoding:** removing every token that would break the grammar before the sampler picks one. The output then satisfies every rule that the backend enforces, so those rules become a property of the server.
 
@@ -64,11 +64,11 @@ The schema fixed the shape and not the facts. The constrained replies named an "
 
 ## Our position
 
-Constrain every response that a program parses. A mask is cheaper than a retry.
+Constrain every response that a program parses. A mask adds work to each step, and a retry repeats the whole request. We did not measure the cost of the mask per step.
 
 Do not trust the grammar backend to enforce every JSON Schema keyword. Test each keyword your consumer depends on, such as `minLength`, `pattern`, `minimum`, and `enum`, with a request that tries to break it. Keep a cheap validator behind the server for the fields that matter.
 
-Send a few requests with each common schema after every deploy, so the first user request does not pay the compile time. On the GB10 that first request paid about 330 ms.
+Send one constrained request after every deploy, so the first user request does not pay the startup cost of the grammar backend. On the GB10 that first request paid about 330 ms. Our probe showed no extra cost for a second, new small schema.
 
 ## Incidents
 
@@ -79,7 +79,7 @@ Send a few requests with each common schema after every deploy, so the first use
 ```takeaways
 - Use json_schema or response_format for every response that a program parses.
 - Test each JSON Schema keyword you rely on with a request designed to break it.
-- Send each common schema once after deploy so users do not pay compile time.
+- Send one constrained request after deploy so users do not pay the first grammar cost.
 - Watch sglang:num_grammar_queue_reqs when you add new schemas under load.
 ```
 

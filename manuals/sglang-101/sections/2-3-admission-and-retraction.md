@@ -81,7 +81,7 @@ The forecast can be too bold, because the ratio decays to 0.098. Requests that r
 
 When the check fails, SGLang logs `KV cache pool is full. Retract requests.`. It retracts the requests with the fewest output tokens first, and among those the longest prompts first, because they lost the least work {{code}}. It resets the ratio to a new estimate: tokens decoded so far plus 20 per request, divided by the total `max_new_tokens`. At v0.5.22, if even the last request cannot fit, it aborts that request with "Out of memory even after retracting all other requests" instead of looping.
 
-Our small-pool run had no retractions at all. The metrics endpoint confirms it.
+Our small-pool run had no retractions at all. Its server log has no `Retract requests` line. The metrics endpoint agrees, with one limit. `num_retracted_reqs` is a gauge that the scheduler resets after each log interval. So a reading of 0 covers only the last interval. The counter `num_retracted_requests_total` covers the whole run.
 
 ```listing
 title: zero retractions in the small-pool run
@@ -103,7 +103,7 @@ caption: Read left to right over decode steps. The amber line is the default rat
 
 ## Incidents: when retraction is the problem
 
-A server running DeepSeek-R1 on eight H20 GPUs logged `KV cache pool is full. Retract requests.` on every rank, again and again, and then stopped answering health checks {{issue #8463}}. A commenter traced it to retraction that could not free enough memory and repeated forever. The issue closed without a fix. The abort of the last request at v0.5.22 addresses that loop.
+A server running DeepSeek-R1 on eight H20 GPUs logged `KV cache pool is full. Retract requests.` on every rank, again and again, and then stopped answering health checks {{issue #8463}}. A commenter traced it to retraction that could not free enough memory and repeated forever. The issue closed without a fix. At v0.5.22 the scheduler aborts the last request when it is still out of memory after it retracts all the others. That abort is meant to end the loop. We did not reproduce the issue.
 
 Another user saw decode throughput fall from about 429 to between 20 and 38 tokens per second after a retraction, and stay there {{issue #26248}}. That issue closed for inactivity with no recorded cause. The lesson stands: a retraction in the log is a performance alarm.
 
@@ -113,12 +113,12 @@ Queueing is the honest failure. A queue keeps every running request fast and mak
 
 The SGLang tuning docs say an occasional retraction, about one per minute, is fine. Treat more than that as a configuration bug. Raise `--schedule-conservativeness`, for example to 1.3, so the forecast starts higher. Or lower `--max-running-requests`. Do not fix it with a larger `--mem-fraction-static` alone, because [section 3.2](#s-mem-fraction-static-and-startup-sizing) shows what that costs.
 
-Set realistic `max_new_tokens` in your clients. A client that asks for 4,096 tokens and uses 200 makes every new request look about 20 times bigger than it is.
+Set realistic `max_new_tokens` in your clients. A client that asks for 4,096 tokens and uses 200 makes the output reservation of every new request about 20 times too big.
 
 ```takeaways
 - Compute admission as uncached prompt plus max_new_tokens, against the free pool.
 - Read a long queue with fast tokens as admission control, not as a fault.
-- Alert when num_retracted_reqs grows faster than about one per minute.
+- Alert when the rate of num_retracted_requests_total is above about one per minute.
 - Raise schedule-conservativeness before you add memory to stop retractions.
 - Send realistic max_new_tokens from clients so admission sizes requests correctly.
 ```

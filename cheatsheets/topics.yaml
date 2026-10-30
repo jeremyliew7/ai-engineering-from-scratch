@@ -285,6 +285,7 @@
 - id: reverse-engineering
   title: Reverse Engineering with rea
   kind: manual
+  explainer: inside-a-decompiler.html
   sources:
     - manuals/reverse-engineering-101
     - phases/13-tools-and-protocols/32-program-anatomy-elf-from-scratch
@@ -305,8 +306,20 @@
 - id: sglang-serving
   title: LLM Serving with SGLang
   kind: manual
+  explainer: inside-an-llm-serving-gpu.html
   sources:
     - manuals/sglang-101
+
+- id: miles-rl
+  title: RL Post-Training with Miles
+  kind: manual
+  sources:
+    - manuals/miles-101
+- id: vllm-serving
+  title: LLM Serving with vLLM
+  kind: manual
+  sources:
+    - manuals/vllm-101
 
 - id: tokenization
   title: Tokenization and BPE

@@ -30,7 +30,7 @@ The docs ask for one exact version in a persistent registration {{install MCP Re
 
 ### Registering with rea setup
 
-`rea setup` writes the entry for you. For Claude Code it edits `.claude.json` in your home directory, or in `CLAUDE_CONFIG_DIR` when that variable is set. The capture kit ran setup twice against copies of two small files. For each run it set `HOME` and `CLAUDE_CONFIG_DIR` to a private work directory. Setup therefore never read or wrote a configuration of the host user (capture/README.md). Do the same when you want to try setup without risk.
+`rea setup` writes the entry for you. For Claude Code it edits `.claude.json` in your home directory, or in `CLAUDE_CONFIG_DIR` when that variable is set. The capture kit ran setup twice against copies of two small files. For each run it set `HOME` and `CLAUDE_CONFIG_DIR` to a private work directory. Setup therefore never read or wrote a configuration of the host user ([the capture](manuals/reverse-engineering-101/capture/README.md)). Do the same when you want to try setup without risk.
 
 The first file holds a comment and a trailing comma. Claude Code reads `.claude.json` as strict JSON, and setup applies the same rule before it makes a backup or writes anything:
 
@@ -75,13 +75,13 @@ note: The args array of the new entry is cut.
 }
 ```
 
-Setup reported `ready` with the action `configured_claude_code` (capture/out/18-setup-claude-duplicate.json). The entry also carries the Ghidra directory and the resolved JDK home of the capture Mac. Its command is a path in the npx cache, because the kit started rea from that path directly. The install docs say "Do not register paths inside npm's temporary package cache." {{install Package runners and global installation}}. Run setup as `npx -y rea-agents@6.7.0 setup` to get the pinned `npx` form, or from a global install.
+Setup reported `ready` with the action `configured_claude_code` ([the capture](manuals/reverse-engineering-101/capture/out/18-setup-claude-duplicate.json)). The entry also carries the Ghidra directory and the resolved JDK home of the capture Mac. Its command is a path in the npx cache, because the kit started rea from that path directly. The install docs tell you not to register a path inside the temporary package cache of npm {{install Package runners and global installation}}. Run setup as `npx -y rea-agents@6.7.0 setup` to get the pinned `npx` form, or from a global install.
 
 Run every setup with `--dry-run` first and read the plan. Then run it again without that flag and approve the changes it lists.
 
 The `rea.mjs` dispatcher routes the single argument `mcp` to `dist/main.js`. `run()` there parses the environment into a configuration and exits 1 with the projected error when a value is invalid. It then creates the logger and the one `BinarySession`, opens an initial target only when `HOPPER_TARGET_PATH` is set, and starts the stdio transport. Shutdown is bound to `SIGINT`, `SIGTERM`, and the end of stdin. An unexpected startup failure prints one fixed sentence and hides its cause: "REA could not start. Run `rea doctor`, then restart REA from your MCP client.".
 
-The transport is newline-delimited JSON-RPC 2.0 on stdin and stdout, and stderr carries one pino JSON line per tool call. The capture kit started the server as `node.../scripts/rea.mjs mcp` with `GHIDRA_INSTALL_DIR` and `JAVA_HOME` set, as capture/README.md describes, and kept the stderr lines as `10-mcp-server.log`.
+The transport is newline-delimited JSON-RPC 2.0 on stdin and stdout, and stderr carries one pino JSON line per tool call. The capture kit started the server as `node.../scripts/rea.mjs mcp` with `GHIDRA_INSTALL_DIR` and `JAVA_HOME` set, as [the kit notes](manuals/reverse-engineering-101/capture/README.md) describe. It kept the stderr lines in [the server log](manuals/reverse-engineering-101/capture/out/10-mcp-server.log).
 
 ## initialize
 
@@ -119,7 +119,7 @@ The second part is always the same. It tells the model to treat strings, symbols
 
 [Section 8.2](#s-an-agent-investigation) puts the same rule in the agent's ledger.
 
-After the reply the client sends `notifications/initialized`, and the connection is established. `binary_session` later reports the negotiated version, the SDK version `2.3.1` on both sides, the client name, and the catalog digests (capture/out/10-mcp-04-binary-session.json).
+After the reply the client sends `notifications/initialized`, and the connection is established. `binary_session` later reports the negotiated version, the SDK version `2.3.1` on both sides, the client name, and the catalog digests ([the capture](manuals/reverse-engineering-101/capture/out/10-mcp-04-binary-session.json)).
 
 ## tools/list
 
@@ -250,7 +250,7 @@ caption: Read left to right in seconds. The grey bar is the client default and t
 
 When the client gives up during startup, the pending query can have been interrupted. A second `open_binary` on the same target reuses the current client instead of starting fresh. The documented recovery stays on the same connection {{mcp Ghidra first-query deadlines and recovery}}. Export a bundle if retained records matter, then call `close_binary` and check its result. Then call `open_binary` with the same path and `provider_id: "ghidra"`, and retry the first query with a longer client deadline.
 
-The docs add that "No macOS cold-start recovery was exercised." {{mcp Ghidra first-query deadlines and recovery}}, so the Mac that recorded this manual has no recorded recovery run either. `close_binary` itself took 491 ms here and shut the Ghidra process down with the ephemeral project. Both tool descriptions say when to close: `open_binary` ends with "Call close_binary when the investigation is finished.", and `close_binary` starts with "When the investigation is finished".
+The docs add that recovery from a cold start was not tested on macOS {{mcp Ghidra first-query deadlines and recovery}}. So the Mac that recorded this manual has no recorded recovery run either. `close_binary` itself took 491 ms here and shut the Ghidra process down with the ephemeral project. Both tool descriptions say when to close: `open_binary` ends with `Call close_binary when the investigation is finished.`, and `close_binary` starts with `When the investigation is finished`.
 
 ```takeaways
 - Register `npx -y rea-agents@6.7.0 mcp` with one exact version and restart the client.

@@ -8,7 +8,7 @@ When you finish this section, you can replay a run from a cassette, compare two 
 
 ## session.db
 
-**Session:** "the record of a conversation, including every message, tool call, sub-agent run, and cost" {{docs-agent Sessions}}. It lives in `session.db` under the data directory, `~/.cagent` unless `--data-dir` or `-s` points elsewhere {{help-agent docker-agent run}}. `--session -1` resumes the newest session by creation time {{docs-agent Sessions}}.
+**Session:** the record of a conversation, with every message, tool call, sub-agent run, and cost {{docs-agent Sessions}}. It lives in `session.db` under the data directory, `~/.cagent` unless `--data-dir` or `-s` points elsewhere {{help-agent docker-agent run}}. `--session -1` resumes the newest session by creation time {{docs-agent Sessions}}.
 
 ```listing
 title: the session store after the runs of this part
@@ -49,13 +49,13 @@ def replay(name):
     return ["--fake", f"{CASSETTE_WORK}/{name}"]
 ```
 
-The recording found four rules that the help does not state (`capture/README.md`). `--record` takes its value only as `--record=PATH`, and a separate word is read as the agent reference. The path is relative to `--working-dir`, and `.yaml` is appended. With the `dmr` provider the recording proxy answers 400 unless the run also has `--models-gateway http://localhost:12434/engines`.
+The recording found four rules that the help does not state ([kit notes](manuals/docker-sandboxes-101/capture/README.md)). `--record` takes its value only as `--record=PATH`, and a separate word is read as the agent reference. The path is relative to `--working-dir`, and `.yaml` is appended. With the `dmr` provider the recording proxy answers 400 unless the run also has `--models-gateway http://localhost:12434/engines`.
 
 Replay matches each request by its body. When one turn issues two tool calls, the runtime runs them in parallel and appends the results in completion order. The next request body then differs, and the replay answers 500, "requested interaction not found". The kit therefore sends one tool call per message.
 
 ## sessions diff
 
-"Comparison is over the sequence of tool calls, not over the assistant's prose" {{help-agent docker-agent sessions diff}}, and the report stops at the first divergence.
+The comparison looks at the sequence of tool calls, not at the prose of the assistant {{help-agent docker-agent sessions diff}}, and the report stops at the first divergence.
 
 ```listing
 title: the help's example form, the working form, and a divergence
@@ -93,7 +93,7 @@ The help's own example, `sessions diff -1 -2`, fails, because the parser reads `
 
 **Eval session:** a JSON session with a user message, the expected tool calls, and an `evals` block {{docs-agent Evaluation}}. The block holds `relevance` statements, a `size`, and a `working_dir`. `eval` replays each one in a container and scores tool-call F1, relevance by a judge model, and size.
 
-The capture needed three tries with `--judge-model dmr/ai/qwen3:4b`. Plain, both evals failed with `exec: "docker": executable file not found in $PATH`, because the image `docker/docker-agent:1.149.0` has no `docker` CLI to find Model Runner (`22-eval.txt`). With `--models-gateway http://model-runner.docker.internal/engines`, the judge check failed first with HTTP 403. The docs explain why: "the LLM judge runs on the host, not inside the eval container" {{docs-agent Evaluation}}, and the host cannot reach that name (`22-eval-gateway.txt`). With `-e DOCKER_AGENT_MODELS_GATEWAY=…`, only the containers changed, and both evals ran.
+The capture needed three tries with `--judge-model dmr/ai/qwen3:4b`. Plain, both evals failed with `exec: "docker": executable file not found in $PATH`, because the image `docker/docker-agent:1.149.0` has no `docker` CLI to find Model Runner (`22-eval.txt`). With `--models-gateway http://model-runner.docker.internal/engines`, the judge check failed first with HTTP 403. The docs explain why: the LLM judge runs on the host, not in the eval container {{docs-agent Evaluation}}, and the host cannot reach that name (`22-eval-gateway.txt`). With `-e DOCKER_AGENT_MODELS_GATEWAY=…`, only the containers changed, and both evals ran.
 
 ```listing
 title: the eval run that worked

@@ -12,7 +12,7 @@ The CLI printed its envelope to stdout and exited 1 when `inspect-binary-layout`
 title: capability_unavailable from the CLI
 source: capture/out/04-inspect-binary-layout.json
 lang: json
-note: Nothing is cut. The exit status 1 is in capture/out/00-commands.txt.
+note: Nothing is cut. The exit status 1 is in [the command record](manuals/reverse-engineering-101/capture/out/00-commands.txt).
 ---
 {
   "code": "capability_unavailable",
@@ -71,7 +71,7 @@ note: The request and the raw response are cut, and so are most fields of detail
           …
 ```
 
-The bridge raised `not_found` with the message in `issues[0].message`, and rea mapped a remote `not_found` to `AnalysisInputError`, whose code is `invalid_request`. The server log recorded the failure twice, once for the bridge layer and once for the server layer, both at level 40 (capture/out/10-mcp-server.log).
+The bridge raised `not_found` with the message in `issues[0].message`, and rea mapped a remote `not_found` to `AnalysisInputError`, whose code is `invalid_request`. The server log recorded the failure twice, once for the bridge layer and once for the server layer, both at level 40 ([the capture](manuals/reverse-engineering-101/capture/out/10-mcp-server.log)).
 
 The diagnostics tell you whether the Ghidra side can explain a failure. `configured_jvm_max_heap` is the heap that rea gave the JVM, `2G` when neither `GHIDRA_HEADLESS_MAXMEM` nor `GHIDRA_MAXMEM` is set. `failure_output` holds the stdout and stderr that Ghidra wrote during the failed request, empty here, and `complete: true` says that nothing was lost. `output_incomplete: false` says the same for the whole process output. With empty output and a remote code, the failure is in your input and not in the engine.
 
@@ -119,9 +119,9 @@ note: The availability objects of hopper and ida. The diagnostics that follow ea
         "reason": "Set REA_IDA_MCP_CONFIG to an upstream IDA MCP JSON registration; see docs/ida-provider.md.",
 ```
 
-`rea setup` on a Claude Code file with a comment returned `status: "needs_human"` and exit 1 (capture/out/18-setup-claude-jsonc.json, [Section 8.1](#s-the-rea-mcp-server)). It planned no action and reported the registration state `invalid`. It is a setup result and not an error envelope, so a script reads `status` and `remediation`, not `code`.
+`rea setup` on a Claude Code file with a comment returned `status: "needs_human"` and exit 1 ([the capture](manuals/reverse-engineering-101/capture/out/18-setup-claude-jsonc.json), [Section 8.1](#s-the-rea-mcp-server)). It planned no action and reported the registration state `invalid`. It is a setup result and not an error envelope, so a script reads `status` and `remediation`, not `code`.
 
-Two results in the captures refused a conclusion and exited 0. `rea compare` over the two bundles returned `status: "unknown"` with ten unresolved records (capture/out/14-compare-bundles.json, [Section 5.5](#s-compare-and-compare-functions)). No record is a member of both bundles, and a bundle carries no completeness marker. `verify_reconstruction` returned `status: "fail"` with two failed claims (capture/out/10-mcp-22-verify-reconstruction.json, [Section 7.1](#s-verify-reconstruction)). Neither is an error envelope, and both are results that say the question stays open or the claim is false. A script that treats a non-zero exit as the only failure signal misses both.
+Two results in the captures refused a conclusion and exited 0. `rea compare` over the two bundles returned `status: "unknown"` with ten unresolved records ([the capture](manuals/reverse-engineering-101/capture/out/14-compare-bundles.json), [Section 5.5](#s-compare-and-compare-functions)). No record is a member of both bundles, and a bundle carries no completeness marker. `verify_reconstruction` returned `status: "fail"` with two failed claims ([the capture](manuals/reverse-engineering-101/capture/out/10-mcp-22-verify-reconstruction.json), [Section 7.1](#s-verify-reconstruction)). Neither is an error envelope, and both are results that say the question stays open or the claim is false. A script that treats a non-zero exit as the only failure signal misses both.
 
 ## The shape every rea error has
 

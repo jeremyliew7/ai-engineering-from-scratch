@@ -35,5 +35,5 @@ module.exports = figure('fig-4-3', {
   f.box({ x: 20, y: 342, w: 200, h: 70, hue: 'blue', title: 'sbx create shell --kit', sub: ['m101-kit: tree installed,', 'HELLO.md, allow example.com'], titleSize: 12, pad: 8 });
   f.box({ x: 236, y: 342, w: 190, h: 70, hue: 'blue', title: 'sbx kit add env-mixin', sub: ['m101-demo recreated in a', 'swap container, variable set'], titleSize: 12, pad: 8 });
   f.box({ x: 442, y: 342, w: 178, h: 70, hue: 'rose', title: 'sbx kit add hello-mixin', sub: ['refused: the kit', 'declares files'], titleSize: 11.5, pad: 8 });
-  f.text(20, 440, 'Dashed boxes come from the help text and were not run. Every solid box is in capture/out/12-*.', { size: 11, serif: true, hue: 'ink-soft' });
+  f.text(20, 440, 'Dashed boxes come from the help text and were not run. Every solid box was captured.', { size: 11, serif: true, hue: 'ink-soft' });
 });

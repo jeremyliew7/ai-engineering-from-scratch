@@ -471,6 +471,29 @@ Requirements:
 
 Success means `python3 code/main.py cfg` names every possible callee with the relocation that proves it, and the oracle comparison still passes on every object.
 
+## Graded Lab
+
+Five questions about the fixtures of this lesson. Find each answer with the code you built, then write it into `code/lab_answers.json`. Write numbers as numbers or as hex strings such as `"0x40"`, and lists as JSON lists.
+
+1. `t1`: instructions that recursive descent decodes in grade at -O1.
+2. `t2`: basic blocks in total at -O1.
+3. `t3`: address of the loop header in total at -O1, as hex.
+4. `t4`: in sweep-trap.o, the address where the linear sweep instruction that covers 0x14 starts, as hex.
+5. `t5`: entries in the jump table of grade at -O0.
+
+Check your answers:
+
+```bash
+cd phases/13-tools-and-protocols/33-disassembly-and-control-flow
+python3 code/lab.py
+```
+
+The checker computes each expected value from `code/main.py` on the committed fixtures. It prints `PASS`, `FAIL` or `TODO` for each task and a score, and it exits 0 only when all five pass. `python3 code/lab.py my-answers.json` checks another file. `code/tests/test_lab.py` proves that the checker accepts the right answers and rejects a wrong one.
+
+### See it run
+
+The [Inside a Decompiler](https://aiengineeringfromscratch.com/inside-a-decompiler?program=trap&sweep=linear) machine runs this lesson as its decode bed and block board. This link opens `sweep-trap.o` with linear sweep: the bed shows the four data bytes decoded as code, and a pin marks the jump target at `0x14` inside the `addq` at `0x13`. Switch the decoder to recursive descent to see the jump skip the data.
+
 ## Lesson Artifact
 
 This lesson includes `outputs/skill-disassembly-and-control-flow.md`. Use it to turn an object and a function name into a checked listing, blocks, typed edges, dominators, and every unresolved transfer. It requires an oracle comparison, both disassembly methods, byte accounting, relocation evidence for every recovered table, and a statement of what stayed unknown.

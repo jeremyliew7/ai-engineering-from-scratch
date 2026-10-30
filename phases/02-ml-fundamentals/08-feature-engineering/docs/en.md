@@ -82,7 +82,7 @@ Models need numbers. Categories need encoding.
 Real data has holes. Strategies:
 
 - **Drop rows:** Only when missing data is rare and random
-- **Mean/median imputation:** Simple, preserves distribution shape (median is more robust to outliers)
+- **Mean/median imputation:** Simple, keeps the center of the feature (median is more robust to outliers), but shrinks its variance and piles every filled value onto one spike, so the distribution shape changes
 - **Mode imputation:** For categorical features
 - **Indicator column:** Add a binary column "was_this_missing" before imputing. The fact that data is missing can itself be informative
 - **Forward/backward fill:** For time series data

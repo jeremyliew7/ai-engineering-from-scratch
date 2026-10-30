@@ -2,7 +2,7 @@
 
 > Every figure of this manual, in order, by the one claim its caption makes.
 
-Each row links to its figure, and the claim is the bold sentence that opens the caption. Every number in a figure comes from a file under `capture/out/`, and the caption names that file. The colours follow the palette of the front matter:
+Each row links to its figure, and the claim is the bold sentence that opens the caption. Every number in a figure comes from [our captured runs](manuals/reverse-engineering-101/capture/out), and the source of each figure is linked from its section. The colours follow the palette of the front matter:
 
 - blue is rea, its CLI, its MCP server, and its domain layer
 - violet is the Ghidra provider

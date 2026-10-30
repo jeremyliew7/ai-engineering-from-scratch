@@ -24,6 +24,13 @@ function cleanHtml(html, pages) {
   });
 }
 
+function nestedPages(siteRoot, dir = 'manual') {
+  const root = path.join(siteRoot, dir);
+  if (!fs.existsSync(root)) return [];
+  return fs.readdirSync(root, { withFileTypes: true }).filter(entry => entry.isDirectory())
+    .flatMap(entry => fs.readdirSync(path.join(root, entry.name)).filter(name => name.endsWith('.html')).map(name => path.join(root, entry.name, name)));
+}
+
 function cleanSite(siteRoot = __dirname) {
   const files = fs.readdirSync(siteRoot);
   const pages = new Set(files.filter(name => name.endsWith('.html') && name !== '404.html')
@@ -35,6 +42,11 @@ function cleanSite(siteRoot = __dirname) {
     if (name === 'sitemap.xml' && pages.has('projects') && !output.includes(`<loc>${ORIGIN}/projects</loc>`)) {
       output = output.replace('</urlset>', `  <url><loc>${ORIGIN}/projects</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>\n</urlset>`);
     }
+    if (source !== output) fs.writeFileSync(filename, output);
+  }
+  for (const filename of nestedPages(siteRoot)) {
+    const source = fs.readFileSync(filename, 'utf8');
+    const output = cleanHtml(source, pages);
     if (source !== output) fs.writeFileSync(filename, output);
   }
   const markdownRoot = path.join(siteRoot, 'agent-pages');
@@ -56,4 +68,4 @@ function cleanSite(siteRoot = __dirname) {
 }
 
 if (require.main === module) console.log(`Published clean URLs for ${cleanSite(process.argv[2] || __dirname)} pages.`);
-module.exports = { cleanHref, cleanPublicUrls, cleanHtml, cleanSite };
+module.exports = { cleanHref, cleanPublicUrls, cleanHtml, cleanSite, nestedPages };

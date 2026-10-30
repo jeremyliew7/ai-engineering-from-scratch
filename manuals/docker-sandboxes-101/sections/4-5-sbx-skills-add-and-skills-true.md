@@ -23,11 +23,11 @@ lang: json
 }
 ```
 
-On Linux the store is `~/.local/state/sandboxes/sandboxes/agent-skills`, and on Windows `%LOCALAPPDATA%\DockerSandboxes\sandboxes\state\agent-skills` {{docs-sbx Import skills from the host}}. "Running `sbx reset` clears the shared store" {{docs-sbx Shared store behavior}}.
+On Linux the store is `~/.local/state/sandboxes/sandboxes/agent-skills`, and on Windows `%LOCALAPPDATA%\DockerSandboxes\sandboxes\state\agent-skills` {{docs-sbx Import skills from the host}}. `sbx reset` clears the shared store {{docs-sbx Shared store behavior}}.
 
 ## add, import, ls, rm, and update
 
-`sbx skills add <repository>` installs from a Git URL or a GitHub `owner/repository`, and "The repository must contain one or more valid SKILL.md files" {{help-sbx sbx skills add}}. `--skill NAME` picks skills by name, repeatable or comma-separated, so `sbx skills add anthropics/skills --skill pdf` installs one. The capture kit did not record an `add`, because the step needs GitHub. `sbx skills update` refreshes only skills that `add` installed, and `sbx skills rm` asks before it removes one {{help-sbx sbx skills update}}.
+`sbx skills add <repository>` installs from a Git URL or a GitHub `owner/repository`, and the repository must hold at least one valid `SKILL.md` file {{help-sbx sbx skills add}}. `--skill NAME` picks skills by name, repeatable or comma-separated, so `sbx skills add anthropics/skills --skill pdf` installs one. The capture kit did not record an `add`, because the step needs GitHub. `sbx skills update` refreshes only skills that `add` installed, and `sbx skills rm` asks before it removes one {{help-sbx sbx skills update}}.
 
 `sbx skills import` copies skills already installed on the host, checking six directories in order, and the first copy of a duplicate name wins {{help-sbx sbx skills import}}:
 
@@ -40,19 +40,19 @@ On Linux the store is `~/.local/state/sandboxes/sandboxes/agent-skills`, and on 
 | `~/.cursor/skills` | Cursor | `/home/agent/.cursor/skills` |
 | `~/.factory/skills` | Droid | `/home/agent/.factory/skills` |
 
-The order comes from the help text and the mount targets from the docs {{docs-sbx Import skills from the host}}. "Imported skills are available to Claude, Codex, Copilot, Cursor, Droid, and OpenCode" {{help-sbx sbx skills import}}. `sbx skills import` arrived in v0.37.0, and `add`, `update`, and `rm` in v0.42.0 {{rel-sbx v0.42.0}}.
+The order comes from the help text and the mount targets from the docs {{docs-sbx Import skills from the host}}. Claude, Codex, Copilot, Cursor, Droid, and OpenCode can use the imported skills {{help-sbx sbx skills import}}. `sbx skills import` arrived in v0.37.0, and `add`, `update`, and `rm` in v0.42.0 {{rel-sbx v0.42.0}}.
 
 ## How a sandbox sees the store
 
-By default "the store's entries are linked into the agent's skills directory read-only, which stays writable so kits can install skills beside them" {{help-sbx sbx skills}}. "Linking happens at container start" {{help-sbx sbx skills}}, so an edit to an existing skill is live, while "adding a store entry reaches a running sandbox only on its next start" {{help-sbx sbx skills}}. Removing a skill breaks its link at once.
+By default, the entries of the store are linked read-only into the skills directory of the agent. The directory itself stays writable, so kits can install skills beside them {{help-sbx sbx skills}}. The links are made when the container starts {{help-sbx sbx skills}}. So an edit to an existing skill is live, while a new store entry reaches a running sandbox only on its next start {{help-sbx sbx skills}}. Removing a skill breaks its link at once.
 
-`--skills off|readonly|readwrite` on `sbx run` or `sbx create` chooses the mode per sandbox, and `readwrite` mounts the store over the directory so the sandbox's writes are shared. The default is `readonly`, or the `skills.defaultMode` setting, which the recording host had at its default (`capture/out/02-settings.txt`). The three-way flag replaced `--no-share-skills` in v0.43.0 {{rel-sbx v0.43.0}}. The capture kit did not list that directory from inside a sandbox, so the link form is not shown.
+`--skills off|readonly|readwrite` on `sbx run` or `sbx create` chooses the mode per sandbox, and `readwrite` mounts the store over the directory so the sandbox's writes are shared. The default is `readonly`, or the `skills.defaultMode` setting, which the recording host had at its default ([the capture](manuals/docker-sandboxes-101/capture/out/02-settings.txt)). The three-way flag replaced `--no-share-skills` in v0.43.0 {{rel-sbx v0.43.0}}. The capture kit did not list that directory from inside a sandbox, so the link form is not shown.
 
-In a v3 kit the agent declares the path itself, with `agent-skills@1`, because "A runtime cannot know where an arbitrary agent reads skills" {{kitcap agent-skills@1}}. A runtime "MUST default an omitted `mode` to `readonly`" {{kitcap agent-skills@1}}. The effective access is the narrower of the host setting and the kit's `mode`. Raising a path to `readwrite` is a widening that stops for approval, as [the capabilities section](#s-com-docker-sandbox-capabilities) explains.
+In a v3 kit the agent declares the path itself, with `agent-skills@1`, because a runtime cannot know where any agent reads its skills {{kitcap agent-skills@1}}. When `mode` is left out, a runtime must use `readonly` {{kitcap agent-skills@1}}. The effective access is the narrower of the host setting and the kit's `mode`. Raising a path to `readwrite` is a widening that stops for approval, as [the capabilities section](#s-com-docker-sandbox-capabilities) explains.
 
 ## docker-agent and skills: true
 
-`docker-agent` does not read the store. It scans its own directories, and two of them, `~/.claude/skills/` and `~/.agents/skills/`, are also import sources. "Docker Agent scans standard directories for `SKILL.md` files" {{docs-agent How Skills Work}}, and "Skill metadata (name, description) is injected into the agent's system prompt" {{docs-agent How Skills Work}}:
+`docker-agent` does not read the store. It scans its own directories, and two of them, `~/.claude/skills/` and `~/.agents/skills/`, are also import sources. Docker Agent scans standard directories for `SKILL.md` files {{docs-agent How Skills Work}}. It adds the name and the description of each skill to the system prompt {{docs-agent How Skills Work}}:
 
 | Path | Search |
 |---|---|
@@ -63,11 +63,11 @@ In a v3 kit the agent declares the path itself, with `agent-skills@1`, because "
 | `.github/skills/` | each directory from the git root to the current one |
 | `.agents/skills/` | each directory from the git root to the current one |
 
-In the agent file, `skills: true` loads every discovered skill, a list restricts it, and `false` turns it off {{docs-agent Filtering Skills}}. A list item that is `local` or an `http://` or `https://` URL is a source, and any other string is a skill name. "A name that doesn't match any discovered skill is logged as a warning at startup but is otherwise ignored" {{docs-agent Filtering Skills}}. The agent needs the `filesystem` toolset to read skill files, as [the toolsets section](#s-toolsets-and-mcps) lists. `context: fork` in a skill's front matter "tells the agent to run the skill in an isolated sub-agent instead" {{docs-agent Running a Skill as a Sub-Agent}}.
+In the agent file, `skills: true` loads every discovered skill, a list restricts it, and `false` turns it off {{docs-agent Filtering Skills}}. A list item that is `local` or an `http://` or `https://` URL is a source, and any other string is a skill name. A name that matches no discovered skill produces a warning at startup and is otherwise ignored {{docs-agent Filtering Skills}}. The agent needs the `filesystem` toolset to read skill files, as [the toolsets section](#s-toolsets-and-mcps) lists. `context: fork` in the front matter of a skill tells the agent to run the skill in an isolated sub-agent {{docs-agent Running a Skill as a Sub-Agent}}.
 
 ## In a docker-agent sandbox
 
-With `docker-agent run --sandbox`, the host paths above are invisible from the VM. Docker Agent builds a kit before the sandbox starts, "bind-mounted read-only into the VM at the same path" {{docs-agent Auto-Kit}}. Every `SKILL.md` found on the host "is copied under `<kit>/skills/<skill-name>/`" {{docs-agent What gets staged}}, every text file passes a secret redaction step, and `--no-kit` turns the staging off. [The end-to-end section](#s-docker-agent-run-sandbox-end-to-end) shows the printed summary of what was staged.
+With `docker-agent run --sandbox`, the host paths above are invisible from the VM. Docker Agent builds a kit before the sandbox starts and mounts it read-only into the VM at the same path {{docs-agent Auto-Kit}}. It copies every `SKILL.md` that it finds on the host under `<kit>/skills/<skill-name>/` {{docs-agent What gets staged}}. Every text file passes a secret redaction step, and `--no-kit` turns the staging off. [The end-to-end section](#s-docker-agent-run-sandbox-end-to-end) shows the printed summary of what was staged.
 
 ```takeaways
 - Fill the store once with `sbx skills add` or `sbx skills import`, and recreate sandboxes that must see new entries.

@@ -129,7 +129,7 @@ from: phases/08-generative-ai/19-visual-autoregressive-var/docs/en.md, phases/12
 - **Cosine mask ratio**: $\cos(\pi t / 2T)$. Ratio 1.0 at step 0, no mask at step T.
 - **Show-o loss**: cross-entropy on masked tokens. Text NTP masks only the last token.
 - **Chameleon vocab**: 32000 text plus 8192 image ids gives 40192.
-- **Emu3 video**: 64 * 64 * 8 = 32,768 tokens for 4 s at 8 FPS, 256x256.
+- **Emu3 video**: 32 * 32 * 8 = 8,192 tokens for 4 s at 8 FPS, 256x256.
 
 ## Numbers to keep
 type: defaults

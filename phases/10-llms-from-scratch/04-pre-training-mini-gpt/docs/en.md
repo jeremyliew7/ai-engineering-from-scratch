@@ -222,6 +222,10 @@ The output projection (logits head) shares weights with the token embedding matr
 
 ## Build It
 
+```figure
+iso-machine {"machine":"mini-gpt"}
+```
+
 ### Step 1: Embedding Layer
 
 Token embeddings map each of the 50,257 possible tokens to a 768-dimensional vector. Position embeddings add information about where each token sits in the sequence. The two are summed.

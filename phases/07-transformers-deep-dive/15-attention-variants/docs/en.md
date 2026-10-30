@@ -1,6 +1,6 @@
 # Attention Variants — Sliding Window, Sparse, Differential
 
-> Full attention is a circle. Every token sees every token, and memory pays the price. Four variants bend the shape of the circle and recover half the cost.
+> Full attention is a circle. Every token sees every token, and memory pays the price. Three variants bend the shape of the circle and recover half the cost.
 
 **Type:** Build
 **Languages:** Python

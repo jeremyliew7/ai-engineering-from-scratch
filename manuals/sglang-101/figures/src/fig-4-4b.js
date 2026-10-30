@@ -9,8 +9,8 @@ const ratio = runs.eagle3.points.map(p => [p.x, runs.default.points.find(q => q.
 
 module.exports = figure('fig-4-4b', {
   height: 350,
-  title: 'On a mixture-of-experts model the EAGLE-3 gain grows with the batch',
-  desc: 'Speedup of median time per output token with EAGLE-3 over the BF16 default for Qwen3-30B-A3B on a GB10. It is 1.60 times at concurrency 1, rises to 1.89 at 32 and is 1.84 at 64, while the accept length stays near 2.7 tokens per step.',
+  title: 'On a mixture-of-experts model the EAGLE-3 gain holds as the batch grows',
+  desc: 'Speedup of median time per output token with EAGLE-3 over the BF16 default for Qwen3-30B-A3B on a GB10. It is 1.60 times at concurrency 1 and 1.56 at 2, peaks at 1.89 at 32 and is 1.84 at 64, while the accept length stays near 2.7 tokens per step.',
 }, f => {
   const c = chart(f, { x: 66, y: 56, w: 540, h: 220, xScale: 'log2', xDomain: [1, 64], yDomain: [0, 3], xTicks: [1, 2, 4, 8, 16, 32, 64], yTicks: [0, 1, 2, 3], xLabel: 'max concurrency (benchmark client)', yLabel: 'default TPOT divided by EAGLE-3 TPOT', yFormat: v => `x${v}` });
   f.rule(c.px(1), c.py(1), c.px(64), c.py(1), { hue: 'rose', dash: 'dashed' });

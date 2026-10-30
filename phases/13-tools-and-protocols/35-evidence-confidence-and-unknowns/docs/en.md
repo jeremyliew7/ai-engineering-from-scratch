@@ -426,6 +426,29 @@ Requirements:
 
 Success means a report in which every sentence cites an id from the bundle and the one `unknown` claim is gone.
 
+## Graded Lab
+
+Five questions about the fixtures of this lesson. Find each answer with the code you built, then write it into `code/lab_answers.json`. Write numbers as numbers or as hex strings such as `"0x40"`, and lists as JSON lists.
+
+1. `t1`: the evidence id that compute_evidence_id gives for rea-evidence-grade.json.
+2. `t2`: the number of limitations in the grade record.
+3. `t3`: the relationship_coverage status of the grade record.
+4. `t4`: the confidence and the authority of the grade record, as a list of two strings.
+5. `t5`: the SHA-256 of the subject of the grade record.
+
+Check your answers:
+
+```bash
+cd phases/13-tools-and-protocols/35-evidence-confidence-and-unknowns
+python3 code/lab.py
+```
+
+The checker computes each expected value from `code/main.py` on the committed fixtures. It prints `PASS`, `FAIL` or `TODO` for each task and a score, and it exits 0 only when all five pass. `python3 code/lab.py my-answers.json` checks another file. `code/tests/test_lab.py` proves that the checker accepts the right answers and rejects a wrong one.
+
+### See it run
+
+The [Inside a Decompiler](https://aiengineeringfromscratch.com/inside-a-decompiler?symbols=off) machine keeps an evidence ledger with four trays: observed, derived, inferred and unknown. This link opens the run with the symbol table switched off, so the name and the end of the function file as unknowns and the start files as inferred.
+
 ## Lesson Artifact
 
 This lesson produces `outputs/skill-evidence-ledger.md`. It tells an agent how to write every finding as a record with confidence, authority, limitations, and links. It tells the agent how to keep unknowns as revisions, and when a claim is `pass`, `fail`, `unknown`, or `unsupported`.

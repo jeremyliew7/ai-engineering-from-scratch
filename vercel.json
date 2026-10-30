@@ -96,6 +96,14 @@
       "destination": "/inside-an-ai-agent.html"
     },
     {
+      "source": "/inside-a-decompiler",
+      "destination": "/inside-a-decompiler.html"
+    },
+    {
+      "source": "/inside-an-llm-serving-gpu",
+      "destination": "/inside-an-llm-serving-gpu.html"
+    },
+    {
       "source": "/skills",
       "destination": "/skills.html"
     },
@@ -174,6 +182,40 @@
     {
       "source": "/cheatsheets/:topic([a-z0-9-]+)",
       "destination": "/cheatsheets/:topic.html"
+    },
+    {
+      "source": "/practice/tracks/:page([a-z0-9-]+)",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept",
+          "value": "(?i).*text/markdown.*"
+        }
+      ],
+      "destination": "/agent-pages/practice/tracks/:page.md"
+    },
+    {
+      "source": "/practice/:page([a-z0-9-]+)",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept",
+          "value": "(?i).*text/markdown.*"
+        }
+      ],
+      "destination": "/agent-pages/practice/:page.md"
+    },
+    {
+      "source": "/practice",
+      "destination": "/practice/index.html"
+    },
+    {
+      "source": "/practice/tracks/:page([a-z0-9-]+)",
+      "destination": "/practice/tracks/:page.html"
+    },
+    {
+      "source": "/practice/:page([a-z0-9-]+)",
+      "destination": "/practice/:page.html"
     },
     {
       "source": "/roadmap",
@@ -357,6 +399,10 @@
       "destination": "/openapi.json"
     },
     {
+      "source": "/:manual(manual-[a-z0-9-]+)/:section([a-z0-9-]+)",
+      "destination": "/manual/:manual/:section.html"
+    },
+    {
       "source": "/:page(manuals|manual-[a-z0-9-]+)",
       "destination": "/:page.html"
     },
@@ -469,11 +515,63 @@
       ]
     },
     {
+      "source": "/:manual(manual-[a-z0-9-]+)/:section([a-z0-9-]+)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        },
+        {
+          "key": "Vary",
+          "value": "Accept, Accept-Encoding"
+        }
+      ]
+    },
+    {
       "source": "/cheatsheets/:path*",
       "headers": [
         {
           "key": "Cache-Control",
           "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/practice/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        },
+        {
+          "key": "Vary",
+          "value": "Accept, Accept-Encoding"
+        }
+      ]
+    },
+    {
+      "source": "/practice/data/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/practice/practice_check.py",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        },
+        {
+          "key": "Content-Type",
+          "value": "text/x-python; charset=utf-8"
         }
       ]
     },
@@ -532,12 +630,25 @@
           "value": "public, max-age=0, must-revalidate"
         }
       ]
+    },
+    {
+      "source": "/agent-pages/practice/:path*",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/markdown; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
     }
   ],
   "functions": {
     "api/lesson.js": {
       "maxDuration": 10,
-      "includeFiles": "{site/lesson.html,site/lesson-seo.json,site/lesson-terms.json,site/cheatsheet-map.json,site/lesson-markdown.js,languages.json,phases/*/*/docs/en.md,certifications/*/lessons/*/docs/en.md,lib/og-render.js,lib/og-fonts/*.json}"
+      "includeFiles": "{site/lesson.html,site/lesson-seo.json,site/lesson-terms.json,site/cheatsheet-map.json,site/practice-map.json,site/lesson-markdown.js,languages.json,phases/*/*/docs/en.md,certifications/*/lessons/*/docs/en.md,lib/og-render.js,lib/og-fonts/*.json}"
     },
     "api/certification.js": {
       "maxDuration": 10,
@@ -606,13 +717,23 @@
       "permanent": true
     },
     {
-      "source": "/:page(about|catalog|glossary|roadmap|developer|contact|privacy|sponsors|projects|project|learning-paths|certifications|assessment|inside-an-ai-agent|skills|how-to-learn|highlights).html",
+      "source": "/:page(about|catalog|glossary|roadmap|developer|contact|privacy|sponsors|projects|project|learning-paths|certifications|assessment|inside-an-ai-agent|inside-a-decompiler|inside-an-llm-serving-gpu|skills|how-to-learn|highlights).html",
       "destination": "/:page",
       "permanent": true
     },
     {
       "source": "/:page(manuals|manual-[a-z0-9-]+).html",
       "destination": "/:page",
+      "permanent": true
+    },
+    {
+      "source": "/manual/:manual(manual-[a-z0-9-]+)/:section([a-z0-9-]+).html",
+      "destination": "/:manual/:section",
+      "permanent": true
+    },
+    {
+      "source": "/manual/:manual(manual-[a-z0-9-]+)/:section([a-z0-9-]+)",
+      "destination": "/:manual/:section",
       "permanent": true
     },
     {
@@ -628,6 +749,21 @@
     {
       "source": "/cheatsheets/:topic([a-z0-9-]+).html",
       "destination": "/cheatsheets/:topic",
+      "permanent": true
+    },
+    {
+      "source": "/practice/index.html",
+      "destination": "/practice",
+      "permanent": true
+    },
+    {
+      "source": "/practice/tracks/:page([a-z0-9-]+).html",
+      "destination": "/practice/tracks/:page",
+      "permanent": true
+    },
+    {
+      "source": "/practice/:page([a-z0-9-]+).html",
+      "destination": "/practice/:page",
       "permanent": true
     },
     {

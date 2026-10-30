@@ -122,7 +122,7 @@ caption: Left, output tokens per second at each cap. Right, median TTFT at the s
 
 The knee is the cap after which throughput stops rising. On this machine it is at or below 8. Past the knee, the server has no idle compute left to give. New requests only wait for a share of the same decode steps. The scheduler in [section 2.2](#s-the-scheduler-loop-and-schedule-policy) accepts them anyway, because its admission limit on this Mac was `max_running_requests=4096`.
 
-**What transfers to a GPU.** The absolute numbers do not. A 0.6B model on Apple silicon says nothing about an H100. The shape does transfer. Every server has a knee, the latency past it grows faster than the throughput, and the default admission limit sits far above it.
+**What transfers to a GPU.** The absolute numbers do not. A 0.6B model on Apple silicon says nothing about an H100. The shape transferred to the servers we measured. Each one had a latency knee, the latency past it grew faster than the throughput, and the default admission limit sat far above it.
 
 ## The same sweep on a GPU, run as an experiment
 
@@ -139,14 +139,29 @@ sglang serve --model-path Qwen/Qwen3-30B-A3B-Instruct-2507 --host 127.0.0.1 --po
 
 At a cap of 8 the single run reported a median first token of 677.61 ms. At a cap of 32 it reported 390.38 ms. More load gave a faster first token, and no queue explains that. One run is one sample, and one sample can be wrong for reasons you never see.
 
-So we ran the sweep the way a model team runs a training comparison. `capture/gpu/sweep.py` runs every cap from 1 to 64 three times, with seeds 1, 2, and 3. It passes `--output-details`, so each run keeps the TTFT and the token gaps of every request. `capture/gpu/summarize.py` reduces the three runs of each point to the median, the lowest, and the highest value.
+So we ran the sweep the way a model team runs a training comparison. [Our sweep script](manuals/sglang-101/capture/gpu/sweep.py) runs every cap from 1 to 64 three times, with seeds 1, 2, and 3. It passes `--output-details`, so each run keeps the TTFT and the token gaps of every request. [Our summary script](manuals/sglang-101/capture/gpu/summarize.py) reduces the three runs of each point to the median, the lowest, and the highest value.
 
 | Cap | Single kit run, median TTFT | Three seeds, median TTFT (lowest to highest) |
 |---|---|---|
 | 8 | 677.61 ms | 209.98 ms (185.25 to 216.02) |
 | 32 | 390.38 ms | 416.37 ms (338.06 to 434.64) |
 
-**We measured** both on the same GB10. The 677.61 ms result did not come back in three more runs. The first token gets slower as the cap grows, as the queue predicts.
+**We measured** both on the same GB10, with two different servers. The single kit run had a pool of 227,243 tokens on 2026-10-17, and the sweep a pool of 234,600 tokens on 2026-10-16. The 677.61 ms result did not come back in three more runs. From a cap of 2 up, the first token gets slower as the cap grows, as the queue predicts.
+
+Later we found the cause of the false result in the server log of the kit run. The kit sent every run with seed 7 to one server, and it never cleared the prefix cache. With one seed, the client sends the same first prompts in every run {{code}}. So each run found the prompts of the run before it in the cache:
+
+```listing
+title: a run that found its prompts in the cache
+source: capture/gpu/out-gb10/server-default.log
+lang: text
+note: Three prefill lines from the kit run at a cap of 32. The first two admit 29 requests that need one new token each. The third is the first prompt that was new to the cache. The ends of the lines are cut.
+---
+[2026-10-17 14:23:00] Prefill batch, #new-seq: 14, #new-token: 14, #cached-token: 6879, token usage: 0.07, …
+[2026-10-17 14:23:00] Prefill batch, #new-seq: 15, #new-token: 15, #cached-token: 7634, token usage: 0.07, …
+[2026-10-17 14:23:47] Prefill batch, #new-seq: 1, #new-token: 510, #cached-token: 2, token usage: 0.01, …
+```
+
+**We counted** the prefill lines of each kit run. At a cap of 8, 16 of the 64 prompts were in the cache before the run started. At a cap of 32, 64 of the 128 prompts were, and at a cap of 64, 128 of the 256. A cached prompt skips its prefill, so its first token comes fast. Half of the requests at a cap of 32 had that advantage, and a quarter at a cap of 8. That is why the median first token fell.
 
 ```figure
 id: fig-5-1c
@@ -156,7 +171,7 @@ claim: Three seeds per point agree closely, so each line is a measurement and th
 caption: Read each line from left to right, one server configuration per line. The band is the lowest and the highest of three seeds. Qwen3-30B-A3B, 512 tokens in and 128 out. From capture/gpu/summary/gb10.json.
 ```
 
-The widest band in the figure is EAGLE-3 at a cap of 8, from 86.93 to 107.23 tok/s. Every other band is inside about 10 percent of its median. With that spread, a gap of two times is real. At a cap of 64, FP8 gave 440.86 tok/s and BF16 gave 235.38 tok/s. The run without CUDA graphs lies on the default line, and [section 4.1](#s-forwardmode-and-cuda-graphs) explains why.
+The widest band in the figure is EAGLE-3 at a cap of 8, from 86.93 to 107.23 tok/s. Every other band is inside about 10 percent of its median. With that spread, a gap of 1.9 times is real. At a cap of 64, FP8 gave 440.86 tok/s and BF16 gave 235.38 tok/s. The run without CUDA graphs lies on the default line, and [section 4.1](#s-forwardmode-and-cuda-graphs) explains why.
 
 ### A median hides two populations
 
@@ -172,9 +187,29 @@ caption: Each line is drawn from 51 quantiles of the pooled requests, from the f
 
 **We measured** two groups on the GB10. For BF16, the fastest half of the requests had a first token from 186.3 to 211.8 ms. From the 68th percentile, requests waited 1,639.8 to 1,743.4 ms. The median was 237.6 ms and P90 was 1,721.5 ms, 7.2 times more. FP8 had the same two groups: 122.7 to 139.5 ms for the fast half, and 589.9 to 1,162.2 ms for the slow half.
 
-EAGLE-3 had the slowest median, 579.3 ms, and the shortest tail, 1,007.4 ms at P90. Its time per token had the widest spread instead: 82.8 ms at the median and 191.3 ms at P99. The number of draft tokens accepted changes from step to step.
+EAGLE-3 had the slowest median, 579.3 ms, and the shortest tail, 1,007.4 ms at P90. Its time per token had the widest spread instead: 82.8 ms at the median and 191.3 ms at P98. The number of draft tokens accepted changes from step to step.
 
 **Our reading of the two groups:** the workload made them. Every request asked for exactly 128 tokens, because `--random-range-ratio 1.0` fixes the length. Requests that start together therefore finish together, and their replacements arrive together. Each wave then queues for prefill behind the requests ahead of it. Real traffic has mixed lengths. If you test with fixed lengths, read P90 as the cost of a burst, not as the cost of a normal request.
+
+The prefix cache gives a second reading, and we cannot rule it out. The sweep also kept one server for all the runs of one configuration, with no flush. Each seed sent the same first prompts at every cap. At a cap of 16, 32 of the 64 prompts were the prompts of the run at a cap of 8. If they were still in the pool, half of the requests skipped their prefill. We did not keep the full server logs of the sweep, so we cannot count the hits.
+
+We tested this reading on the L4, not on the GB10. On 2026-10-23 we ran the load sweep of Qwen3-8B with a flush before each run and a 900 MHz lock. We compared it with a run of the same session that had no flush:
+
+```listing
+title: median TTFT with and without a flush, Qwen3-8B on our L4 at 900 MHz
+source: capture/gpu/out-l4/load-flushed-vs-unflushed.txt
+lang: text
+note: The median TTFT rows. The share of requests that met the target and the P99 ITL lines are cut.
+---
+median TTFT, flushed against unflushed
+users   vLLM                                   SGLang
+4       650 / 145 ms (4.5x)                    532 to 645 / 141 ms (3.8 to 4.6x)
+8       951 to 978 / 264 to 274 ms (3.6x)      1,174 to 1,273 / 173 to 178 ms (6.6 to 7.3x)
+16      1,550 to 1,587 / 294 to 295 ms (5.3x)  1,804 to 1,944 / 218 ms (8.3 to 8.9x)
+…
+```
+
+On the L4, the flush raised the median TTFT of SGLang 4 to 9 times at 4 to 16 users. The time per token changed by less than 10 percent. So on the L4, the cache made most of the fast group. On the GB10 we did not rerun the sweep, so both readings stay open there.
 
 ### We tested the waves on an L4
 
@@ -209,22 +244,55 @@ caption: Solid lines are median TTFT and dashed lines are P99 inter-token latenc
 | 0.5 | 364 ms | 396 ms | 130 ms | 95 ms |
 | 0.0 | 291 ms | 300 ms | 129 ms | 95 ms |
 
-**We measured** a first token 6.9 times slower with fixed lengths on BF16, and 11.8 times slower on FP8. Mixed lengths sent fewer tokens, 17,870 input tokens against 32,768 in seed 1, so part of the gap is less work. Less work does not explain the other half of the result. With mixed lengths, P99 ITL rose from 82 to 300 ms. New prompts arrived one by one, and each prefill stopped the running decodes. With fixed lengths, prefill happened only between waves.
+**We measured** a first token 6.9 times slower with fixed lengths on BF16, and 11.8 times slower on FP8. The FP8 runs at the two ratios had median clocks of 1,185 and 2,040 MHz. So part of the FP8 factor is the clock. Mixed lengths sent fewer tokens. In seed 1 they sent 17,870 input tokens at a ratio of 0.0, against 32,768 at 1.0. So part of the gap is less work.
 
-The GB10 gave the same shape with Qwen3-30B-A3B, three seeds per point. With fixed lengths, the BF16 median TTFT was 1,650 ms and P99 ITL 169 ms. With mixed lengths, they were 320 ms and 230 ms. FP8 went from 1,050 ms and 92 ms to 188 ms and 127 ms. Two GPUs and two models show the same trade, so it comes from the workload, not from the hardware.
+The cache can explain another part. In each seed, the run at 1.0 came first and started with an empty cache. The runs at 0.5 and 0.0 came after it. Each of their prompts is the first part of a prompt from the run at 1.0. The BF16 pool of 24,094 tokens held only part of the 32,768 tokens of that run. The FP8 pool of 142,369 tokens could hold all of them.
+
+Less work and the cache do not explain the other half of the result. With mixed lengths, P99 ITL rose from 82 to 300 ms. New prompts arrived one by one, and each prefill stopped the running decodes. With fixed lengths, prefill happened only between waves.
+
+The GB10 gave the same shape with Qwen3-30B-A3B, three seeds per point. With fixed lengths, the BF16 median TTFT was 1,650 ms and P99 ITL 169 ms. With mixed lengths, they were 320 ms and 230 ms. FP8 went from 1,050 ms and 92 ms to 188 ms and 127 ms. Two GPUs and two models show the same trade, so on both of our machines it came from the workload, not from the hardware.
 
 The two settings measure two different servers. Fixed lengths measure bursts: a slow first token and smooth tokens after it. Mixed lengths measure steady traffic: a fast first token and stalls in the stream. Keep `--random-range-ratio 1.0` when you compare two builds, because it repeats exactly. Before you set a latency target from it, run your real length distribution too.
+
+## Reset the prefix cache between runs
+
+The prefix cache keeps the KV of earlier prompts after a run ends. It changes two things in the next run: the speed, and sometimes the greedy output, as [section 4.6](#s-deterministic-inference-and-logprobs) shows.
+
+To see the size of the speed effect, we ran one load four times in a row with the same seed. We used `Qwen/Qwen3-0.6B`, 64 prompts at a cap of 16, 512 tokens in and 128 out. This was on the second GPU of our L4 node, which its owner shares and which had no clock lock. So trust the ratios, not the times.
+
+```listing
+title: median TTFT in ms, the same load four times in a row
+source: capture/gpu/out-l4/prefix-cache-flush.txt
+lang: text
+note: The SGLang row of the summary. The vLLM row is cut.
+---
+engine        fresh   repeat, not flushed   repeat after a flush   repeat, not flushed
+SGLang 0.6B   394     82.5                  289                    77
+…
+```
+
+The repeat without a flush read a median TTFT about 4.8 times lower than the fresh run. After a flush, the TTFT went back near the fresh run. The time per token changed by less than 15 percent.
+
+Use this protocol for every run that you compare:
+
+1. Start each run with an empty cache. Pass `--flush-cache` to `sglang.benchmark.serving`, which calls `/flush_cache` after the warm-up request {{code}}. You can also call `POST /flush_cache` yourself, or restart the server.
+2. Check that the flush ran. The server flushes only when no request runs or waits. Otherwise the route answers with HTTP 400, and the log says `Cache not flushed because there are pending requests` {{code}}.
+3. Use a new `--seed` for each run, so that the client sends new prompts.
+4. Record the cached tokens. Read `sglang:cached_tokens_total` from `/metrics` before and after the run. With `--enable-cache-report`, each OpenAI-style response also gives `usage.prompt_tokens_details.cached_tokens`.
+5. Write the cache setting and the cached tokens next to the result.
+
+Our kit and our sweeps did not follow this protocol. Only the first run of each seed on each server started with an empty cache. The later TTFT numbers on this page can be too low, most of all on the GB10, whose pool held every prompt we sent. The time per token is less exposed, because a cache hit removes prefill work and leaves the decode work the same.
 
 ## Goodput finds the knee that throughput hides
 
 On the GB10, BF16 throughput still rises at a cap of 64, because the KV pool holds 234,600 tokens. A throughput curve with no knee does not tell you where to stop. A latency target does.
 
-**Goodput:** the number of requests per second that finish inside the latency target. `capture/gpu/summarize.py` counts a request when its first token comes in under 1 s and its mean time per token is under 100 ms.
+**Goodput:** the number of requests per second that finish inside the latency target. Our summary script counts a request when its first token comes in under 1 s and its mean time per token is under 100 ms.
 
 | Cap | BF16 goodput | BF16 median TPOT | FP8 goodput | FP8 median TPOT |
 |---|---|---|---|---|
 | 4 | 0.44 req/s | 71.01 ms | 0.80 req/s | 38.60 ms |
-| 8 | 0 | 102.21 ms | 1.07 req/s | 54.96 ms |
+| 8 | 0, and up to 0.04 in one seed | 102.21 ms | 1.07 req/s | 54.96 ms |
 | 16 | 0 | 154.24 ms | 1.10 req/s | 81.90 ms |
 | 32 | 0 | 201.91 ms | 0 | 104.12 ms |
 
@@ -254,9 +322,40 @@ claim: On the L4, FP8 served 3.18 requests per second within the target at 4 off
 caption: Dashed lines are requests completed per second. Solid lines are requests that met the target, with the range of three seeds as a band. Green is FP8 with an FP8 KV cache, plum is BF16. From capture/gpu/summary/l4.json, the rate sweep.
 ```
 
-**We measured** a different shape on the smaller card. Both servers met the target for every request up to 1 per second. BF16 held 0.88 within the target at 2 offered and none from 4. FP8 held 3.18 within the target at 4 offered, three times the best BF16 point.
+**We measured** a different shape on the smaller card. Both servers met the target for every request up to 1 per second. BF16 held 0.88 within the target at 2 offered and none from 4. FP8 held 3.18 within the target at 4 offered, three times the best BF16 point. The FP8 server also had a pool of 142,369 tokens against 24,094 for BF16. From 4 offered, the BF16 pool was the limit.
 
-Past its peak, BF16 completed fewer requests as we offered more: 2.01 per second at 4 offered, 1.91 at 8, and 1.62 at 16. The telemetry shows why. The median SM clock fell from 1,320 MHz at 4 offered to 465 MHz at 16. At 16, 70 percent of the samples showed thermal slowdown. On a passively cooled card, overload costs throughput as well as latency.
+Past its peak, BF16 completed fewer requests as we offered more: 2.01 per second at 4 offered, 1.91 at 8, and 1.62 at 16. The telemetry shows why. The median SM clock fell from 1,320 MHz at 4 offered to 465 MHz at 16. At 16, 70 percent of the samples showed thermal slowdown. On our passively cooled L4, overload cost throughput as well as latency.
+
+## Check the client at high rates
+
+`sglang.benchmark.serving` sends every request from one Python process with asyncio {{code}}. A 2026 study of benchmark clients found that such a client adds its own queue at high request rates. The client then reports a TTFT and a TPOT that are higher than what the server did. The study uses a client that runs in several processes instead.
+
+We did not measure this effect. Our open loop stopped at 16 requests per second, and we did not record the CPU use of the client. Before you trust a TTFT at a high rate, compare one client process with two processes that each send half the rate.
+
+## Compare two clients on one server
+
+Our sweep tables came from `sglang.benchmark.serving` at temperature 0, its default. Another client can read a different number from the same server. We ran three clients against one vLLM 0.31.0 server with `Qwen/Qwen3-0.6B` on 2026-10-23. They were this client with `--backend vllm`, `vllm bench serve`, and its Rust version. The GPU was the shared second L4 of our node. Its clock was throttled, but it stayed at 420 to 495 MHz for every run.
+
+```listing
+title: median TTFT in ms from three clients, two rounds each
+source: capture/gpu/out-l4/bench-client-bias.txt
+lang: text
+note: The rows at temperature 0 from the TTFT table. The rows at temperature 0.7 and the throughput table are cut.
+---
+users   temperature   SGLang client    vllm bench       vllm bench, Rust
+1       0             154, 164         149, 150         144, 144
+…
+16      0             1,077, 1,045     1,033, 1,027     1,088, 1,038
+…
+64      0             1,688, 1,838     1,624, 1,667     1,674, 1,789
+```
+
+- Our client read a median TTFT 3 to 10 percent higher than `vllm bench serve`. At 16 and 64 users, it read an output throughput 2 to 8 percent lower. At one user, one of its rounds read a higher throughput than every other round, so we give no throughput gap there.
+- The Python and the Rust versions of `vllm bench serve` agreed within the noise.
+- The clients send different prompt tokens from their random datasets, so part of a small gap can come from the prompts.
+- Temperature 0.7 raised the median TPOT over temperature 0. It was 10 to 13 percent higher at one user, and 3 to 6 percent higher at 16 and 64 users.
+
+So a gap of a few percent between two published numbers can come from the client alone. Report the client and the temperature with every result.
 
 ## Record the GPU clock with every run
 
@@ -274,7 +373,7 @@ index, temperature.gpu, power.draw [W], power.limit [W], clocks.current.sm [MHz]
 
 The GPU was at 87 C with software thermal slowdown active, and its SM clock was 360 MHz of 2040. The L4 is a 72 W card with passive cooling, and the second card in the same chassis ran other work at the same time. We had measured a hot GPU, and the server under it was not the cause.
 
-Now `capture/gpu/sweep.py` samples `nvidia-smi` once a second into a `.gpu.csv` file beside each run. Before each run it waits up to 900 s for the GPU to cool below the `--cool` limit, 65 C by default. On this chassis the L4 never went below 69 C, so we ran with `--cool 72`. `capture/gpu/summarize.py` adds the median SM clock, the highest temperature, and the share of samples with a thermal slowdown bit to each point. The GB10 load sweep in [figure 5.1c](#fig-5-1c) ran before we added the sampler, so its tight bands are the only check on it.
+Now the sweep script samples `nvidia-smi` once a second into a `.gpu.csv` file beside each run. Before each run it waits up to 900 s for the GPU to cool below the `--cool` limit, 65 C by default. The L4 in this chassis runs warm, so we ran with `--cool 72`. The summary script adds the median SM clock, the highest temperature, and the share of samples with a thermal slowdown bit to each point. The GB10 load sweep in [figure 5.1c](#fig-5-1c) ran before we added the sampler, so its tight bands are the only check on it.
 
 We ran the L4 sweep again with the same command and the cool-down. The throttled sweep is the rose line in the next figure.
 
@@ -282,13 +381,13 @@ We ran the L4 sweep again with the same command and the cool-down. The throttled
 id: fig-5-1f
 kind: chart
 title: the same server on the same L4, measured hot and measured with a cool-down
-claim: The hot sweep reported up to 39 percent less throughput than the cooled sweep, with the same command on the same card.
+claim: The hot sweep reported up to 28 percent less throughput than the cooled sweep, with the same command on the same card.
 caption: Blue is the sweep with a cool-down to 72 C and the clock recorded, and rose is the first sweep with no telemetry. Bands are the range of three seeds. Qwen3-8B, 512 tokens in and 128 out. From capture/gpu/summary/l4.json and capture/gpu/summary/l4-throttled.json.
 ```
 
 **We measured** the difference on the L4. At a cap of 32, the cooled sweep gave 270.11 tok/s and the hot sweep gave 194.16 tok/s. At a cap of 1, the median time per token was 60.16 ms against 103.38 ms.
 
-The cooled runs are not at full speed either. Their median SM clock was 1,080 to 1,515 MHz of 2,040. At caps of 1 and 64, 41 to 49 percent of the samples still had the thermal bit set. The cool-down removes the worst error, and the recorded clock tells you how much is left.
+The cooled runs are not at full speed either. Their median SM clock was 1,080 to 1,515 MHz of 2,040. At caps of 1 and 64, in the worst seed, 41 to 49 percent of the samples still had the thermal bit set. The cool-down removes the worst error, and the recorded clock tells you how much is left.
 
 **Our position:** a benchmark without the clock and the temperature of each run is not evidence. Read the clock first, then the throughput.
 
@@ -312,7 +411,11 @@ Then enforce the knee outside the engine. The engine's own limit is set from mem
 - Enforce the knee in your client or gateway, because the engine admits far more.
 - Run each point with three seeds and plot the lowest and the highest result.
 - Choose the concurrency cap from goodput at your latency target.
-- Record the SM clock and the temperature with every run, and drop throttled runs.
+- Record the SM clock and the temperature with every run, and report them.
+- Set aside runs below a clock floor.
+- Pass --flush-cache, or call POST /flush_cache, before every run that you compare, and record the cached tokens.
+- Split the client into several processes before you trust TTFT at a high request rate.
+- Report the client and the temperature with every result, and keep both fixed.
 ```
 
-Sources: python/sglang/benchmark/serving.py (calculate_metrics, argument defaults), python/sglang/benchmark/datasets/common.py (compute_random_lens), python/sglang/bench_serving.py, PR #40795, all at v0.5.22 (baa9befa); capture/out/serve-help.txt, capture/out/server-default.command.txt, capture/out/server-default.log, capture/out/bench-random-c1.txt, capture/out/bench-random-c8.txt, capture/out/bench-random-c32.txt; capture/gpu/sweep.py, capture/gpu/summarize.py, capture/gpu/summary/gb10.json, capture/gpu/summary/l4.json, capture/gpu/out-gb10/server-default.command.txt, capture/gpu/out-gb10/bench-random-c8.txt, capture/gpu/out-gb10/bench-random-c32.txt, capture/gpu/incidents/l4-thermal-throttle.txt; issue #3196. capture/gpu/out-l4/server-waves-default.log.
+Sources: python/sglang/benchmark/serving.py (calculate_metrics, argument defaults, flush_server_cache, --flush-cache, the asyncio client), python/sglang/benchmark/datasets/common.py (compute_random_lens), python/sglang/benchmark/datasets/random.py (sample_random_requests), python/sglang/srt/entrypoints/http_server.py (flush_cache), python/sglang/srt/managers/scheduler.py (flush_cache), python/sglang/srt/observability/metrics_collector.py (cached_tokens_total), python/sglang/srt/entrypoints/openai/usage_processor.py, python/sglang/bench_serving.py, PR #40795, all at v0.5.22 (baa9befa); capture/out/serve-help.txt, capture/out/server-default.command.txt, capture/out/server-default.log, capture/out/bench-random-c1.txt, capture/out/bench-random-c8.txt, capture/out/bench-random-c32.txt; capture/gpu/sweep.py, capture/gpu/summarize.py, capture/gpu/summary/gb10.json, capture/gpu/summary/l4.json, capture/gpu/summary/l4-throttled.json, capture/gpu/out-gb10/server-default.command.txt, capture/gpu/out-gb10/bench-random-c8.txt, capture/gpu/out-gb10/bench-random-c32.txt, capture/gpu/incidents/l4-thermal-throttle.txt; issue #3196. capture/gpu/out-l4/server-waves-default.log, capture/gpu/out-l4/waves-default-input-tokens.txt, capture/gpu/out-gb10/server-pools.log, capture/gpu/out-gb10/server-default.log, Chandrasekar and Kramberger, Identifying and Mitigating Systemic Measurement Bias in Production LLM Inference Benchmarks, arXiv 2605.24217 (2026-05), capture/gpu/out-l4/prefix-cache-flush.txt, capture/gpu/out-l4/bench-client-bias.txt, capture/gpu/out-l4/load-flushed-vs-unflushed.txt

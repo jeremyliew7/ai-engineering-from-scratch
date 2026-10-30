@@ -46,7 +46,7 @@ That is the entire algorithm. One line.
 
 ```mermaid
 graph TD
-    A["* Starting point (high loss)"] --> B["Moving downhill along gradient"]
+    A["* Starting point (high loss)"] --> B["Moving downhill, against the gradient"]
     B --> C["Approaching minimum"]
     C --> D["o Minimum (low loss)"]
 ```
@@ -158,7 +158,7 @@ Common schedules:
 
 ### Convex vs non-convex
 
-A convex function has one minimum. Gradient descent always finds it. A quadratic like $f(x) = x^2$ is convex.
+A convex function has no bad local minima: every local minimum is a global minimum. For a smooth convex function that has a minimum, gradient descent with a small enough learning rate converges to it. A quadratic like $f(x) = x^2$ is convex, and its minimum is unique.
 
 Neural network loss functions are non-convex. They have many local minima, saddle points, and flat regions.
 

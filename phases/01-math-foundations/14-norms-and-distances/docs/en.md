@@ -102,7 +102,7 @@ L1 and L2 are special cases of the Lp norm:
 \lVert x \rVert_p = (|x_1|^p + |x_2|^p + \cdots + |x_n|^p)^{1/p}
 ```
 
-Different values of $p$ produce different shaped "unit balls" (the set of all points at distance 1 from the origin):
+Different values of $p$ produce different shaped "unit balls" (the set of all points at distance at most 1 from the origin; the shapes below are their boundaries):
 
 ```
 p=1:    Diamond shape      (corners on axes)

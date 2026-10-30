@@ -4,19 +4,19 @@
 
 You have an agent file with the `filesystem` and `shell` toolsets, and its model is `ai/qwen3:4b` on Docker Model Runner on your Mac. On the host, `shell` runs with your permissions. `--sandbox` moves the tools into a microVM and leaves the model on the host.
 
-This section follows the recorded run in capture/out/27-*, step by step, and [figure](#fig-1-3) draws it. When you finish this section, you can read the launch summary of a sandboxed run and explain the two failures this run met.
+This section follows [the recorded run](manuals/docker-sandboxes-101/capture/out), step by step, and [figure](#fig-1-3) draws it. When you finish this section, you can read the launch summary of a sandboxed run and explain the two failures this run met.
 
 ```figure
 id: fig-1-3
 kind: sequence
 title: one docker-agent run --sandbox, step by step
 claim: docker-agent stages a kit, has sbx create the VM, and opens two hosts on the proxy, and the model call from inside then leaves through that proxy.
-caption: Read top to bottom, one numbered row per step, and row 8 is the failure that ends the run. Rows 1 to 8 come from capture/out/27-sandbox-allow.txt, 27-sandbox-run.txt, and 27-kit-cache.txt. Rows 9 to 15 come from 27-inside-run.txt and 27-sbx-rm.txt, and the chunk name in row 12 is the stream format of the cassette 18-files.
+caption: Read top to bottom, one numbered row per step, and row 8 is the failure that ends the run. Rows 1 to 8 come from the allow, run, and kit-cache captures. Rows 9 to 15 come from the inside run and the removal captures. The chunk name in row 12 is the stream format of the cassette.
 ```
 
 ## The agent file
 
-The agent file differs from the host version only in its provider. Your host's `127.0.0.1` is "not reachable from inside the sandbox" {{docs-sbx Accessing host services from a sandbox}}, so the provider points at `host.docker.internal`:
+The agent file differs from the host version only in its provider. The `127.0.0.1` of your host cannot be reached from inside the sandbox {{docs-sbx Accessing host services from a sandbox}}, so the provider points at `host.docker.internal`:
 
 ```listing
 title: the provider block of the sandboxed agent file
@@ -41,7 +41,7 @@ models:
 
 ## Step 1: allow the model host
 
-**Persistent allowlist:** the hosts that `docker-agent sandbox allow` stores, which "are added to the sandbox proxy's allow rules on every subsequent --sandbox run" {{help-agent docker-agent sandbox allow}}. The help names it the fix for a `Blocked by network policy` 403. The proxy translates `host.docker.internal` to `localhost`, so the capture allows `localhost:12434` before the run:
+**Persistent allowlist:** the hosts that `docker-agent sandbox allow` stores, which docker-agent adds to the allow rules of the sandbox proxy on every later `--sandbox` run {{help-agent docker-agent sandbox allow}}. The help names it the fix for a `Blocked by network policy` 403. The proxy translates `host.docker.internal` to `localhost`, so the capture allows `localhost:12434` before the run:
 
 ```listing
 title: one host added to the persistent allowlist
@@ -99,13 +99,13 @@ memory     32 GiB
 ✓ Created sandbox docker-agent-<hash>
 ```
 
-The run set no `--models-gateway`. It allows `models.dev`, because "without it the first catalog lookup fails with a `403 Blocked by network policy` error" {{docs-agent Auto-Kit}}. The next line repeats the host from step 1.
+The run set no `--models-gateway`. It allows `models.dev`, because without that host the first catalog lookup fails with `403 Blocked by network policy` {{docs-agent Auto-Kit}}. The next line repeats the host from step 1.
 
-**Auto-kit:** a directory that docker-agent stages on the host, "bind-mounted read-only into the VM at the same path" {{docs-agent Auto-Kit}}. Here it is `.m101/cache/sandbox-kits/<hash>`, and its `manifest.json` holds only `agent_ref` and `built_at` (capture/out/27-kit-cache.txt). The workspace is read-write, and the agent file's directory, the kit, and the config directory are read-only.
+**Auto-kit:** a directory that docker-agent stages on the host and mounts read-only into the VM at the same path {{docs-agent Auto-Kit}}. Here it is `.m101/cache/sandbox-kits/<hash>`, and its `manifest.json` holds only `agent_ref` and `built_at` ([the capture](manuals/docker-sandboxes-101/capture/out/27-kit-cache.txt)). The workspace is read-write, and the agent file's directory, the kit, and the config directory are read-only.
 
 ## Step 4: an ordinary sandbox
 
-During the run, `sbx ls` lists `docker-agent-<hash>` with the agent `docker-agent`, the status `running`, and the same four workspaces, three of them `:ro` (capture/out/27-sbx-ls.txt). The sandbox is an ordinary one, and `sbx` lists and removes it like any other.
+During the run, `sbx ls` lists `docker-agent-<hash>` with the agent `docker-agent`, the status `running`, and the same four workspaces, three of them `:ro` ([the capture](manuals/docker-sandboxes-101/capture/out/27-sbx-ls.txt)). The sandbox is an ordinary one, and `sbx` lists and removes it like any other.
 
 ## Step 5: the session store fails
 
@@ -123,7 +123,7 @@ Error:
 [exit 1]
 ```
 
-The data directory sits on the `virtiofs` workspace mount, which `mount` lists as `rw`. A Python `sqlite3` write on the same mount fails the same way (capture/out/27-sqlite-probe.txt), so on this host SQLite cannot write through that mount. The run printed no safety mode, so [conflict C62](#s-ref-sources-and-the-conflicts-register) stays open. Docker Agent "exits but does not stop or remove the sandbox VM" {{docs-agent Sandbox Mode}}, and the VM stayed `running`.
+The data directory sits on the `virtiofs` workspace mount, which `mount` lists as `rw`. A Python `sqlite3` write on the same mount fails the same way ([the capture](manuals/docker-sandboxes-101/capture/out/27-sqlite-probe.txt)), so on this host SQLite cannot write through that mount. The run printed no safety mode, so [conflict C62](#s-ref-sources-and-the-conflicts-register) stays open. Docker Agent exits, but it does not stop or remove the sandbox VM {{docs-agent Sandbox Mode}}, and the VM stayed `running`.
 
 ## Step 6: the model call from inside
 
@@ -146,7 +146,7 @@ OPENAI_API_KEY=proxy-managed
 Persistent sandbox allowlist is empty.
 ```
 
-The template runs `docker-agent version main`, not v1.149.0, although the docs build `:latest` from "The most recent `v*` release" {{docs-agent Sandbox Mode}}. The provider keys read `proxy-managed`. The in-VM allowlist is empty, because the allowed hosts arrive as proxy rules from the host.
+The template runs `docker-agent version main`, not v1.149.0, although the docs say that `:latest` is built from the most recent `v*` release {{docs-agent Sandbox Mode}}. The provider keys read `proxy-managed`. The in-VM allowlist is empty, because the allowed hosts arrive as proxy rules from the host.
 
 The capture then starts the same agent file inside the VM by hand, with its state in `/tmp/m101`. This run shows the model path from the VM, not a working `--sandbox` launch:
 
@@ -162,7 +162,7 @@ The working directory contains README.md with 1 line.
 [exit 0]
 ```
 
-The request to `host.docker.internal:12434` leaves through `HTTP_PROXY`, because that host is not in `NO_PROXY`. "The sandbox proxy translates `host.docker.internal` to `localhost` before forwarding the request" {{docs-sbx Accessing host services from a sandbox}}, and the rule from step 1 admits it. The answer is correct: the capture kit copies the same README into every workspace, and it holds the one line `hello` (capture/out/04-workspace.txt).
+The request to `host.docker.internal:12434` leaves through `HTTP_PROXY`, because that host is not in `NO_PROXY`. The sandbox proxy changes `host.docker.internal` to `localhost` before it forwards the request {{docs-sbx Accessing host services from a sandbox}}, and the rule from step 1 admits it. The answer is correct: the capture kit copies the same README into every workspace, and it holds the one line `hello` ([the capture](manuals/docker-sandboxes-101/capture/out/04-workspace.txt)).
 
 ## Step 7: remove the sandbox
 
@@ -178,7 +178,7 @@ Sandbox 'docker-agent-<hash>' removed
 [exit 0]
 ```
 
-A later run from the same workspace reuses the VM, and creates a new one "only when the mount set has changed" {{docs-agent Sandbox Mode}}.
+A later run from the same workspace reuses the VM, and creates a new one only when the set of mounts has changed {{docs-agent Sandbox Mode}}.
 
 ```takeaways
 - Allow each host service with `docker-agent sandbox allow localhost:PORT` before the first sandboxed run.

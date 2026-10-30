@@ -95,10 +95,10 @@ No OCR anywhere. Figures, charts, fonts, layout all flow into the answer.
 
 A 50-page financial report with 729 patches per page and 128-dim embeddings:
 
-- ColPali: 50 * 729 * 128 * 4 bytes = ~18 MB raw, ~4 MB after PQ.
+- ColPali: 50 * 729 * 128 * 4 bytes = ~18 MB raw, ~2.3 MB after 8x PQ.
 - Text-RAG: 50 chunks * 768-dim * 4 bytes = ~150 kB.
 
-ColPali is ~30x more storage per document. At scale, OPQ / PQ brings it down to ~5-10x, usually tolerable.
+ColPali is ~120x more storage per document raw. At scale, 8x OPQ / PQ brings it down to ~15x, usually tolerable.
 
 ### When text-RAG still wins
 

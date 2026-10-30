@@ -156,7 +156,7 @@ type: concepts
 from: phases/10-llms-from-scratch/34-gradient-checkpointing/docs/en.md, phases/19-capstone-projects/46-gradient-accumulation/docs/en.md, phases/19-capstone-projects/81-end-to-end-distributed-train/docs/en.md
 
 - **Activations per layer**: about `12 * B * L * d` floats.
-- **d=8192, L=8192, B=1**: 800 MB per layer in BF16. 64 layers is 51 GB.
+- **d=8192, L=8192, B=1**: about 1.6 GB per layer in BF16. 64 layers is about 103 GB.
 - **Full checkpointing**: about 33% more FLOPs. A step is 4 units, not 3.
 - **Selective checkpointing**: recompute attention only. About 5% overhead.
 - **sqrt(L) rule**: one checkpoint every sqrt(L) layers. 8 checkpoints for L=64.

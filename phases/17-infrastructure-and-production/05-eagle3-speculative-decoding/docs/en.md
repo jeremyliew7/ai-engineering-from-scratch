@@ -16,7 +16,7 @@
 
 ## The Problem
 
-Decode is memory-bound. On an H100 running Llama 3.3 70B FP8, each decoded token reads ~140 GB/s of weights and emits one token. The GPU compute is almost idle during decode — the bottleneck is HBM bandwidth, not matmul throughput.
+Decode is memory-bound. On an H100 running Llama 3.3 70B FP8, each decode step reads all ~70 GB of weights from HBM and emits one token per sequence. The GPU compute is almost idle during decode — the bottleneck is HBM bandwidth, not matmul throughput.
 
 Speculative decoding exploits the gap. Generate K candidate tokens with a cheap draft model, then ask the target model to verify all K in a single forward pass. Each verified token is effectively free (amortized into a batch-of-K forward the target would have had to do anyway).
 

@@ -12,7 +12,7 @@ const median = values => {
 };
 const t = run.timers_s;
 const items = [
-  { name: 'rollout', value: median(run.rollouts.map(r => r['perf/rollout_time'])), hue: 'green' },
+  { name: 'rollout', value: median(run.rollouts.map(r => r['perf/rollout_time'])), hue: 'blue' },
   { name: 'log probs', value: t.log_probs.median, hue: 'violet' },
   { name: 'train', value: t.actor_train.median, hue: 'violet' },
   { name: 'weights', value: t.update_weights.median, hue: 'amber' },

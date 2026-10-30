@@ -338,74 +338,252 @@ function svgText(lines, x, y, size, className, anchor = 'middle') {
   return lines.map((line, index) => `<text class="${className}" x="${x}" y="${y + index * size * 1.25}" font-size="${size}" text-anchor="${anchor}">${escapeHtml(line)}</text>`).join('');
 }
 
-function architectureSvg(source, narrow = false) {
-  const block = narrow ? { ...source, span: 1, id: `${source.id}-n`, nodes: source.nodes.map(node => ({ ...node, col: node.row, row: node.col })) } : source;
+const round1 = value => Math.round(value * 10) / 10;
+
+function segmentHitsBox(x1, y1, x2, y2, r, pad = 1) {
+  const left = r.x + pad;
+  const right = r.x + r.w - pad;
+  const top = r.y + pad;
+  const bottom = r.y + r.h - pad;
+  let t0 = 0;
+  let t1 = 1;
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  for (const [p, q] of [[-dx, x1 - left], [dx, right - x1], [-dy, y1 - top], [dy, bottom - y1]]) {
+    if (p === 0) {
+      if (q < 0) return false;
+      continue;
+    }
+    const t = q / p;
+    if (p < 0) t0 = Math.max(t0, t);
+    else t1 = Math.min(t1, t);
+    if (t0 > t1) return false;
+  }
+  return true;
+}
+
+function boxesOverlap(a, b) {
+  return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+}
+
+function edgeLabelBox(label, x, y, style) {
+  const lw = textWidth(label, 8.5) + 6;
+  if (style === 'above') return { x, y: y - 4, anchor: 'middle', knock: false, box: { x: x - lw / 2 + 3, y: y - 11, w: lw - 6, h: 9 } };
+  if (style === 'right') return { x: x + 5, y: y + 3, anchor: 'start', knock: false, box: { x: x + 5, y: y - 4, w: lw - 6, h: 9 } };
+  return { x, y: y + 3, anchor: 'middle', knock: true, box: { x: x - lw / 2, y: y - 6, w: lw, h: 12 } };
+}
+
+function placeArchitecture(block, gutter) {
   const width = 300 * (block.span || 1) + 14 * ((block.span || 1) - 1);
   const cols = Math.max(...block.nodes.map(node => node.col));
   const rows = Math.max(...block.nodes.map(node => node.row));
   const rowOf = new Map(block.nodes.map(node => [node.id, node]));
-  const sideLabels = block.edges.filter(edge => rowOf.get(edge.from) && rowOf.get(edge.to) && rowOf.get(edge.from).row === rowOf.get(edge.to).row && edge.label);
+  const sideLabels = block.edges.filter(edge => rowOf.get(edge.from) && rowOf.get(edge.to) && rowOf.get(edge.from).row === rowOf.get(edge.to).row && Math.abs(rowOf.get(edge.from).col - rowOf.get(edge.to).col) === 1 && edge.label);
   const wantGap = Math.max(28, ...sideLabels.map(edge => textWidth(edge.label, 8.5) + 12));
-  const gapX = cols > 1 ? Math.min(wantGap, (width * 0.36) / (cols - 1)) : 0;
-  const nodeW = (width - 2 - gapX * (cols - 1)) / cols;
+  const room = width - gutter;
+  const gapX = cols > 1 ? Math.min(wantGap, (room * 0.36) / (cols - 1)) : 0;
+  const nodeW = (room - 2 - gapX * (cols - 1)) / cols;
   const labelSize = 10.5;
   const subSize = 9;
   const laid = block.nodes.map(node => ({ ...node, labelLines: wrap(node.label, labelSize, nodeW - 10), subLines: node.sub ? wrap(node.sub, subSize, nodeW - 10) : [] }));
   const nodeH = Math.max(...laid.map(node => 10 + node.labelLines.length * labelSize * 1.25 + node.subLines.length * subSize * 1.25 + 4));
   const gapY = 34;
-  const height = rows * nodeH + (rows - 1) * gapY + 2;
   const box = node => ({ x: 1 + (node.col - 1) * (nodeW + gapX), y: 1 + (node.row - 1) * (nodeH + gapY), w: nodeW, h: nodeH });
-  const byId = new Map(laid.map(node => [node.id, node]));
-  const parts = [];
-  for (const edge of block.edges) {
-    const a = box(byId.get(edge.from));
-    const b = box(byId.get(edge.to));
+  const nodes = laid.map(node => ({ ...node, box: box(node) }));
+  const byId = new Map(nodes.map(node => [node.id, node]));
+  const rowTop = row => 1 + (row - 1) * (nodeH + gapY);
+  const laneSets = [];
+  for (let row = 0; row <= rows; row += 1) {
+    const centre = row === 0 ? rowTop(1) - 11 : row === rows ? rowTop(rows) + nodeH + 11 : rowTop(row) + nodeH + gapY / 2;
+    const offsets = row === 0 ? [0, -12] : row === rows ? [0, 12] : [0, -8, 8];
+    laneSets.push({ after: row, ys: offsets.map(offset => centre + offset), margin: row === 0 || row === rows });
+  }
+  const colLanes = [];
+  for (let col = 1; col < cols; col += 1) for (const offset of gapX >= 20 ? [0, -gapX / 4, gapX / 4] : [0]) colLanes.push(1 + col * (nodeW + gapX) - gapX / 2 + offset);
+  if (gutter) colLanes.push(width - gutter / 2);
+  const placedLabels = [];
+  const placedSegments = [];
+  const crossesNode = (edge, points) => points.slice(1).some((point, i) => nodes.some(node => node.id !== edge.from && node.id !== edge.to && segmentHitsBox(points[i][0], points[i][1], point[0], point[1], node.box)));
+  const labelFits = label => label.box.x >= 0 && label.box.x + label.box.w <= width && !nodes.some(node => boxesOverlap(label.box, node.box)) && !placedLabels.some(other => boxesOverlap(label.box, other));
+  const sharesLine = (x1, y1, x2, y2) => placedSegments.some(([sx1, sy1, sx2, sy2]) => {
+    if (Math.abs(y1 - y2) < 0.5 && Math.abs(sy1 - sy2) < 0.5 && Math.abs(sy1 - y1) < 3) return Math.min(Math.max(x1, x2), Math.max(sx1, sx2)) - Math.max(Math.min(x1, x2), Math.min(sx1, sx2)) > 2;
+    if (Math.abs(x1 - x2) < 0.5 && Math.abs(sx1 - sx2) < 0.5 && Math.abs(sx1 - x1) < 3) return Math.min(Math.max(y1, y2), Math.max(sy1, sy2)) - Math.max(Math.min(y1, y2), Math.min(sy1, sy2)) > 2;
+    return false;
+  });
+  const travel = points => points.slice(1).reduce((sum, [x2, y2], i) => sum + Math.abs(x2 - points[i][0]) + Math.abs(y2 - points[i][1]), 25 * (points.length - 2));
+  const penalty = (points, label) => {
+    let cost = 25 * (points.length - 2);
+    for (let i = 1; i < points.length; i += 1) {
+      const [x1, y1] = points[i - 1];
+      const [x2, y2] = points[i];
+      cost += Math.abs(x2 - x1) + Math.abs(y2 - y1);
+      for (const other of placedLabels) if (segmentHitsBox(x1, y1, x2, y2, other, 0)) cost += 60;
+      if (points.length > 2 && sharesLine(x1, y1, x2, y2)) cost += 80;
+    }
+    if (label) for (const seg of placedSegments) if (segmentHitsBox(...seg, label.box, 0)) cost += 40;
+    return cost;
+  };
+  const labelsOn = (edge, points, styles) => {
+    if (!edge.label) return [null];
+    const out = [];
+    for (let i = 1; i < points.length; i += 1) {
+      const [x1, y1] = points[i - 1];
+      const [x2, y2] = points[i];
+      const flat = Math.abs(y2 - y1) < 0.5;
+      const upright = Math.abs(x2 - x1) < 0.5;
+      const these = flat ? styles.flat : upright ? styles.upright : styles.slant;
+      if (!these) continue;
+      for (const t of [0.5, 0.3, 0.7]) for (const style of these) out.push(edgeLabelBox(edge.label, x1 + (x2 - x1) * t, y1 + (y2 - y1) * t, style));
+    }
+    return out;
+  };
+  const edges = block.edges.map(edge => {
+    const a = byId.get(edge.from).box;
+    const b = byId.get(edge.to).box;
     const ax = a.x + a.w / 2;
     const ay = a.y + a.h / 2;
     const bx = b.x + b.w / 2;
     const by = b.y + b.h / 2;
-    const clip = (r, dx, dy) => {
-      const tx = dx ? (r.w / 2) / Math.abs(dx) : Infinity;
-      const ty = dy ? (r.h / 2) / Math.abs(dy) : Infinity;
-      const t = Math.min(tx, ty);
-      return t;
-    };
     const dx = bx - ax;
     const dy = by - ay;
-    const t1 = clip(a, dx, dy);
-    const t2 = clip(b, dx, dy);
-    const x1 = ax + dx * t1;
-    const y1 = ay + dy * t1;
-    const x2 = bx - dx * t2;
-    const y2 = by - dy * t2;
-    const round = value => Math.round(value * 10) / 10;
-    parts.push(`<line class="cs-arch-edge" x1="${round(x1)}" y1="${round(y1)}" x2="${round(x2)}" y2="${round(y2)}" marker-end="url(#cs-arrow-${block.id})"/>`);
-    if (edge.label) {
-      const mx = round((x1 + x2) / 2);
-      const my = round((y1 + y2) / 2);
-      const lw = textWidth(edge.label, 8.5) + 6;
-      if (Math.abs(dy) < 1) {
-        parts.push(svgText([edge.label], mx, round(my - 4), 8.5, 'cs-arch-elabel'));
-      } else if (Math.abs(dx) < 1) {
-        parts.push(svgText([edge.label], round(mx + 5), round(my + 3), 8.5, 'cs-arch-elabel', 'start'));
-      } else {
-        parts.push(`<rect class="cs-arch-knock" x="${round(mx - lw / 2)}" y="${round(my - 6.5)}" width="${round(lw)}" height="12"/>`);
-        parts.push(svgText([edge.label], mx, round(my + 2.5), 8.5, 'cs-arch-elabel'));
+    const clip = r => Math.min(dx ? (r.w / 2) / Math.abs(dx) : Infinity, dy ? (r.h / 2) / Math.abs(dy) : Infinity);
+    const straight = [[ax + dx * clip(a), ay + dy * clip(a)], [bx - dx * clip(b), by - dy * clip(b)]];
+    const candidates = [];
+    const offer = (points, styles, extra = 0) => {
+      if (crossesNode(edge, points)) return;
+      for (const label of labelsOn(edge, points, styles)) {
+        if (label && !labelFits(label)) continue;
+        const cost = penalty(points, label);
+        candidates.push({ points, label, cost: cost + extra, clean: cost === travel(points) && extra < 80 });
+      }
+    };
+    offer(straight, { flat: ['above', 'knock'], upright: ['right', 'knock'], slant: ['knock'] }, sharesLine(...straight[0], ...straight[1]) ? 80 : 0);
+    const exit = (r, y) => (y > r.y + r.h / 2 ? r.y + r.h : r.y);
+    const side = (r, x) => (x > r.x + r.w / 2 ? r.x + r.w : r.x);
+    const rowAfter = r => Math.round((r.y - 1) / (nodeH + gapY));
+    const near = r => laneSets.filter(set => set.after === rowAfter(r) || set.after === rowAfter(r) + 1);
+    const ports = [0, -0.25, 0.25];
+    const settled = () => candidates.some(candidate => candidate.clean);
+    for (const set of laneSets) {
+      if (Math.abs(dx) < 1 || settled()) break;
+      for (const y of set.ys) {
+        for (const pa of ports) for (const pb of ports) {
+          const xa = ax + pa * a.w;
+          const xb = bx + pb * b.w;
+          offer([[xa, exit(a, y)], [xa, y], [xb, y], [xb, exit(b, y)]], { flat: ['knock'] }, (set.margin ? 150 : 0) + (pa || pb ? 10 : 0));
+        }
       }
     }
+    for (const x of colLanes) {
+      if (settled()) break;
+      offer([[side(a, x), ay], [x, ay], [x, by], [side(b, x), by]], { upright: ['knock'] });
+      for (const setA of near(a)) for (const setB of near(b)) {
+        for (const ya of setA.ys) for (const yb of setB.ys) {
+          for (const pa of ports) for (const pb of ports) {
+            const xa = ax + pa * a.w;
+            const xb = bx + pb * b.w;
+            offer([[xa, exit(a, ya)], [xa, ya], [x, ya], [x, yb], [xb, yb], [xb, exit(b, yb)]], { flat: ['knock'] }, (setA.margin ? 150 : 0) + (setB.margin ? 150 : 0) + (pa || pb ? 10 : 0));
+          }
+        }
+      }
+    }
+    candidates.sort((p, q) => p.cost - q.cost);
+    const chosen = candidates[0] || { points: straight, label: edge.label ? edgeLabelBox(edge.label, (straight[0][0] + straight[1][0]) / 2, (straight[0][1] + straight[1][1]) / 2, 'knock') : null };
+    if (chosen.label) placedLabels.push(chosen.label.box);
+    for (let i = 1; i < chosen.points.length; i += 1) placedSegments.push([...chosen.points[i - 1], ...chosen.points[i]]);
+    return { ...edge, points: chosen.points, place: chosen.label };
+  });
+  let minY = 0;
+  let maxY = rows * nodeH + (rows - 1) * gapY + 2;
+  for (const edge of edges) {
+    for (const [, y] of edge.points) {
+      minY = Math.min(minY, y - 2);
+      maxY = Math.max(maxY, y + 2);
+    }
+    if (edge.place) {
+      minY = Math.min(minY, edge.place.box.y - 1);
+      maxY = Math.max(maxY, edge.place.box.y + edge.place.box.h + 1);
+    }
   }
-  for (const node of laid) {
-    const r = box(node);
-    const round = value => Math.round(value * 10) / 10;
-    parts.push(`<rect class="cs-arch-node" x="${round(r.x)}" y="${round(r.y)}" width="${round(r.w)}" height="${round(r.h)}" rx="2"/>`);
-    if (node.kind) parts.push(`<path class="cs-arch-kind" transform="translate(${round(r.x + 4)} ${round(r.y + 4)}) scale(0.8)" d="${NODE_KINDS[node.kind]}"><title>${node.kind}</title></path>`);
+  return { block, width, minY, height: maxY - minY, nodes, edges, labelSize, subSize };
+}
+
+function layoutOverlaps({ width, nodes, edges }) {
+  const found = [];
+  const name = edge => `${edge.from} to ${edge.to}`;
+  for (const edge of edges) {
+    for (let i = 1; i < edge.points.length; i += 1) {
+      const [x1, y1] = edge.points[i - 1];
+      const [x2, y2] = edge.points[i];
+      for (const node of nodes) {
+        if (node.id !== edge.from && node.id !== edge.to && segmentHitsBox(x1, y1, x2, y2, node.box)) found.push(`edge ${name(edge)} crosses node ${node.id}`);
+      }
+    }
+    if (!edge.place) continue;
+    for (const node of nodes) if (boxesOverlap(edge.place.box, node.box)) found.push(`label of edge ${name(edge)} overlaps node ${node.id}`);
+    if (edge.place.box.x < 0 || edge.place.box.x + edge.place.box.w > width) found.push(`label of edge ${name(edge)} runs off the diagram`);
+  }
+  const labelled = edges.filter(edge => edge.place);
+  for (let i = 0; i < labelled.length; i += 1) {
+    for (let j = i + 1; j < labelled.length; j += 1) {
+      if (boxesOverlap(labelled[i].place.box, labelled[j].place.box)) found.push(`labels of edges ${name(labelled[i])} and ${name(labelled[j])} overlap`);
+    }
+  }
+  return [...new Set(found)];
+}
+
+const architectureCache = new WeakMap();
+
+function architectureLayout(source, narrow = false) {
+  const cached = architectureCache.get(source) || [];
+  if (!cached[Number(narrow)]) {
+    cached[Number(narrow)] = routeArchitecture(source, narrow);
+    architectureCache.set(source, cached);
+  }
+  return cached[Number(narrow)];
+}
+
+function routeArchitecture(source, narrow) {
+  const block = narrow ? { ...source, span: 1, id: `${source.id}-n`, nodes: source.nodes.map(node => ({ ...node, col: node.row, row: node.col })) } : source;
+  const plainLayout = placeArchitecture(block, 0);
+  const plainCount = layoutOverlaps(plainLayout).length;
+  if (!plainCount) return plainLayout;
+  const gutter = Math.min(120, Math.max(40, ...block.edges.map(edge => (edge.label ? textWidth(edge.label, 8.5) + 18 : 0))));
+  const guttered = placeArchitecture(block, gutter);
+  return layoutOverlaps(guttered).length < plainCount ? guttered : plainLayout;
+}
+
+function architectureOverlaps(source, narrow = false) {
+  return layoutOverlaps(architectureLayout(source, narrow));
+}
+
+function architectureSvg(source, narrow = false) {
+  const { block, width, minY, height, nodes, edges, labelSize, subSize } = architectureLayout(source, narrow);
+  const parts = [];
+  for (const edge of edges) {
+    const points = edge.points.map(([x, y]) => `${round1(x)},${round1(y)}`);
+    if (points.length === 2) {
+      const [[x1, y1], [x2, y2]] = edge.points;
+      parts.push(`<line class="cs-arch-edge" x1="${round1(x1)}" y1="${round1(y1)}" x2="${round1(x2)}" y2="${round1(y2)}" marker-end="url(#cs-arrow-${block.id})"/>`);
+    } else {
+      parts.push(`<polyline class="cs-arch-edge" fill="none" points="${points.join(' ')}" marker-end="url(#cs-arrow-${block.id})"/>`);
+    }
+    if (!edge.place) continue;
+    const label = edge.place;
+    if (label.knock) parts.push(`<rect class="cs-arch-knock" x="${round1(label.box.x)}" y="${round1(label.box.y)}" width="${round1(label.box.w)}" height="${round1(label.box.h)}"/>`);
+    parts.push(svgText([edge.label], round1(label.x), round1(label.y), 8.5, 'cs-arch-elabel', label.anchor));
+  }
+  for (const node of nodes) {
+    const r = node.box;
+    parts.push(`<rect class="cs-arch-node" x="${round1(r.x)}" y="${round1(r.y)}" width="${round1(r.w)}" height="${round1(r.h)}" rx="2"/>`);
+    if (node.kind) parts.push(`<path class="cs-arch-kind" transform="translate(${round1(r.x + 4)} ${round1(r.y + 4)}) scale(0.8)" d="${NODE_KINDS[node.kind]}"><title>${node.kind}</title></path>`);
     const top = r.y + (r.h - (node.labelLines.length * labelSize * 1.25 + node.subLines.length * subSize * 1.25)) / 2 + labelSize;
-    parts.push(svgText(node.labelLines, round(r.x + r.w / 2), round(top), labelSize, 'cs-arch-label'));
-    if (node.subLines.length) parts.push(svgText(node.subLines, round(r.x + r.w / 2), round(top + node.labelLines.length * labelSize * 1.25), subSize, 'cs-arch-sub'));
+    parts.push(svgText(node.labelLines, round1(r.x + r.w / 2), round1(top), labelSize, 'cs-arch-label'));
+    if (node.subLines.length) parts.push(svgText(node.subLines, round1(r.x + r.w / 2), round1(top + node.labelLines.length * labelSize * 1.25), subSize, 'cs-arch-sub'));
   }
   const marker = `<defs><marker id="cs-arrow-${block.id}" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="cs-arch-head" d="M0,0 L8,4 L0,8 z"/></marker></defs>`;
   const title = `${block.title}: ${block.nodes.map(node => node.label).join(', ')}`;
-  return `<svg class="cs-arch${narrow ? ' cs-arch-narrow' : ' cs-arch-wide'}" viewBox="0 0 ${width} ${Math.round(height)}" role="img" aria-label="${escapeHtml(title)}">${marker}${parts.join('')}</svg>`;
+  return `<svg class="cs-arch${narrow ? ' cs-arch-narrow' : ' cs-arch-wide'}" viewBox="0 ${round1(minY)} ${width} ${Math.round(height)}" role="img" aria-label="${escapeHtml(title)}">${marker}${parts.join('')}</svg>`;
 }
 
 function flowSvg(block) {
@@ -505,13 +683,9 @@ function blockBody(block) {
 
 function blockHtml(block, place, href = '') {
   const group = TYPES[block.type] ? TYPES[block.type].group : 'know';
-  const from = block.from.map(source => {
-    const link = sourceLink(source);
-    return `<a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a>`;
-  }).join(', ');
   const style = place ? ` style="grid-column:${place.col} / span ${place.span};grid-row:${place.row} / span ${place.rows}"` : '';
   const wide = place && place.span > 1 ? ' cs-wide' : '';
-  return `<section class="cs-block cs-g-${group} cs-t-${block.type}${wide}" id="${block.id}"${style}><h2 class="cs-bar"><span>${placeholders(inline(block.title))}</span><a class="cs-anchor" href="${href}#${block.id}" aria-label="Link to this block">#</a></h2><div class="cs-bb">${blockBody(block)}</div><p class="cs-from">From ${from}</p></section>`;
+  return `<section class="cs-block cs-g-${group} cs-t-${block.type}${wide}" id="${block.id}"${style}><h2 class="cs-bar"><span>${placeholders(inline(block.title))}</span><a class="cs-anchor" href="${href}#${block.id}" aria-label="Link to this block">#</a></h2><div class="cs-bb">${blockBody(block)}</div></section>`;
 }
 
 function textLength(html) {
@@ -548,7 +722,7 @@ function estimateBlock(block) {
     }
   } else if (block.type === 'architecture' || block.type === 'flow') {
     const svg = block.type === 'architecture' ? architectureSvg(block) : flowSvg(block);
-    const viewBox = /viewBox="0 0 (\d+) (\d+)"/.exec(svg);
+    const viewBox = /viewBox="0 -?[\d.]+ (\d+) (\d+)"/.exec(svg);
     h += viewBox ? Number(viewBox[2]) * (350 * scale) / Number(viewBox[1]) : 200;
   } else {
     for (const item of block.items) {
@@ -556,8 +730,6 @@ function estimateBlock(block) {
       else h += 6 + 18 * Math.ceil((plain(item.lead).length + plain(item.text).length + 2) / (44 * scale));
     }
   }
-  const fromText = block.from.map(source => sourceLink(source).label).join(', ');
-  h += 13 * Math.max(0, Math.ceil(fromText.length / (50 * scale)) - 1);
   return h + 16;
 }
 
@@ -672,7 +844,7 @@ function posterMain(topic, year, neighbours) {
     const link = sourceLink(source);
     return `<a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a>`;
   }).join('');
-  const head = `<header class="cs-poster-head"><div class="cs-title-block"><span class="cs-code" aria-hidden="true">${escapeHtml(topic.code)}</span><div><p class="cs-kicker"><a href="${BASE}">Cheat sheets</a></p><h1>${escapeHtml(topic.title)}</h1><p class="cs-sub">${placeholders(inline(topic.subtitle))}</p></div></div><div class="cs-head-side">${legendHtml(topic)}<p class="cs-actions"><button type="button" class="cs-print" data-print>Print</button><a href="${REPO}/blob/main/${TOPIC_DIR}/${topic.id}.md">Source</a></p></div></header>`;
+  const head = `<header class="cs-poster-head"><div class="cs-title-block"><span class="cs-code" aria-hidden="true">${escapeHtml(topic.code)}</span><div><p class="cs-kicker"><a href="${BASE}">Cheat sheets</a></p><h1>${escapeHtml(topic.title)}</h1><p class="cs-sub">${placeholders(inline(topic.subtitle))}</p></div></div><div class="cs-head-side">${legendHtml(topic)}<p class="cs-actions"><button type="button" class="cs-print" data-print>Print</button>${topic.explainer ? `<a href="/${escapeHtml(topic.explainer.replace(/\.html$/, ''))}">Interactive machine</a>` : ''}<a href="${REPO}/blob/main/${TOPIC_DIR}/${topic.id}.md">Source</a></p></div></header>`;
   const pager = [neighbours.previous && `<a href="${neighbours.previous.href}" rel="prev">← ${escapeHtml(neighbours.previous.title)}</a>`, `<a href="${BASE}">All cheat sheets</a>`, neighbours.next && `<a href="${neighbours.next.href}" rel="next">${escapeHtml(neighbours.next.title)} →</a>`].filter(Boolean).join('');
   const foot = `<footer class="cs-foot"><p class="cs-covers"><span>Covers</span>${sources}</p><nav class="cs-pager" aria-label="Cheat sheet navigation">${pager}</nav><p class="cs-stamp"><span>aiengineeringfromscratch.com${BASE}/${topic.id}</span><span>${copyLine(year)}</span><span>source ${topic.hash}</span></p></footer>`;
   return `<main id="main" class="cs-page cs-poster">${head}${cols}${foot}</main>`;
@@ -698,7 +870,7 @@ function indexMain(topics, year, phases) {
   const byPhase = phases.filter(phase => phase.topics.length).map(phase => `<li id="p-${phase.slug}"><a href="/phase/${phase.slug}">${escapeHtml(phase.label)}</a><span>${phase.topics.map(topic => `<a href="${topic.href}">${escapeHtml(topic.title)}</a>`).join(', ')}</span></li>`).join('');
   const head = `<header class="cs-index-head"><p class="cs-kicker">AI Engineering from Scratch</p><h1>Cheat sheets</h1><p class="cs-sub">${topics.length} posters. Each poster holds the tasks, commands, code, diagrams, defaults and fixes that you use while you work. Every fact comes from a lesson, a manual or a project of this course.</p>${search}${filters}</header>`;
   const phaseList = byPhase ? `<section class="cs-index-section" aria-labelledby="by-phase"><h2 id="by-phase">By phase</h2><ul class="cs-by-phase">${byPhase}</ul></section>` : '';
-  const how = '<section class="cs-index-section" aria-labelledby="how"><h2 id="how">How to use them</h2><ul class="cs-tips"><li>Each colour means one kind of block. Blue blocks are tasks and commands. Red blocks are fixes. The key is at the top of each poster.</li><li>Click a command to copy it. Replace each value in angle brackets, such as <code>&lt;model&gt;</code>.</li><li>Each block names the lesson or manual section that its facts come from. Open it when you need the reason.</li><li>Print a poster on one or two landscape pages. It fits A4 and Letter paper.</li></ul></section>';
+  const how = '<section class="cs-index-section" aria-labelledby="how"><h2 id="how">How to use them</h2><ul class="cs-tips"><li>Each colour means one kind of block. Blue blocks are tasks and commands. Red blocks are fixes. The key is at the top of each poster.</li><li>Click a command to copy it. Replace each value in angle brackets, such as <code>&lt;model&gt;</code>.</li><li>The foot of each poster lists the lessons and manuals that it covers. Open one when you need the reason.</li><li>Print a poster on one or two landscape pages. It fits A4 and Letter paper.</li></ul></section>';
   return `<main id="main" class="cs-page cs-index">${head}${sections}${phaseList}${how}<footer class="cs-foot"><p class="cs-stamp"><span>aiengineeringfromscratch.com${BASE}</span><span>${copyLine(year)}</span></p></footer></main>`;
 }
 
@@ -775,11 +947,13 @@ function trackOf(topic) {
 function loadTopics(root = REPO_ROOT) {
   const map = topicMap.loadTopicMap(root);
   const kinds = new Map(map.topics.map(entry => [entry.id, entry.kind]));
+  const explainers = new Map(map.topics.filter(entry => entry.explainer).map(entry => [entry.id, entry.explainer]));
   return topicFiles(root).map(file => {
     const topic = parseTopic(fs.readFileSync(file, 'utf8'), file);
     topic.file = path.relative(root, file);
     topic.href = `${BASE}/${topic.id}`;
     topic.kind = kinds.get(topic.id) || 'concept';
+    topic.explainer = explainers.get(topic.id) || '';
     topic.track = trackOf(topic);
     return topic;
   });
@@ -970,6 +1144,35 @@ function checkTopic(topic, root = REPO_ROOT, cache = new Map()) {
   return problems;
 }
 
+const MAINTAINER_ONLY = /capture\/(?:gpu\/)?run\.py|\bpython3? run\.py\b|\brun\.py --(?:check|build-fixtures|only)\b|--build-fixtures|build-manuals\.js|build-cheatsheets\.js|build-projects\.js|audit_manuals|audit_lessons|\bmanual\.json\b|site\/data\.js|\.github\/workflows|\bnode (?:site|scripts)\/|\bcapture kit\b|\btimeoutSeconds\b|SGLANG_KIT_PROFILE|\bREA_COMMAND\b/i;
+const BLANK_CELL = /^(?:|-|tbd|todo|\.\.\.|…)$/i;
+
+function blockTexts(block) {
+  const texts = [block.title];
+  if (block.header) texts.push(block.header.join(' '));
+  if (block.rows) for (const row of block.rows) texts.push(row.join(' '));
+  if (block.items) for (const item of block.items) texts.push(`${item.lead} ${item.text}`);
+  if (block.code) texts.push(...block.code);
+  if (block.nodes) for (const node of block.nodes) texts.push(`${node.label} ${node.sub || ''}`);
+  if (block.edges) for (const edge of block.edges) texts.push(edge.label);
+  return texts.map(plain);
+}
+
+function maintainerContent(topic) {
+  return topic.blocks.filter(block => blockTexts(block).some(text => MAINTAINER_ONLY.test(text))).map(block => block.title);
+}
+
+function incompleteRows(topic) {
+  const found = [];
+  for (const block of topic.blocks) {
+    if (!block.rows) continue;
+    for (const row of block.rows) {
+      if (row.some(cell => BLANK_CELL.test(plain(cell).trim()))) found.push(`${block.title}: ${plain(row[0])}`);
+    }
+  }
+  return found;
+}
+
 const EMPTY_VALUES = /^(?:|-|n\/a|tbd|todo|not given|not covered|not listed|not stated|none stated|no number given|unknown)$/i;
 const QUALITY_RULES = {
   concept: { doRows: 4, troubleRows: 3 },
@@ -1017,6 +1220,12 @@ function qualityReport(topic) {
     }
   }
   add('duplicates', !duplicates.length, duplicates.length ? `duplicate rows: ${duplicates.slice(0, 3).join(' | ')}` : 'no duplicate row');
+  const maintainer = maintainerContent(topic);
+  add('reader', !maintainer.length, maintainer.length ? `maintainer-only content in: ${maintainer.join(', ')}` : 'learner content only');
+  const incomplete = incompleteRows(topic);
+  add('complete', !incomplete.length, incomplete.length ? `rows with an empty cell: ${incomplete.slice(0, 3).join(' | ')}` : 'every row is complete');
+  const overlaps = topic.blocks.filter(block => block.type === 'architecture').flatMap(block => [false, true].flatMap(narrow => architectureOverlaps(block, narrow).map(problem => `${block.title}${narrow ? ' (narrow)' : ''}: ${problem}`)));
+  add('overlap', !overlaps.length, overlaps.length ? `diagram overlaps: ${overlaps.slice(0, 3).join(' | ')}` : 'no diagram overlap');
   const { pages } = layout(topic);
   add('fit', pages <= MAX_PAGES, `${pages} pages, ${MAX_PAGES} at most`);
   const passed = checks.filter(check => check.pass).length;
@@ -1050,6 +1259,8 @@ function checkLinks(built, root = REPO_ROOT) {
       if (phase) continue;
       const manual = /^\/manual-([a-z0-9-]+)$/.exec(target);
       if (manual && manuals.has(manual[1])) continue;
+      const explainer = /^\/(inside-[a-z0-9-]+)$/.exec(target);
+      if (explainer && fs.existsSync(path.join(root, 'site', `${explainer[1]}.html`))) continue;
       broken.push({ page: page.href, href });
     }
   }
@@ -1222,4 +1433,4 @@ function main(argv) {
 
 if (require.main === module) process.exitCode = main(process.argv.slice(2));
 
-module.exports = { qualityReport, QUALITY_RULES, trackOf, parseTopic, loadTopics, buildCheatsheets, writeCheatsheets, writePrint, printHtml, prerenderMath, checkTopic, checkLinks, coverage, layout, factTokens, blockFacts, architectureSvg, flowSvg, TYPES };
+module.exports = { qualityReport, QUALITY_RULES, MAINTAINER_ONLY, maintainerContent, incompleteRows, trackOf, parseTopic, loadTopics, buildCheatsheets, writeCheatsheets, writePrint, printHtml, prerenderMath, checkTopic, checkLinks, coverage, layout, factTokens, blockFacts, architectureSvg, architectureLayout, architectureOverlaps, flowSvg, TYPES };

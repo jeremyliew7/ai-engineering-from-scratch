@@ -51,7 +51,7 @@ Abbreviations: L23 = phases/12-multimodal-ai/23-colpali-vision-native-rag, L24 =
 - Page vectors: ColPali N_p patches L23/d:51, VisRAG single vector L23/d:70, text-RAG one vector per chunk L23/d:25
 - Scoring: MaxSim L23/d:53, bi-encoder L23/d:70, cosine L23/d:26
 - OCR: none L23/d:92, text-RAG OCR / pdftotext L23/d:23
-- Storage: ~30x L23/d:101, VisRAG smaller L23/d:70, ~150 kB L23/d:99
+- Storage: ~15x after PQ L23/d:101, VisRAG smaller L23/d:70, ~150 kB L23/d:99
 - Recall: strong L23/d:45, weaker L23/d:70, charts and tables lost L23/d:29
 - Use for: quality vs scale L23/d:72, pure-text L23/d:105
 
@@ -65,7 +65,7 @@ Abbreviations: L23 = phases/12-multimodal-ai/23-colpali-vision-native-rag, L24 =
 
 ## Formulas and numbers (concepts, 8)
 - MaxSim formula: L23/d:53
-- ColPali storage ~18 MB, ~4 MB after PQ: L23/d:98
+- ColPali storage ~18 MB, ~2.3 MB after 8x PQ: L23/d:98
 - Text-RAG ~150 kB: L23/d:99
 - PQ ~8x: L23/d:149
 - ViDoRe ~80% vs ~50-60%: L23/d:82

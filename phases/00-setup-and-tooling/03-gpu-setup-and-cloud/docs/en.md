@@ -55,7 +55,13 @@ Check if you have one:
 nvidia-smi
 ```
 
-Install PyTorch with CUDA:
+Install PyTorch with CUDA. On Linux the default wheel ships with CUDA. On Windows, copy the CUDA command from the selector at pytorch.org.
+
+```bash
+pip install torch torchvision torchaudio
+```
+
+Then check that PyTorch sees the GPU:
 
 ```python
 import torch

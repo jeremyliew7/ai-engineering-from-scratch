@@ -8,7 +8,7 @@ When you finish this section, you can push an agent file, read its manifest, pul
 
 ## Push to a registry
 
-**share push:** "Push an agent configuration file to an OCI registry" {{help-agent docker-agent share push}}. The capture pushed `files.yaml`, an agent with the `filesystem` and `shell` toolsets, to a `registry:2` container on `localhost:15000`:
+**share push:** pushes an agent configuration file to an OCI registry {{help-agent docker-agent share push}}. The capture pushed `files.yaml`, an agent with the `filesystem` and `shell` toolsets, to a `registry:2` container on `localhost:15000`:
 
 ```listing
 title: one push to a local registry
@@ -21,7 +21,7 @@ Successfully pushed artifact to localhost:15000/m101/agent:v1
 [exit 0]
 ```
 
-The registry speaks plain HTTP, and the push needed no insecure-registry setting (capture/README.md). Its catalog then listed `m101/agent` with the tag `v1`, served as `application/vnd.oci.image.manifest.v1+json` (capture/out/24-registry.txt).
+The registry speaks plain HTTP, and the push needed no insecure-registry setting ([the capture](manuals/docker-sandboxes-101/capture/README.md)). Its catalog then listed `m101/agent` with the tag `v1`, served as `application/vnd.oci.image.manifest.v1+json` ([the capture](manuals/docker-sandboxes-101/capture/out/24-registry.txt)).
 
 ## The manifest
 
@@ -55,9 +55,9 @@ lang: json
 }
 ```
 
-**artifactType:** the field of an OCI manifest that names what the artifact is. Here it marks a Docker Agent config, while the config and the one layer keep Docker image media types. `io.docker.agent.version` records the release that pushed the file. `io.docker.cagent.version` repeats it, because v1.23.3 renamed the annotation "while maintaining backward compatibility with the old annotation" {{rel-agent v1.23.3}}.
+**artifactType:** the field of an OCI manifest that names what the artifact is. Here it marks a Docker Agent config, while the config and the one layer keep Docker image media types. `io.docker.agent.version` records the release that pushed the file. `io.docker.cagent.version` repeats it, because v1.23.3 renamed the annotation and kept the old one for backward compatibility {{rel-agent v1.23.3}}.
 
-A file that the agent reads through `instruction_file` travels inside the artifact. On push, "the file contents are inlined into the pushed artifact, so the published agent stays self-contained" {{docs-agent Agent Configuration}}. [Figure](#fig-6-4) shows the push, the manifest, and the two ways back.
+A file that the agent reads through `instruction_file` travels inside the artifact. On push, the file contents go into the artifact, so the published agent needs nothing else {{docs-agent Agent Configuration}}. [Figure](#fig-6-4) shows the push, the manifest, and the two ways back.
 
 ```figure
 id: fig-6-4
@@ -69,11 +69,11 @@ caption: Read the top row left to right, then the manifest fields from top to bo
 
 ## --key and --encrypt
 
-The capture pushed without `--key`, so its manifest carries no proof. The flag arrived in v1.132.0 {{rel-agent v1.132.0}}, and it takes a key inline or as a `file://` path {{help-agent docker-agent share push}}. With `--key`, the proof goes into manifest annotations, and "the YAML itself is always pushed in clear" {{help-agent docker-agent share push}}. A PEM or OpenSSH key (Ed25519, ECDSA, or RSA) records a signature. Any other value is a symmetric secret of at least 16 bytes and records a MAC {{help-agent docker-agent share push}}.
+The capture pushed without `--key`, so its manifest carries no proof. The flag arrived in v1.132.0 {{rel-agent v1.132.0}}, and it takes a key inline or as a `file://` path {{help-agent docker-agent share push}}. With `--key`, the proof goes into manifest annotations, and the YAML itself is always pushed in clear text {{help-agent docker-agent share push}}. A PEM or OpenSSH key (Ed25519, ECDSA, or RSA) records a signature. Any other value is a symmetric secret of at least 16 bytes and records a MAC {{help-agent docker-agent share push}}.
 
-`--encrypt` also embeds an encrypted copy of the whole YAML, and Ed25519 keys cannot encrypt {{help-agent docker-agent share push}}. Since v1.138.1 the signature covers "a DSSE-wrapped in-toto statement instead of raw YAML bytes" {{rel-agent v1.138.1}}. Neither the help nor this capture names the proof annotations, so this manual does not print them.
+`--encrypt` also embeds an encrypted copy of the whole YAML, and Ed25519 keys cannot encrypt {{help-agent docker-agent share push}}. Since v1.138.1 the signature covers an in-toto statement in a DSSE envelope instead of the raw YAML bytes {{rel-agent v1.138.1}}. Neither the help nor this capture names the proof annotations, so this manual does not print them.
 
-On the other side, `share pull --key` checks the signature or the MAC, or decrypts the copy and compares it. "The pull fails if the artifact is unprotected or the check does not pass" {{help-agent docker-agent share pull}}. Both commands read `DOCKER_AGENT_ENCRYPT_KEY` in place of the flag.
+On the other side, `share pull --key` checks the signature or the MAC, or decrypts the copy and compares it. The pull fails when the artifact has no protection or when the check does not pass {{help-agent docker-agent share pull}}. Both commands read `DOCKER_AGENT_ENCRYPT_KEY` in place of the flag.
 
 ## Pull and run by reference
 
@@ -88,7 +88,7 @@ Agent saved to localhost:15000_m101_agent:v1.yaml
 [exit 0]
 ```
 
-`share pull` names the file after the reference, with `/` replaced by `_`, and `--force` overwrites an earlier copy. The pulled YAML is byte for byte the pushed `files.yaml` (capture/out/24-share-pull-agent.yaml). `run` takes the reference in place of a path, and the replayed run answered from the registry copy:
+`share pull` names the file after the reference, with `/` replaced by `_`, and `--force` overwrites an earlier copy. The pulled YAML is byte for byte the pushed `files.yaml` ([the capture](manuals/docker-sandboxes-101/capture/out/24-share-pull-agent.yaml)). `run` takes the reference in place of a path, and the replayed run answered from the registry copy:
 
 ```listing
 title: run straight from the reference
@@ -101,9 +101,9 @@ README.md has 1 line.
 [exit 0]
 ```
 
-A reference also works as a `sub_agents` entry. "Tag references are checked against the registry on every `docker agent run`" {{docs-agent Agent Distribution}}, so pin each one to a digest, `myorg/agent@sha256:…`, to start from cache. `serve api --pull-interval N` pulls a reference again every N minutes {{help-agent docker-agent serve api}}. For local work, `run` also takes a plain `http://localhost` URL to an agent file, with no registry at all {{docs-agent Agent Distribution}}.
+A reference also works as a `sub_agents` entry. Every `docker agent run` checks a tag reference against the registry {{docs-agent Agent Distribution}}, so pin each one to a digest, `myorg/agent@sha256:…`, to start from cache. `serve api --pull-interval N` pulls a reference again every N minutes {{help-agent docker-agent serve api}}. For local work, `run` also takes a plain `http://localhost` URL to an agent file, with no registry at all {{docs-agent Agent Distribution}}.
 
-A private repository needs `docker login` first. Docker Agent forwards a Docker token by itself only for HTTPS URLs under `docker.com`, and `docker.io` is not one of them {{docs-agent Agent Distribution}}. So a private Hub repository needs `docker login docker.io`. Older material points to the `agentcatalog` namespace on Docker Hub, and v1.116.0 removed the references to that "discontinued `agentcatalog` Docker Hub namespace" {{rel-agent v1.116.0}}.
+A private repository needs `docker login` first. Docker Agent forwards a Docker token by itself only for HTTPS URLs under `docker.com`, and `docker.io` is not one of them {{docs-agent Agent Distribution}}. So a private Hub repository needs `docker login docker.io`. Older material points to the `agentcatalog` namespace on Docker Hub, and v1.116.0 removed the references to that namespace, because it is no longer maintained {{rel-agent v1.116.0}}.
 
 ```takeaways
 - Push with `--key` whenever another person will run the agent.

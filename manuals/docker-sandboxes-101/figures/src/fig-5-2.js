@@ -13,10 +13,10 @@ function block(f, x, y, w, hue, head, lines, dash) {
 module.exports = figure('fig-5-2', {
   height: 512,
   title: 'Two ways a model reference reaches Model Runner',
-  desc: 'Left column, capture/fixtures/agents/files.yaml: agents.root with model local resolves to models.local with provider dmr, model ai/qwen3:4b and temperature 0; with no base_url the endpoint is found by running docker model status --json. Right column, capture/fixtures/agents/dmr.yaml: agents.root with model qwen resolves to models.qwen with provider runner, which resolves to providers.runner with provider dmr and base_url http://localhost:12434/engines/llama.cpp/v1. Bottom row: the auto decision as doctor printed it. No cloud provider has a credential, so auto looks for a pulled Model Runner model: with the runner up it picks dmr/docker.io/ai/qwen3:4b, and with no runner it names dmr/ai/qwen3:latest and reports no usable model.',
+  desc: 'Left column, files.yaml: agents.root with model local resolves to models.local with provider dmr, model ai/qwen3:4b and temperature 0; with no base_url the endpoint is found by running docker model status --json. Right column, capture/fixtures/agents/dmr.yaml: agents.root with model qwen resolves to models.qwen with provider runner, which resolves to providers.runner with provider dmr and base_url http://localhost:12434/engines/llama.cpp/v1. Bottom row: the auto decision as doctor printed it. No cloud provider has a credential, so auto looks for a pulled Model Runner model: with the runner up it picks dmr/docker.io/ai/qwen3:4b, and with no runner it names dmr/ai/qwen3:latest and reports no usable model.',
 }, f => {
-  f.box({ x: 20, y: 28, w: 285, h: 26, hue: 'violet', title: 'capture/fixtures/agents/files.yaml', titleSize: 11.5, align: 'left', pad: 8 });
-  f.box({ x: 335, y: 28, w: 285, h: 26, hue: 'violet', title: 'capture/fixtures/agents/dmr.yaml', titleSize: 11.5, align: 'left', pad: 8 });
+  f.box({ x: 20, y: 28, w: 285, h: 26, hue: 'violet', title: 'files.yaml', titleSize: 11.5, align: 'left', pad: 8 });
+  f.box({ x: 335, y: 28, w: 285, h: 26, hue: 'violet', title: 'dmr.yaml', titleSize: 11.5, align: 'left', pad: 8 });
 
   const a1 = block(f, 20, 66, 285, 'violet', 'agents.root', ['description, instruction', 'max_iterations: 8', 'toolsets: filesystem, shell']);
   const a2 = block(f, 20, 178, 285, 'plum', 'models.local', ['provider: dmr', 'model: ai/qwen3:4b', 'temperature: 0']);

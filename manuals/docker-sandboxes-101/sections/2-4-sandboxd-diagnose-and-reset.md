@@ -6,7 +6,7 @@
 
 ## sandboxd
 
-**sandboxd:** the host daemon behind every local `sbx` verb, managed with `sbx daemon start`, `stop`, `restart`, `status`, and `log-level set`. The settings commands "use the local daemon to read evaluated values and manage overrides, starting it if necessary" {{help-sbx sbx settings}}, and the first probe of `sbx settings list` printed `Starting sandboxd daemon...` before its table. `sbx daemon start -d` runs it in the background. `--policy allow-all`, `balanced`, or `deny-all` initializes the global network policy at the same time, which [sbx policy init](#s-sbx-policy-init-allow-deny-and-check-network) covers. `sbx daemon log-level set TARGET LEVEL` changes one log category, `proxy`, `general`, or `all`.
+**sandboxd:** the host daemon behind every local `sbx` verb, managed with `sbx daemon start`, `stop`, `restart`, `status`, and `log-level set`. The settings commands use the local daemon to read evaluated values and manage overrides, and they start it when it is not running {{help-sbx sbx settings}}. So the first probe of `sbx settings list` printed `Starting sandboxd daemon...` before its table. `sbx daemon start -d` runs it in the background. `--policy allow-all`, `balanced`, or `deny-all` initializes the global network policy at the same time, which [sbx policy init](#s-sbx-policy-init-allow-deny-and-check-network) covers. `sbx daemon log-level set TARGET LEVEL` changes one log category, `proxy`, `general`, or `all`.
 
 `sbx daemon status --json` names the socket and the log, both under `~/Library/Application Support/com.docker.sandboxes/sandboxes/sandboxd/` on the recording Mac, where `$HOME` is a capture mask.
 
@@ -23,13 +23,13 @@ note: Nothing is cut.
 }
 ```
 
-The log is JSON lines with `time`, `level`, `msg`, `version`, and often a `runtime`, the sandbox name, and [the lifecycle section](#s-sbx-run-create-stop-and-rm) reads two of them. Since v0.43.0 "The local daemon now verifies connecting operating-system users on Unix sockets and Windows named pipes" {{rel-sbx v0.43.0}}, and since v0.46.0 "Starting a second daemon against a state directory already in use fails with an error instead of disrupting the running daemon" {{docs-sbx release-notes}}.
+The log is JSON lines with `time`, `level`, `msg`, `version`, and often a `runtime`, the sandbox name, and [the lifecycle section](#s-sbx-run-create-stop-and-rm) reads two of them. Since v0.43.0 the local daemon checks the operating-system user of each connection on Unix sockets and Windows named pipes {{rel-sbx v0.43.0}}. Since v0.46.0 a second daemon on a state directory that is in use fails with an error and leaves the running daemon alone {{docs-sbx release-notes}}.
 
 ## The state directory
 
-**State directory:** the tree where sandboxd keeps sandboxes, images, policies, and its socket. On macOS it is `~/Library/Application Support/com.docker.sandboxes/`, on Windows `%LOCALAPPDATA%\DockerSandboxes`, and on Linux the state "is spread across three directories" {{docs-sbx Removing all state}}: `~/.local/state/sandboxes/`, `~/.cache/sandboxes/`, and `~/.config/sandboxes/`. Release v0.29.0 added the `SANDBOXES_STORAGE_ROOT` override {{rel-sbx v0.29.0}}, and v0.31.0 moved "the state directory symlink from /tmp to ~/.sbx/run/" {{rel-sbx v0.31.0}}. The daemon binds its containerd socket under that symlink. The `sbx kit builder history` help pages, captured in a shell that could not bind sockets, end in "failed to create unix socket on $HOME/.sbx/run/d/containerd/containerd.sock.ttrpc" {{help-sbx sbx kit builder history}}.
+**State directory:** the tree where sandboxd keeps sandboxes, images, policies, and its socket. On macOS it is `~/Library/Application Support/com.docker.sandboxes/`, on Windows `%LOCALAPPDATA%\DockerSandboxes`, and on Linux the state is in three directories {{docs-sbx Removing all state}}: `~/.local/state/sandboxes/`, `~/.cache/sandboxes/`, and `~/.config/sandboxes/`. Release v0.29.0 added the `SANDBOXES_STORAGE_ROOT` override {{rel-sbx v0.29.0}}, and v0.31.0 moved the state directory symlink from `/tmp` to `~/.sbx/run/` {{rel-sbx v0.31.0}}. The daemon binds its containerd socket under that symlink. The `sbx kit builder history` help pages, captured in a shell that could not bind sockets, end in `failed to create unix socket on $HOME/.sbx/run/d/containerd/containerd.sock.ttrpc` {{help-sbx sbx kit builder history}}.
 
-Two more trees matter: the shared skills store at `sandboxes/agent-skills` under the state directory {{docs-sbx agent-skills}}, and the audit log under `~/Library/Logs/com.docker.sandboxes/sandboxes/auditkit/`, where "Files are named audit-<utc-timestamp>-<process-uuid>-<seq>.jsonl" {{docs-sbx audit}}. The 2025 plugin kept its VMs under `~/.docker/sandboxes/vm/` and its images under `~/.docker/sandboxes/image-cache/`, which [the migration section](#s-from-docker-sandbox-and-cagent-to-sbx-and-docker-agent) maps. [Figure](#fig-2-3) draws the macOS tree, and [the settings table](#s-ref-settings-keys-environment-variables-and-paths) lists every path for the three systems.
+Two more trees matter. The first is the shared skills store at `sandboxes/agent-skills` under the state directory {{docs-sbx agent-skills}}. The second is the audit log under `~/Library/Logs/com.docker.sandboxes/sandboxes/auditkit/`, where each file is named `audit-<utc-timestamp>-<process-uuid>-<seq>.jsonl` {{docs-sbx audit}}. The 2025 plugin kept its VMs under `~/.docker/sandboxes/vm/` and its images under `~/.docker/sandboxes/image-cache/`, which [the migration section](#s-from-docker-sandbox-and-cagent-to-sbx-and-docker-agent) maps. [Figure](#fig-2-3) draws the macOS tree, and [the settings table](#s-ref-settings-keys-environment-variables-and-paths) lists every path for the three systems.
 
 ```figure
 id: fig-2-3
@@ -43,7 +43,7 @@ caption: Read top down. Solid lines are containment, the dashed line is the syml
 
 `sbx diagnose` runs thirteen checks in four groups and prints a pass, a warning, or a failure for each. Installation finds the binary, its version, the daemon, and a diagnostics bundle. Platform confirms `kern.hv_support is 1` and finds `mkfs.erofs` with its default block size and the guest kernel page size. Storage checks the state directory, its permissions, and the free space. Connection checks the version match, the socket, the SSH client config, and the sign-in.
 
-The page-size check exists because v0.43.0 made diagnose warn "if its default block size exceeds the sandbox kernel's page size" {{rel-sbx v0.43.0}}. On the recording Mac the block size is 4096 bytes and the guest page size is 16384 bytes, which `getconf PAGESIZE` inside `m101-demo` confirms.
+The page-size check exists because v0.43.0 made diagnose warn when its default block size is larger than the page size of the sandbox kernel {{rel-sbx v0.43.0}}. On the recording Mac the block size is 4096 bytes and the guest page size is 16384 bytes, which `getconf PAGESIZE` inside `m101-demo` confirms.
 
 ```listing
 title: the two platform checks and the summary
@@ -90,11 +90,13 @@ note: Cut to the Virtualization and mkfs.erofs checks and the summary. The byte 
 - clear the image cache and the internal registries
 - delete all sandbox state and all policies
 - remove the managed SSH configuration
-- clear "the Gordon assistant's sessions and history" {{help-sbx sbx reset}}
+- clear the sessions and the history of the Gordon assistant {{help-sbx sbx reset}}
 - delete stored secrets, unless `--preserve-secrets`
 - sign out, stop the daemon, and remove the state, cache, and config directories
 
-The docs give Gordon no role in a sandbox, so this manual quotes that line and claims nothing more, as [conflict C33](#s-ref-sources-and-the-conflicts-register) rules. The docs reach for the command after an upgrade: "A newer version of sbx upgraded the local database to a schema that older binaries don't understand" {{docs-sbx sbx reset}}, and `--preserve-secrets` keeps your secrets through that. The last resort is to delete the state directory by hand after `sbx reset`. Your workspaces stay where they are. The docs say host workspace files "remain on your host" when a sandbox is removed, and `sbx reset` lists only state, cache, and config directories. Commands that help text names but the help tree does not list, such as `sbx mount`, are collected in [sbx settings list](#s-sbx-settings-list).
+The docs give Gordon no role in a sandbox, so this manual repeats that one item and claims nothing more, as [conflict C33](#s-ref-sources-and-the-conflicts-register) rules. The docs use the command after an upgrade. A newer `sbx` can move the local database to a schema that older binaries cannot read {{docs-sbx sbx reset}}. Then `--preserve-secrets` keeps your secrets through that.
+
+The last resort is to delete the state directory by hand after `sbx reset`. Your workspaces stay where they are. The docs say that host workspace files stay on your host when a sandbox is removed, and `sbx reset` lists only state, cache, and config directories. Commands that help text names but the help tree does not list, such as `sbx mount`, are collected in [sbx settings list](#s-sbx-settings-list).
 
 ```takeaways
 - Run `sbx daemon status --json` first, and open the `daemon.log` it names.

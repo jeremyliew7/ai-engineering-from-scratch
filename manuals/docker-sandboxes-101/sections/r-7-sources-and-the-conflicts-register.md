@@ -2,7 +2,7 @@
 
 > Two help trees, one schema, one kit specification, the vendored docs, the release notes, and one capture kit, with a ruling for every conflict a section touches.
 
-The pin is sbx 0.47.0 and docker-agent 1.149.0 (manual.json). The agent file schema is at version 16, and the Sandbox Kit Spec at milestone v3.0.0-m.8. The pin date is 2026-10-07, and the facts were verified on 2026-10-08. Every file named below lives under `research/sources/`, and `research/sources/README.md` records its origin, commit, line count, and license.
+The pin is sbx 0.47.0 and docker-agent 1.149.0. The agent file schema is at version 16, and the Sandbox Kit Spec at milestone v3.0.0-m.8. The pin date is 2026-10-07, and the facts were verified on 2026-10-08. Every file named below is [vendored in the repository](manuals/docker-sandboxes-101/research/sources), and [its README](manuals/docker-sandboxes-101/research/sources/README.md) records its origin, commit, line count, and license.
 
 ## The pin
 
@@ -17,9 +17,9 @@ The pin is sbx 0.47.0 and docker-agent 1.149.0 (manual.json). The agent file sch
 
 ## The ranked sources
 
-When two sources disagree, the higher one wins and the section says so. The table repeats the ranking of manual.json with the citation keys of `quoteSources`.
+When two sources disagree, the higher one wins and the section says so. The table repeats the ranking of the manual with its source keys.
 
-| Rank | Source | Cited as | Used for |
+| Rank | Source | Source key | Used for |
 |---|---|---|---|
 | 1 | the help text that sbx 0.47.0 and docker-agent 1.149.0 print | `help-sbx`, `help-agent` with the command | every command, flag, default, and path |
 | 2 | the agent file schema at v1.149.0 | `schema` with the definition | every key, type, and default of the agent file |
@@ -27,7 +27,7 @@ When two sources disagree, the higher one wins and the section says so. The tabl
 | 4 | the Docker documentation, fetched 2026-10-08 | `docs-sbx`, `docs-agent`, `docs-dmr`, `docs-mcp`, `docs-sbx-api`, `docs-desktop` with the page | rules and limits the help text does not state |
 | 5 | the release notes | `rel-sbx`, `rel-agent` with the version | when a behaviour appeared, changed, or was removed |
 | 6 | Docker blog posts and talks, through the research files | `blog`, `talk` with a date, declared `null` | history and positioning only, never a rule |
-| 7 | the capture kit | the file under `capture/out/` | every command output, file, and record shown |
+| 7 | the capture kit | [the captured output](manuals/docker-sandboxes-101/capture/out) | every command output, file, and record shown |
 
 ## The vendored files
 
@@ -48,11 +48,11 @@ When two sources disagree, the higher one wins and the section says so. The tabl
 | `mcp-gateway-README.md`, `model-runner-README.md`, `compose-for-agents-README.md` | the README of each repository | main `a34df45d4ec0e941a9853ad768c4f6cd818966b3`, `ed3e67a8205b8d068b9c65b30d3708132a231bba`, `bfd4fe952591495af757a1a737c7eacc78c75c15` |
 | `probes/` | 21 read-only command runs with timestamps and exit codes | sbx v0.47.0, docker-agent v1.149.0, 2026-10-08 |
 
-The sbx help text and release notes are proprietary program output of Docker Inc., quoted as short quotations. The repositories docker/docker-agent, docker/sandbox-kit-spec, docker/docs, and docker/model-runner are Apache-2.0. The repository docker/mcp-gateway is MIT, and docker/compose-for-agents is Apache-2.0 or MIT (research/sources/LICENSES.md).
+The sbx help text and release notes are proprietary program output of Docker Inc., quoted as short quotations. The repositories docker/docker-agent, docker/sandbox-kit-spec, docker/docs, and docker/model-runner are Apache-2.0. The repository docker/mcp-gateway is MIT, and docker/compose-for-agents is Apache-2.0 or MIT ([our source record](manuals/docker-sandboxes-101/research/sources/LICENSES.md)).
 
 ## The conflicts register
 
-`research/conflicts-register.md` holds 122 conflicts, C1 to C122, in nine groups, and 30 pieces of stale advice, S1 to S30. The table below keeps every C row that a section entry of the plan cites or whose ruling names a section. That is 94 rows, each with the ruling the manual follows. The 28 rows that no section uses are cut to keep the table short, and the next table names them by group. Their substance appears in the S rows below or in the register itself. Kind is the register's own label.
+[The conflicts register](manuals/docker-sandboxes-101/research/conflicts-register.md) holds 122 conflicts, C1 to C122, in nine groups, and 30 pieces of stale advice, S1 to S30. The table below keeps every C row that a section entry of the plan cites or whose ruling names a section. That is 94 rows, each with the ruling the manual follows. The 28 rows that no section uses are cut to keep the table short, and the next table names them by group. Their substance appears in the S rows below or in the register itself. Kind is the register's own label.
 
 | Group | Rows cut |
 |---|---|

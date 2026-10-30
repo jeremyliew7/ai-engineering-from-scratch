@@ -124,7 +124,7 @@ from: phases/07-transformers-deep-dive/12-kv-cache-flash-attention/docs/en.md, p
 | Setting | Default | Note |
 |---|---|---|
 | Llama 3 70B KV per token per layer | 4096 bytes | 80 layers, 8 KV heads, fp16 |
-| Llama 3 70B KV, 32K context | 10.4 GB | GQA with 8 KV heads |
+| Llama 3 70B KV, 32K context | 10 GiB | GQA with 8 KV heads |
 | Gemma 3 layer mix | 5:1 SWA:global | window=1024 |
 | SWA KV at 128K context | 128× | window 1024, last W tokens |
 | Gemma-3 mix KV | ~6x | vs pure full attention |

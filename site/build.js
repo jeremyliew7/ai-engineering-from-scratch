@@ -18,6 +18,8 @@ const { socialCards } = require('../lib/og-cards');
 const { phaseHubPath, phaseLabel, glossaryLookupKey } = require('../lib/hub-routes');
 const { writeHubs } = require('./build-hubs.js');
 const { writeCheatsheets, loadTopics, coverage } = require('./build-cheatsheets.js');
+const { writePractice } = require('./build-practice.js');
+const { lessonNumber } = require('./catalog.js');
 
 const REPO_ROOT = path.resolve(__dirname, '..');
 const README_PATH = path.join(REPO_ROOT, 'README.md');
@@ -1055,27 +1057,28 @@ function renderCatalogDiscovery(phases, lessonManifest) {
   const rows = [];
   for (const phase of phases) {
     let grouped = false;
-    for (const lesson of phase.lessons) {
+    phase.lessons.forEach((lesson, index) => {
       const relPath = lessonPath(lesson.url);
       const seo = relPath && lessonManifest.lessons[relPath];
-      if (!seo) continue;
+      if (!seo) return;
       if (!grouped) {
         grouped = true;
         rows.push(
           `            <tr class="catalog-group-row" data-generated-discovery="phase">` +
-          `<th colspan="5" scope="rowgroup"><a href="${htmlEscape(phaseHubPath(relPath))}">` +
+          `<th colspan="6" scope="rowgroup"><a href="${htmlEscape(phaseHubPath(relPath))}">` +
           `${htmlEscape(phaseLabel(phase.id, phase.name))}</a></th></tr>`
         );
       }
       rows.push(
         `            <tr data-generated-discovery="lesson">` +
-        `<td>${htmlEscape(String(phase.id).padStart(2, '0'))}</td>` +
+        `<td></td>` +
+        `<td>${htmlEscape(lessonNumber(phase.id, lesson.url, index + 1).label)}</td>` +
         `<td><a href="${htmlEscape(lessonHref(relPath))}">${htmlEscape(seo.title)}</a></td>` +
         `<td>${htmlEscape(lesson.type || '')}</td>` +
         `<td>${htmlEscape(lesson.lang || '')}</td>` +
         `<td>${htmlEscape(lesson.status || '')}</td></tr>`
       );
-    }
+    });
   }
   return rows.join('\n');
 }
@@ -1181,6 +1184,7 @@ function sanitizeSponsorTag(tag) {
 
 function sponsorLinkTarget(href) {
   if (/^#[\w-]+$/.test(href)) return { href, external: false };
+  if (/^mailto:[\w.+-]+@[\w-]+(?:\.[\w-]+)+$/.test(href)) return { href, external: false };
   if (/^https:\/\/[^\s"'<>]+$/.test(href)) return { href, external: true };
   if (/^[\w.-]+(?:\/[\w.-]+)*(?:#[\w-]+)?$/.test(href) && !href.includes('..')) {
     return { href: GITHUB_BLOB_BASE + href, external: true };
@@ -2241,6 +2245,11 @@ function build() {
   const cheatsheets = writeCheatsheets({ siteDir: __dirname });
   hubs.cheatsheetPages = cheatsheets.pages;
   console.log(`   wrote ${cheatsheets.topics.length} cheat sheet posters`);
+  console.log('Writing practice problems...');
+  const practice = writePractice({ siteDir: __dirname });
+  hubs.practicePages = practice.pages;
+  hubs.practice = practice;
+  console.log(`   wrote ${practice.problems.length} practice problems in ${practice.tracks.length} tracks`);
   const glossaryPage = path.join(__dirname, 'glossary.html');
   replaceGeneratedDiscovery(glossaryPage, GLOSSARY_JSONLD_START, GLOSSARY_JSONLD_END, hubs.glossaryJsonLd);
   replaceGeneratedDiscovery(glossaryPage, GLOSSARY_INDEX_START, GLOSSARY_INDEX_END, hubs.glossaryIndex);
@@ -2333,6 +2342,7 @@ function writeHubSitemaps(hubs, siteDir = __dirname) {
     ['sitemap-phases.xml', hubs.phasePages.map(page => ({ loc: page.href, priority: '0.8', freq: 'monthly' }))],
     ['sitemap-glossary.xml', hubs.termPages.map(page => ({ loc: page.href, priority: '0.5', freq: 'monthly' }))],
     ['sitemap-cheatsheets.xml', (hubs.cheatsheetPages || []).map(page => ({ loc: page.href, priority: '0.5', freq: 'monthly' }))],
+    ['sitemap-practice.xml', (hubs.practicePages || []).map(page => ({ loc: page.href, priority: '0.6', freq: 'monthly' }))],
   ].filter(([, urls]) => urls.length).map(([name, urls]) => {
     fs.writeFileSync(path.join(siteDir, name), urlsetXml(urls), 'utf8');
     return name;
@@ -2349,6 +2359,8 @@ function writeSitemap(lessonManifest, glossaryCount, certifications, projects, h
     { loc: '/about.html', priority: '0.5', freq: 'yearly' },
     { loc: '/skills.html', priority: '0.7', freq: 'monthly' },
     { loc: '/inside-an-ai-agent.html', priority: '0.7', freq: 'monthly' },
+    { loc: '/inside-a-decompiler.html', priority: '0.7', freq: 'monthly' },
+    { loc: '/inside-an-llm-serving-gpu.html', priority: '0.7', freq: 'monthly' },
     { loc: '/how-to-learn.html', priority: '0.8', freq: 'monthly' },
     { loc: '/developer.html', priority: '0.6', freq: 'monthly' },
     { loc: '/contact.html', priority: '0.3', freq: 'yearly' },
@@ -2439,6 +2451,18 @@ function hubLlms(hubs) {
   for (const phase of hubs.phaseModels) out += `- [${phase.headline}](${SITE_ORIGIN}${phase.href}): ${phase.label}\n`;
   out += `\n## Glossary term pages\n`;
   out += `${hubs.termPages.length} glossary terms have their own page at ${SITE_ORIGIN}/glossary/<term slug>. [Glossary term sitemap](${SITE_ORIGIN}/sitemap-glossary.xml)\n\n`;
+  if (hubs.practice && hubs.practice.problems.length) {
+    const labels = { implement: 'Implement', research: 'Research', train: 'Train', lab: 'Lab' };
+    out += `## Practice tasks\n`;
+    out += `${hubs.practice.problems.length} practice tasks ask the learner to implement code from a lesson, implement a method from a research paper, train a tiny model to a target, or run an experiment and answer with numbers. Python with numpy runs the checks in the browser. Each page holds the statement only, and each task page returns Markdown with Accept: text/markdown. [Practice index in Markdown](${SITE_ORIGIN}/agent-pages/practice/index.md) \`python3 scripts/practice/run.py <id> <file>\` runs the checks offline. [Practice sitemap](${SITE_ORIGIN}/sitemap-practice.xml)\n\n`;
+    for (const kind of Object.keys(labels)) {
+      const list = hubs.practice.problems.filter(problem => problem.meta.kind === kind);
+      if (!list.length) continue;
+      out += `### ${labels[kind]}\n\n`;
+      for (const problem of list) out += `- [${problem.meta.title}](${SITE_ORIGIN}${problem.href}) (${problem.meta.difficulty}): ${problem.meta.summary} From [${problem.lessonTitle}](${SITE_ORIGIN}/lesson?path=${encodeURIComponent(problem.meta.lesson)})\n`;
+      out += `\n`;
+    }
+  }
   return out;
 }
 
@@ -2579,6 +2603,7 @@ module.exports = {
   canonicalLessonUrl,
   certificationStats,
   githubSourceUrl,
+  sourceRepository,
   lessonDocumentSeo,
   GLOSSARY_CATEGORY_ORDER,
   annotateLessonMeta,

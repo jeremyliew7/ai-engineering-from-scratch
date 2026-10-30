@@ -55,6 +55,7 @@ mlruns/
 *.bin
 *.h5
 .gstack/
+.lesson-screen/
 
 .link-cache.json
 .claude/
@@ -80,6 +81,8 @@ mlruns/
 !.claude/skills/isometric-explainer/**
 !.claude/skills/motion-figure/
 !.claude/skills/motion-figure/**
+!.claude/skills/lesson-screen/
+!.claude/skills/lesson-screen/**
 !.claude/skills/write-manual/
 !.claude/skills/write-manual/**
 catalog.json
@@ -122,7 +125,12 @@ site/sitemap-phases.xml
 site/sitemap-cheatsheets.xml
 site/cheatsheets/
 site/cheatsheet-map.json
+site/sitemap-practice.xml
+site/practice/
+site/practice-map.json
 site/manual-*.html
+site/manual/
+site/sitemap-manuals.xml
 site/manuals-data.js
 site/manuals.html
 

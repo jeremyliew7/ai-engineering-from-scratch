@@ -52,7 +52,7 @@ caption: Read left to right, one column per phase of train.py. A filled cell mea
 
 ## What stock SGLang gives the trainer
 
-The rental works through SGLang HTTP endpoints that exist in stock v0.5.22 {{code}}. SGLang's RL guide states the design rule as "Be a library, not a framework" {{docs}}. Miles drives each engine as an ordinary `sglang serve` process over HTTP.
+The rental works through SGLang HTTP endpoints that exist in stock v0.5.22 {{code}}. The RL guide of SGLang states the design rule. SGLang acts as a library that the trainer calls, not as a framework that owns the loop {{docs}}. Miles drives each engine as an ordinary `sglang serve` process over HTTP.
 
 **Memory release:** `POST /release_memory_occupation` frees GPU memory by tag, and `POST /resume_memory_occupation` gives it back. The server needs `--enable-memory-saver`, which is off by default. The tags are `kv_cache`, `weights`, and `cuda_graph`. The docs list only the first two, and the code accepts all three, so the code wins. The memory saver frees physical memory but keeps the virtual addresses, so captured CUDA graphs stay valid without a new capture. The call asserts that the server is idle, so pause generation first.
 
@@ -91,7 +91,9 @@ With `--colocate`, Miles ignores this flag and always sends CUDA IPC handles thr
 
 Here the serving engine and the trainer must agree on a number. Give SGLang and Megatron or FSDP the same weights and the same tokens. Their kernels can still return different log probabilities, because their reductions run in a different order. Then the PPO ratio mixes "the policy changed" with "the kernels differ". Miles reports the gap as `train/train_rollout_logprob_abs_diff`, which should be exactly 0 in true on-policy mode.
 
-Two SGLang facts matter first. SGLang returns log probabilities after temperature scaling unless the request is greedy or `SGLANG_RETURN_ORIGINAL_LOGPROB` is set, as [section 4.6](#s-deterministic-inference-and-logprobs) explains. A trainer that compares at temperature 1 sees a mismatch that no kernel causes. Second, `--rl-on-policy-target` accepts one value at v0.5.22, `fsdp`, and it forces deterministic inference {{code}}. That mode replaces matrix multiply, softmax, and norm kernels with batch-invariant versions and forces the PyTorch sampler. It also turns off the radix cache unless the attention backend is `fa3`, `fa4`, `triton`, or `ascend`.
+Two SGLang facts matter first. SGLang returns log probabilities after temperature scaling unless the request is greedy or `SGLANG_RETURN_ORIGINAL_LOGPROB` is set, as [section 4.6](#s-deterministic-inference-and-logprobs) explains. Sometimes the rollout samples at a temperature other than 1, and the trainer computes log probabilities at temperature 1. Then the trainer sees a mismatch that no kernel causes.
+
+Second, `--rl-on-policy-target` accepts one value at v0.5.22, `fsdp`, and it forces deterministic inference {{code}}. That mode replaces matrix multiply, softmax, and norm kernels with batch-invariant versions and forces the PyTorch sampler. It also turns off the radix cache unless the attention backend is `fa3`, `fa4`, `triton`, or `ascend`.
 
 Miles builds on that with a launch plan that sets matching flags on both sides. The coverage is narrow. At v0.1.2 the only model profile is Qwen3 dense: Qwen3-0.6B, Qwen3-4B, Qwen3-4B-Base, and Qwen3-4B-Instruct-2507. Three open issues in the Miles repository show where bitwise parity still breaks:
 
@@ -117,17 +119,17 @@ timer.py:42 - Timer update_weights end (elapsed: 0.7s)
 [2026-10-17 15:55:01] post-warmup freeze_gc failed
 ```
 
-**We measured** the step time by phase. The SGLang rollout took a median of 57.2 s, at about 3,113 tokens per second. The trainer then recomputed log probabilities in 25.2 s and trained in 80.3 s. The weight update into SGLang took 0.65 s through CUDA IPC. Releasing and taking back the SGLang memory took a median of 1.7 s, and 4.0 s at worst.
+**We measured** the step time by phase. The SGLang rollout took a median of 57.2 s, at about 3,113 tokens per second. The trainer then recomputed log probabilities in 25.2 s and trained in 80.3 s. The weight update into SGLang took 0.65 s through CUDA IPC. Releasing the SGLang memory took a median of 0.8 s and at most 4.0 s, and taking it back took 0.9 s.
 
 ```figure
 id: fig-7-2c
 kind: chart
 title: One GRPO step on a GB10, by phase
 claim: On one GB10, the trainer phases took 1.8 times as long as the SGLang rollout, and the weight update took under a second.
-caption: Median seconds per phase over 12 steps. Green is SGLang generation, violet is the trainer, and amber is the weight update and the memory release between them. From capture/gpu/summary/miles-gb10.json.
+caption: Median seconds per phase over 12 steps. Blue is SGLang generation, violet is the trainer, and amber is the weight update and the memory release between them. From capture/gpu/summary/miles-gb10.json.
 ```
 
-The rollout was not the bottleneck at this size. For a 0.6B model on one GPU, a faster serving engine would save at most a third of the step. The weight update and the memory release, which much of this section is about, cost 2.4 s of a 165 s step.
+The rollout was not the bottleneck at this size. For a 0.6B model on one GPU, a faster serving engine would save at most about a third of the step, 35 percent. The weight update and the memory release, which much of this section is about, cost 2.4 s. The step took about 165 s, summed from the phase medians.
 
 The log-probability gap stayed between 0.0143 and 0.0163 in all 12 steps. That is the number true on-policy mode exists to drive to 0, and plain mode does not move it. The raw reward went up and down between 0.586 and 0.758. Twelve steps are too few to show learning, so read the run as a timing and a gap, not as a training curve.
 
@@ -159,17 +161,17 @@ caption: Raw reward and the share of samples cut at 1,024 tokens for each step o
 
 From one step to the next the reward changed by as much as 0.207, from 0.801 at step 30 to 0.594 at step 31. Read the trend from the 8-step means, not from one step.
 
-The log-probability gap did not move. It was 0.0153 over the first 8 steps and 0.0146 over the last 8, and it stayed between 0.0138 and 0.0162 in all 48. Training does not close this gap. The gap comes from the SGLang and FSDP kernels. True on-policy mode is the part of Miles that works on it.
+The log-probability gap did not move. It was 0.0153 over the first 8 steps and 0.0146 over the last 8, and it stayed between 0.0138 and 0.0162 in all 48. In 48 steps of this 0.6B run, training did not close the gap. Miles attributes the gap to differences between the SGLang and FSDP kernels. True on-policy mode is the part of Miles that works on it.
 
 The last log lines also need a note. The SGLang scheduler printed `crashed with exit code -15`, and the Ray job then reported success. Exit code -15 means the scheduler got SIGTERM, here at the end of a finished job. Alert on the job status, not on that line alone.
 
-Two log lines are worth knowing before you trust a run. About 30 percent of the samples hit the 1,024-token limit, so the reward includes answers cut off before the end. And SGLang printed `post-warmup freeze_gc failed` once at startup. Training ran normally after it, so the warning cost nothing here.
+Two log lines are worth knowing before you trust a run. About 30 percent of the samples in the 12-step run hit the 1,024-token limit, and 20 percent over the 48 steps. So the reward includes answers cut off before the end. And SGLang printed `post-warmup freeze_gc failed` once at startup. Training ran normally after it, so the warning cost nothing here.
 
 ### Two more seeds
 
-We ran the same 48 steps twice more, with `MILES_SEED=2` and `MILES_SEED=3`. The variable sets the train seed and the rollout seed. The GB10 shut down three times under this load, each time 10 to 15 minutes into the run. So these runs had a guard. A script paused the container when the GPU reached 84 C, and resumed it at 74 C or after 2 minutes.
+We ran the same 48 steps twice more, with `MILES_SEED=2` and `MILES_SEED=3`. The variable sets the train seed and the rollout seed. The GB10 shut down three times under this load on 2026-10-18, and its boot list shows three short boots that day. So these runs had a guard. A script paused the container when the GPU reached 84 C, or 80 C in the first 30 minutes. It resumed the container after about 45 to 60 seconds, at 72 C or below.
 
-During seed 2 the container was paused for about 60 percent of the 5 hours. A pause does not change what the model computes, so the reward, the lengths, the cut share, and the log-probability gap are valid. The rollout times are not, and we do not report them for seeds 2 and 3.
+Over the 9.3 hours of seeds 2 and 3, the container was paused for about 58 percent of the time. A pause stops the process and does not change its arithmetic. So we read the reward, the lengths, the cut share, and the log-probability gap as valid. We did not test this with a paused and an unpaused run of the same seed. The rollout times are not, and we do not report them for seeds 2 and 3.
 
 ```listing
 title: the last step of seed 2
@@ -208,7 +210,7 @@ ValueError: Specified `attn_implementation="triton"` is not supported. The only 
 
 The flag value came from the wrong example. In the FSDP actor, the SGLang Triton attention bridge turns on only when `torch.version.hip` is set, which means AMD GPUs {{code}}. On an NVIDIA GPU the value goes straight to transformers, which has no attention named `triton`.
 
-The only true on-policy contract in Miles pairs the SGLang `fa3` backend with `flash_attention_3` in FSDP {{code}}. In this image, the FlashAttention 3 package imports, but `sgl_kernel` reports `Can not import FA3 in sgl_kernel`. We ran the job again with the contract flags to see where it stops.
+The only true on-policy contract in Miles pairs the SGLang `fa3` backend with `flash_attention_3` in FSDP {{code}}. We ran the job again with the contract flags to see where it stops.
 
 ```listing
 title: the contract flags on a GB10
@@ -223,15 +225,15 @@ AssertionError: FlashAttention v3 Backend requires SM>=80 and SM<=90. Please use
 [2026-10-17 22:06:46.137 rollout_executor] http_utils.py:241 - Error: Server error '503 Service Unavailable' for url 'http://172.17.0.3:20035/generate'
 ```
 
-SGLang stopped 21 seconds after it started. Its FA3 backend accepts GPUs from SM 8.0 to SM 9.0, and the GB10 is SM 12.1. So on a GB10, true on-policy at v0.1.2 cannot start, whatever flags you pass.
+SGLang stopped 21 seconds after it started. Its FA3 backend accepts GPUs from SM 8.0 to SM 9.0, and the GB10 is SM 12.1. With the Miles image we ran, at commit 08752a12, the only true on-policy contract needs FA3, so it cannot start on a GB10.
 
-What happened next is the part to remember. The rollout engine was gone, but the Miles job did not stop. Its rollout loop kept sending requests to the router, which answered `503 Service Unavailable`. The log holds 199,685 of those errors over 63 minutes, until we stopped the container. The job never reported a failure, and the GPU sat idle the whole time.
+What happened next is the part to remember. The rollout engine was gone, but the Miles job did not stop. Its rollout loop kept sending requests to the router, which answered `503 Service Unavailable`. The log holds about 200,000 of those errors over 63 minutes, until we stopped the container. The job never reported a failure. We did not record the GPU during that hour.
 
-**Our position on the GB10 result:** before you plan a true on-policy run, check that your GPU and image have both kernels of the contract. Then watch the SGLang server log, not only the trainer, because a dead rollout engine can look like a slow one. At v0.1.2, that contract means FlashAttention 3 on both sides, a path written for Hopper GPUs.
+**Our position on the GB10 result:** before you plan a true on-policy run, check that your GPU and image have both kernels of the contract. Then watch the SGLang server log, not only the trainer, because a dead rollout engine can look like a slow one. In the image we ran, at Miles commit 08752a12, that contract means FlashAttention 3 on both sides, a path written for Hopper GPUs.
 
 ## Miles runs on its own SGLang
 
-Miles does not use the SGLang release that the rest of this manual describes. Its Docker image builds on `lmsysorg/sglang:v0.5.21` and checks out the `sglang-miles` branch. The v0.1.2 release lock pins SGLang commit `b84bec5761a6`. The Miles docs say it plainly: "installing stock `sglang` or upstream Megatron-LM next to Miles does not work." {{docs}}
+Miles does not use the SGLang release that the rest of this manual describes. Its Docker image builds on `lmsysorg/sglang:v0.5.21` and checks out the `sglang-miles` branch. The v0.1.2 release lock pins SGLang commit `b84bec5761a6`. The Miles docs say it plainly: stock `sglang` or upstream Megatron-LM installed next to Miles does not work {{docs}}.
 
 At least four things that Miles calls do not exist at v0.5.22: the `/pull_weights` endpoint for disk-delta, `register_lora_adapter`, `get_parallelism_info`, and the `--true-on-policy-contract` flag.
 
@@ -244,13 +246,13 @@ That branch is a fair summary of this section. RL asks a serving engine for thin
 - Pause generation before you release memory, because the release asserts an idle server.
 - Start colocated on one node, and expect `--colocate` to override the transfer mode.
 - Choose `p2p` only for multi-node MoE runs, and measure the update time first.
-- Log the rollout and training log-probability gap on every run, and do not expect training to close it.
+- Log the rollout and training log-probability gap on every run. In our 48-step runs, training did not close it.
 - Read the reward from means over several steps, because one step can move it by 0.2.
-- Pause a long RL job when the GPU runs hot, because a pause changes the timing and not the result.
-- Set `SGLANG_RETURN_ORIGINAL_LOGPROB` when your trainer compares at temperature 1.
+- Pause a long RL job when the GPU runs hot. We expect a pause to change only the timing, and we did not test that directly.
+- Set `SGLANG_RETURN_ORIGINAL_LOGPROB` when the rollout temperature is not 1 and the trainer computes log probabilities at temperature 1.
 - Treat true on-policy as a Qwen3 dense diagnostic at v0.1.2.
 - Check that your GPU and image have both kernels of the true on-policy contract.
 - Alert on the rollout server's own errors, because the trainer can keep waiting on a dead engine.
 ```
 
-Sources: Miles at v0.1.2 (a22fd824): train.py, release-lock.json, docker/Dockerfile, docs/developer/versions.md, miles/ray/rollout/inference_controller.py, miles/backends/training_utils/weight_update/protocol.py, session.py, protocols/broadcast.py, protocols/cuda_ipc.py, protocols/p2p.py, protocols/delta.py, miles/true_on_policy/model_profiles.py, docs/advanced/p2p-weight-transfer.md; SGLang at v0.5.22: python/sglang/srt/entrypoints/http_server.py, python/sglang/srt/managers/io_struct.py (PauseGenerationReqInput), python/sglang/srt/managers/scheduler_components/weight_updater.py, python/sglang/srt/constants.py, python/sglang/srt/arg_groups/fields/exec_.py, python/sglang/srt/arg_groups/choices.py, python/sglang/srt/arg_groups/attention_hook.py, python/sglang/srt/layers/logprob_processor.py, docs/docs/advanced_features/sglang_for_rl.mdx; Miles issues #860, #1485, #3277, #3714; RadixArk and LMSYS posts: lmsys.org/blog/2025-11-19-miles and lmsys.org/blog/2026-08-18-miles-v0-1. Miles at 08752a12: miles/backends/fsdp_utils/actor.py, miles/true_on_policy/schema.py, examples/infra_features/true_on_policy/run_simple.py and run_simple_amd_triton.py. capture/gpu/miles_grpo.py, capture/gpu/miles_summary.py, capture/gpu/out-miles/plain-excerpt.log, capture/gpu/out-miles/plain-48-excerpt.log, capture/gpu/out-miles/plain-48-s2-excerpt.log, capture/gpu/out-miles/plain-48-s3-excerpt.log, capture/gpu/out-miles/plain-48-thermostat.log, capture/gpu/out-miles/true-on-policy-error.log, capture/gpu/summary/miles-gb10.json. capture/gpu/out-miles/true-on-policy-fa3-error.log.
+Sources: Miles at v0.1.2 (a22fd824): train.py, release-lock.json, docker/Dockerfile, docs/developer/versions.md, miles/ray/rollout/inference_controller.py, miles/backends/training_utils/weight_update/protocol.py, session.py, protocols/broadcast.py, protocols/cuda_ipc.py, protocols/p2p.py, protocols/delta.py, miles/true_on_policy/model_profiles.py, docs/advanced/p2p-weight-transfer.md; SGLang at v0.5.22: python/sglang/srt/entrypoints/http_server.py, python/sglang/srt/managers/io_struct.py (PauseGenerationReqInput), python/sglang/srt/managers/scheduler_components/weight_updater.py, python/sglang/srt/constants.py, python/sglang/srt/arg_groups/fields/exec_.py, python/sglang/srt/arg_groups/choices.py, python/sglang/srt/arg_groups/attention_hook.py, python/sglang/srt/layers/logprob_processor.py, docs/docs/advanced_features/sglang_for_rl.mdx; Miles issues #860, #1485, #3277, #3714; RadixArk and LMSYS posts: lmsys.org/blog/2025-11-19-miles and lmsys.org/blog/2026-08-18-miles-v0-1. Miles at 08752a12: miles/backends/fsdp_utils/actor.py, miles/true_on_policy/schema.py, examples/infra_features/true_on_policy/run_simple.py and run_simple_amd_triton.py. capture/gpu/miles_grpo.py, capture/gpu/miles_summary.py, capture/gpu/out-miles/plain-excerpt.log, capture/gpu/out-miles/plain-48-excerpt.log, capture/gpu/out-miles/plain-48-s2-excerpt.log, capture/gpu/out-miles/plain-48-s3-excerpt.log, capture/gpu/out-miles/plain-48-thermostat.log, capture/gpu/out-miles/true-on-policy-error.log, capture/gpu/summary/miles-gb10.json. capture/gpu/out-miles/true-on-policy-fa3-error.log, capture/gpu/incidents/gb10-boot-list.txt

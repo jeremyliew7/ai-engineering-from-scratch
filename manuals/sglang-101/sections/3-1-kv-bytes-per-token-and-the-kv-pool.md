@@ -42,7 +42,7 @@ The same arithmetic on public model configs gives these costs:
 | Llama-3.1-70B | GQA, 80 layers, 8 KV heads | 320 KiB | 40 KiB with 8-way tensor parallelism |
 | DeepSeek-V3 | MLA, 61 layers, latent 512 plus 64 | 68.6 KiB | 68.6 KiB on every GPU |
 
-Two results surprise most people. A 0.6B model costs almost as much per token as an 8B model. The layer count and the KV heads decide the cost, and the parameter count does not. A 100,000-token conversation on Llama-3.1-8B holds 12.5 GiB of KV, which is close to the size of the weights.
+Two results surprise most people. A 0.6B model costs almost as much per token as an 8B model. The layer count and the KV heads decide the cost, and the parameter count does not. A 100,000-token conversation on Llama-3.1-8B holds 12.2 GiB of KV, which is close to the size of the weights.
 
 **Multi-head latent attention (MLA):** DeepSeek's attention, which stores one compressed latent per token instead of separate keys and values per head. MLA is small per token, but every tensor-parallel rank stores the full latent {{code}}. Add GPUs with tensor parallelism and you do not add tokens. [Section 6.1](#s-tp-size-dp-size-and-attn-dp-size) shows how data-parallel attention answers that problem.
 
@@ -74,7 +74,7 @@ caption: Read top to bottom. Each row is a ReqToTokenPool entry, and the strip b
 
 ## The cache is the pool
 
-SGLang has no separate setting for cache size. The SGLang paper states the design directly: "we let the cached tokens and the currently running requests share the same memory pool" {{paper}}. A cached prefix is KV that no running request locks right now. When a new request needs room, SGLang evicts prefixes that no request locks, from the same pool.
+SGLang has no separate setting for cache size. The SGLang paper makes this a design choice: cached tokens and running requests use one memory pool {{paper}}. A cached prefix is KV that no running request locks right now. When a new request needs room, SGLang evicts prefixes that no request locks, from the same pool.
 
 This is why the startup log reports one number, `max_total_num_tokens`, and not two. On our Mac with `--mem-fraction-static 0.4`, that number was 181,574 tokens. The model allows a context of 40,960 tokens. So the pool holds four full-length conversations, or about 180 conversations of 1,000 tokens each. Running requests and cached prefixes compete for those same slots.
 
@@ -84,7 +84,11 @@ Size a deployment from `max_total_num_tokens`, not from free memory. Multiply yo
 
 The two levers that change the number are the memory fraction in [section 3.2](#s-mem-fraction-static-and-startup-sizing) and the KV data type. `--kv-cache-dtype` defaults to `auto`, which keeps the model data type unless the checkpoint asks for FP8 {{code}}. FP8 halves the bytes per token.
 
-A field report shows the size of that lever. Cloudflare reported that FP8 KV raised the context held in memory for Kimi K2.6 from about 686,000 to about 1.37 million tokens {{field Cloudflare 2026-08}}. The same report measured a few percent less throughput per request at low concurrency. At concurrency 64, the BF16 configuration ran out of memory, and the FP8 configuration reached 2,192 tokens per second. You trade a little speed per token for twice the users. Read the [Cloudflare post](https://blog.cloudflare.com/smaller-faster-safer-models/) for their accuracy checks before you copy the change.
+A field report shows the size of that lever. Cloudflare reported that FP8 KV raised the context held in memory for Kimi K2.6 from about 686,000 to about 1.37 million tokens {{field Cloudflare 2026-08}}. The same report measured a few percent less throughput per request at low concurrency. At concurrency 64, the BF16 configuration ran out of memory, and the FP8 configuration reached 2,192 tokens per second. In that report, FP8 KV traded a little speed per token for twice the users.
+
+Our own FP8 runs changed the weights and the KV cache together, and they were faster per user. On the L4 they gave 24.5 against 13.4 tokens per second at 1 user, as [section 4.3](#s-quantization) shows. Read the [Cloudflare post](https://blog.cloudflare.com/smaller-faster-safer-models/) for their accuracy checks before you copy the change.
+
+The [Inside an LLM Serving GPU](https://aiengineeringfromscratch.com/inside-an-llm-serving-gpu?users=64) machine draws the KV pool as cells on the six GDDR6 packages of an L4. This link opens the BF16 run at 64 users: the 24,094-token pool holds 37 requests of 640 tokens, and the other 27 wait. Switch the weights and the KV cache to FP8 to see the pool grow to 142,369 tokens.
 
 ## What to measure
 
@@ -102,4 +106,4 @@ The lesson on [inference optimization](phases/10-llms-from-scratch/12-inference-
 - Try FP8 KV before you buy more GPUs, and check accuracy on your data.
 ```
 
-Sources: python/sglang/srt/model_executor/pool_configurator.py (_compute_cell_size, calculate_pool_sizes), python/sglang/srt/mem_cache/memory_pool.py (ReqToTokenPool), python/sglang/srt/mem_cache/allocator/token.py (TokenToKVPoolAllocator), python/sglang/srt/hardware_backend/mlx/model_runner.py (_compute_pool_size), python/sglang/srt/arg_groups/fields/model.py (kv_cache_dtype) at v0.5.22, capture/out/server-default.log, the SGLang paper (arXiv 2312.07104), the Cloudflare report of 2026-08-03.
+Sources: python/sglang/srt/model_executor/pool_configurator.py (_compute_cell_size, calculate_pool_sizes), python/sglang/srt/mem_cache/memory_pool.py (ReqToTokenPool), python/sglang/srt/mem_cache/allocator/token.py (TokenToKVPoolAllocator), python/sglang/srt/hardware_backend/mlx/model_runner.py (_compute_pool_size), python/sglang/srt/arg_groups/fields/model.py (kv_cache_dtype) at v0.5.22, capture/out/server-default.log, the SGLang paper (arXiv 2312.07104), the Cloudflare report of 2026-08-03, capture/gpu/out-l4/server-load-default.log and capture/gpu/out-l4/server-load-fp8.log for the L4 pools.

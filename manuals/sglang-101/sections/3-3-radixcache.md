@@ -73,7 +73,7 @@ note: Two lines from the run with a 4,096-token shared prompt. Timestamps are cu
 … Prefill batch, #new-seq: 2, #new-token: 4096, #cached-token: 0, token usage: 0.74, #running-req: 2, #queue-req: 0, #pending-token: 1431, cuda graph: True, input throughput (token/s): 1634.70
 ```
 
-The L4 prefills about 1,600 tokens per second. Each 4,096-token batch costs about 2.5 seconds, and without the tree every request pays for its full prompt.
+In this run the L4 prefilled about 1,600 tokens per second, on a card that was throttling. Each 4,096-token batch cost about 2.5 seconds, and without the tree every request paid for its full prompt.
 
 ```figure
 id: fig-3-3c
@@ -89,11 +89,13 @@ caption: Median TTFT against the shared prompt length, three seeds per point, on
 | 1,024 | 462 ms | 2,202 ms | 105.76 | 70.15 |
 | 4,096 | 479 ms | 14,706 ms | 88.87 | 20.80 |
 
-**We measured** a 30.7 times shorter median wait and 4.3 times the throughput at 4,096 shared tokens. With no shared prompt, the median TTFT differed by 9 percent and the throughput was the same, so the tree cost almost nothing. The card was hot during the longest run without the cache, with a thermal throttle flag in 62 percent of its samples. That run would be a little faster on a cool card, but not 30 times faster.
+The median SM clock was 1,440 MHz with the cache and 930 MHz without it at 4,096 shared tokens. Every seed of the run without the cache stayed under our floor of 1,000 MHz.
 
-The same sweep on the GB10 with `Qwen/Qwen3-30B-A3B-Instruct-2507` gave a smaller factor. At 4,096 shared tokens, the median TTFT was 589 ms with the tree and 5,208 ms without it, 8.8 times. The output rate was 120.66 against 49.73 tok/s. The server without the tree ran a day after the other one.
+**We measured** a 30.7 times shorter median wait and 4.3 times the throughput at 4,096 shared tokens. Treat both factors as upper bounds. The run without the cache had a thermal throttle flag in 62 percent of its samples and a 35 percent lower clock. A cool card would shrink the factor, but a 35 percent clock gap cannot explain a factor of 30. With no shared prompt, the median TTFT differed by 8 percent, inside the seed spread, and the throughput was the same.
 
-Our reading is that prefill was cheaper on the GB10. That model activates about 3 billion parameters per token, so each repeated prompt cost less to compute again. The tree saves the prefill that the workload repeats, and a model with cheap prefill has less of it to save.
+The same sweep on the GB10 with `Qwen/Qwen3-30B-A3B-Instruct-2507` gave a smaller factor. At 4,096 shared tokens, the median TTFT was 589 ms with the tree and 5,208 ms without it, 8.8 times. The output rate was 120.66 against 49.73 tok/s. The server without the tree ran a day after the other one. It ran at a median clock of 2,376 MHz, with a throttle flag in 37 percent of its samples. The server with the tree ran at 2,496 MHz.
+
+Our hypothesis for these two cards is that prefill was cheaper on the GB10. That model activates about 3 billion parameters per token, so each repeated prompt cost less to compute again. Two confounds remain: the throttled L4 run without the cache inflates the L4 factor, and the GB10 pair ran on two days at different clocks.
 
 ## The tree
 
@@ -115,7 +117,7 @@ id: fig-3-3b
 kind: tree
 title: two groups of the shared-prefix benchmark in one tree
 claim: Two running requests share one system-prompt node, and the tree splits exactly where their questions start.
-caption: Read from the root down. Numbers on nodes are lock counts while two requests of group 1 run. Mechanism from RadixCache at v0.5.22, token counts from the benchmark settings in capture/out/bench-shared-prefix.txt.
+caption: Read from the root down. Numbers on nodes are lock counts while two requests of group 1 run. Mechanism from RadixCache at v0.5.22, token counts from the settings of our shared-prefix benchmark.
 ```
 
 ## Which tree you get at v0.5.22
@@ -143,7 +145,7 @@ The scheduler also avoids a waste inside one round. When several waiting request
 
 ## Our position: leave the radix cache on
 
-The cache costs almost nothing when prompts do not repeat. Cached tokens live in the same pool as running requests, and eviction frees them on demand. We know of one reason to turn it off: to test whether a wrong answer comes from reused KV. Even then, try `--kv-canary log` first, which checks KV slots for corruption while the cache stays on {{code}}.
+In our runs without a shared prompt, on the L4 and on the GB10, the cache cost nothing measurable. We did not test its cost under heavy eviction. Cached tokens live in the same pool as running requests, and eviction frees them on demand. We know of one reason to turn it off: to test whether a wrong answer comes from reused KV. Even then, try `--kv-canary log` first, which checks KV slots for corruption while the cache stays on {{code}}.
 
 Then measure the hit rate together with every other feature you add. Issue #32459 is the warning {{issue #32459}}. A team that replayed multi-turn agent traffic saw a deep-prompt hit rate of 97 percent without speculative decoding, and 40 to 53 percent with EAGLE. Input throughput fell from 43,981 to 12,881 tokens per second, with no error in the logs. The candidate cause was the extra KV that speculative decoding reserves, which forced the tree to evict cached prompts.
 

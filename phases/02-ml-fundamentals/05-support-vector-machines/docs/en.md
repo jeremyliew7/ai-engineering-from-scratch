@@ -340,7 +340,7 @@ print(f"Support vectors: {clf['svm'].n_support_}")
 
 Important: always scale your features before training an SVM. SVMs are sensitive to feature magnitudes because the margin depends on $\lVert w \rVert$, and unscaled features distort the geometry.
 
-For large datasets, use `LinearSVC` (primal formulation, $O(n)$ per epoch) instead of `SVC` (dual formulation, $O(n^2)$ to $O(n^3){}$):
+For large datasets, use `LinearSVC` (primal formulation, $O(n \cdot d)$ per epoch, linear in $n$) instead of `SVC` (dual formulation, $O(n^2)$ to $O(n^3){}$):
 
 ```python
 from sklearn.svm import LinearSVC

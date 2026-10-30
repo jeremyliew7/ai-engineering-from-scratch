@@ -2,6 +2,7 @@ const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const { stampCards } = require('../lib/og-cards');
+const { nestedPages } = require('./clean-urls');
 
 const HUB_DIRS = ['hubs/glossary', 'hubs/phase'];
 
@@ -46,6 +47,10 @@ function versionSite(siteRoot = __dirname) {
     const source = fs.readFileSync(filename, 'utf8');
     return { filename, source, output: stampCards(versionHtml(source, siteRoot, versions), cards) };
   });
+  for (const filename of nestedPages(siteRoot)) {
+    const source = fs.readFileSync(filename, 'utf8');
+    outputs.push({ filename, source, output: stampCards(versionHtml(source, siteRoot, versions), cards) });
+  }
   for (const dir of HUB_DIRS) {
     const folder = path.join(siteRoot, dir);
     if (!fs.existsSync(folder)) continue;

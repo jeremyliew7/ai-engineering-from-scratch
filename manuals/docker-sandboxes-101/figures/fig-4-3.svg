@@ -62,5 +62,5 @@
   <text x="531" y="364.45" font-size="11.5" text-anchor="middle" font-weight="700">sbx kit add hello-mixin</text>
   <text x="531" y="381.55" font-size="11" text-anchor="middle" class="m-serif" fill="var(--m-ink-soft, #4a4a4a)">refused: the kit</text>
   <text x="531" y="396.55" font-size="11" text-anchor="middle" class="m-serif" fill="var(--m-ink-soft, #4a4a4a)">declares files</text>
-  <text x="20" y="440" font-size="11" class="m-serif" fill="var(--m-ink-soft, #4a4a4a)">Dashed boxes come from the help text and were not run. Every solid box is in capture/out/12-*.</text>
+  <text x="20" y="440" font-size="11" class="m-serif" fill="var(--m-ink-soft, #4a4a4a)">Dashed boxes come from the help text and were not run. Every solid box was captured.</text>
 </svg>

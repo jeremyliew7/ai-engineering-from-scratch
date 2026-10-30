@@ -18,7 +18,7 @@ Governance narrows and never widens. When a policy is active, only organization 
 label: the narrowing rule
 source: help-sbx sbx create --deny-network
 ---
-"Safe under centralized governance because a local deny can only narrow, never widen, egress."
+A local deny is safe under central governance, because it can only make egress narrower, never wider.
 ```
 
 A local deny even beats an organization approval requirement, so the request is blocked and no prompt appears {{docs-sbx Policy concepts}}.
@@ -64,7 +64,7 @@ note: The JSON form only. The text form prints "No policy profiles found".
 }
 ```
 
-No `Governance: Managed by <org>` line appears, and the docs name that line as the test for an active policy {{docs-sbx Local audit logs}}. Every `policy check` in this capture reports `"governance": {"active": false}` (capture/out/09-check-verbose.json). **Profile:** a named group of organization policies that a developer assigns with `--profile` at creation, listed by `sbx policy profile ls` {{help-sbx sbx policy profile ls}}. When no rule matches and no organization governs the machine, the proxy asks for approval. Its 403 body names `sbx policy approval ls` (capture/out/09-blocked.txt), a command the v0.47.0 help tree does not list ([conflict C16](#s-ref-sources-and-the-conflicts-register)).
+No `Governance: Managed by <org>` line appears, and the docs name that line as the test for an active policy {{docs-sbx Local audit logs}}. Every `policy check` in this capture reports `"governance": {"active": false}` ([the capture](manuals/docker-sandboxes-101/capture/out/09-check-verbose.json)). **Profile:** a named group of organization policies that a developer assigns with `--profile` at creation, listed by `sbx policy profile ls` {{help-sbx sbx policy profile ls}}. When no rule matches and no organization governs the machine, the proxy asks for approval. Its 403 body names `sbx policy approval ls` ([the capture](manuals/docker-sandboxes-101/capture/out/09-blocked.txt)), a command the v0.47.0 help tree does not list ([conflict C16](#s-ref-sources-and-the-conflicts-register)).
 
 ## The audit record
 

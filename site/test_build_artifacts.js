@@ -463,7 +463,7 @@ function writeMarkdown(file, { name, description, version }) {
 test('shared site asset families use the expected cache keys on every page', () => {
   const release = '20260822a';
   const styleRelease = '20261015a';
-  const navigationRelease = '20261018a';
+  const navigationRelease = '20261021a';
   const narrationRelease = '20260829a';
   const homepageRelease = '20261015a';
   const pages = [
@@ -1801,8 +1801,9 @@ test('lesson reader keeps learning-path context and renders a copyable full-dept
   assert.match(lessonHtml, /Run from the repository root, the folder containing README\.md/);
   assert.match(lessonHtml, /Run copied commands from the repository root, the directory containing README\.md and phases\//);
   assert.doesNotMatch(lessonHtml, /shell is anywhere inside the repository/);
-  assert.match(lessonHtml, /inferLearningPath\(lessonPath\)/);
-  assert.match(lessonHtml, /preferredIds = \['agent-skills', 'model-context-protocol'\]/);
+  assert.doesNotMatch(lessonHtml, /inferLearningPath/);
+  assert.match(lessonHtml, /\? findLearningPath\(requestedLearningPathId\)/);
+  assert.match(lessonHtml, /'">Phase view<\/a><\/div>'/);
   assert.match(lessonHtml, /A code fence is not automatically a runnable program/);
   assert.match(lessonHtml, /var fetchOptions = localPreview \? \{ cache: 'no-store' \} : undefined/);
   assert.match(lessonHtml, /fetch\(primary, fetchOptions\)/);

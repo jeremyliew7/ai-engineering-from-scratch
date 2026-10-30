@@ -42,7 +42,7 @@ Failure mode: critics grow with N agents (input includes all actions). Does not 
 
 ### QMIX (2018) — value decomposition
 
-Cooperative only. Global reward is the sum of a monotone function of per-agent Q-values:
+Cooperative only. The joint action-value `Q_tot` is a monotone mixing function of per-agent Q-values:
 
 ```math
 Q_{\text{tot}}(\tau, a) = f\big(Q_1(\tau_1, a_1), \ldots, Q_n(\tau_n, a_n)\big), \quad \frac{\partial f}{\partial Q_i} \ge 0

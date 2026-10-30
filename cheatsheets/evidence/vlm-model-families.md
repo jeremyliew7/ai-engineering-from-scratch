@@ -6,8 +6,8 @@ Abbreviations: P = phases/12-multimodal-ai. L05 = P/05-llava-visual-instruction-
 - Vision to LLM: LLaVA 2-layer MLP with GELU L05/d:37. OneVision same projector L05/d:95. Qwen2-VL MLP on merged patch tokens L09/d:47. InternVL3 no alignment pretraining, no projector freezing stage L10/d:44.
 - Recipe: post-hoc list (LLaVA, Qwen-VL) L10/d:19, L10/c:73. Native pretraining L10/d:37, L10/c:73.
 - High resolution: AnyRes 336 crops plus thumbnail L05/d:89. AnyRes-9 and AnyRes-4 with 384 tiles L08/d:37. Native res divisible by 28 L09/d:45. ViR tiers L10/d:62-64.
-- Video: per-frame concat L05/d:106. 32 frames, 81 tokens L08/d:39. Dynamic FPS and `<time>` tokens L09/d:56-57. 5% video-text L10/d:42.
-- Visual tokens: 576 and 2880 L05/d:101. 3000-4000 per sample L08/d:35. Budget scales with input L08/d:83. 256, 576, 2048+ L10/d:64.
+- Video: per-frame concat L05/d:106. 32 frames, 196 tokens L08/d:39. Dynamic FPS and absolute-time M-RoPE L09/d:56-57. 5% video-text L10/d:42.
+- Visual tokens: 576 and 2880 L05/d:101. 6000-9000 per sample L08/d:35. Budget scales with input L08/d:83. 256, 576, 2048+ L10/d:64.
 - Training: two stages L05/d:53-61. Stages SI, OV, TT L08/d:45-49. Stages emphasize OCR, grounding, agent behavior L09/d:3. Single stage then instruction tuning L10/d:46.
 - Swap the LLM: retrain the projector L05/d:78. Post-hoc retrains only the adapter, native gives up the option L10/d:90. Base-LLM swap impossible for native L10/c:72.
 
@@ -22,7 +22,7 @@ Abbreviations: P = phases/12-multimodal-ai. L05 = P/05-llava-visual-instruction-
 ## Qwen-VL lineage (flow, 5 steps)
 1. Qwen-VL 448 res, grounding as text, Q-Former with 256 queries: L09/d:33-36, L09/c:168.
 2. Qwen2-VL M-RoPE, native dynamic resolution, MLP projector: L09/d:41-47, L09/c:169.
-3. Qwen2.5-VL dynamic FPS, absolute time tokens, window attention: L09/d:52-58.
+3. Qwen2.5-VL dynamic FPS, absolute-time M-RoPE, window attention: L09/d:52-58.
 4. JSON tool calls, ScreenSpot 55% to 84%: L09/d:59, 112.
 5. Qwen3-VL Qwen3 base, thinking mode, OCR, ViT and M-RoPE stay: L09/d:66, L09/c:171.
 
@@ -60,7 +60,7 @@ Abbreviations: P = phases/12-multimodal-ai. L05 = P/05-llava-visual-instruction-
 - 1344x1344 at 4x4 is 9216 + 576 ≈ 9800: L06/d:58.
 - 1120x672 is 40x24 merged patches, 960 tokens: L09/d:45.
 - AnyRes-9, 2x2 pool, 9 * 182 + 182 = 1820: L08/d:37.
-- 32 * 81 = 2592: L08/d:39.
+- 32 * 196 = 6272: L08/d:39.
 - fps_max = B / (T * tokens_per_frame): L09/d:92.
 - 60 s at 4 FPS with 81 tokens per frame = 19440: L09/d:97.
 
@@ -77,7 +77,7 @@ Abbreviations: P = phases/12-multimodal-ai. L05 = P/05-llava-visual-instruction-
 - image_tokens=576: L05/c:116.
 - MRoPEConfig base 10000.0: L09/c:24.
 - Qwen2-VL video 1-2 FPS default, any frame count: L09/d:48.
-- OneVision budget = 4096: L08/c:125.
+- OneVision toy planner budget = 4096: L08/c:125.
 - Dynamic-FPS budget = 32768, 81 tokens after 3x pool: L09/c:124, 132.
 - dvd_throughput llm_tokens 128: L10/c:52-53.
 

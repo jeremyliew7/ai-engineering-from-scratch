@@ -43,7 +43,7 @@ caption: Left, each confirmed claim with the capture file that shows it, coloure
 
 ## sbx diagnose, the only self-check
 
-**sbx diagnose:** the one command that checks an installation, in the four groups that `capture/out/02-diagnose.txt` shows: Installation, Platform, Storage, and Connection. It takes `--json`, `--output github-issue` for a report to paste into an issue, and `--upload` to send diagnostics to Docker support {{help-sbx sbx diagnose}}.
+**sbx diagnose:** the one command that checks an installation, in the four groups that [the captured output](manuals/docker-sandboxes-101/capture/out/02-diagnose.txt) shows: Installation, Platform, Storage, and Connection. It takes `--json`, `--output github-issue` for a report to paste into an issue, and `--upload` to send diagnostics to Docker support {{help-sbx sbx diagnose}}.
 
 ```listing
 title: the platform and connection checks on the recording host
@@ -71,7 +71,7 @@ All 13 checks passed, and the JSON form in `02-diagnose.json` carries the same r
 
 ## kit-tck, not run in this edition
 
-**kit-tck:** the conformance suite of the Sandbox Kit Specification v3, with two independent halves, one for a published kit artifact and one for a runtime. The conformance page of the specification repository describes both (research/sources/kit-spec-extras.md). `kit-tck validate <reference>` judges a published artifact against the publishing and OCI layout rules, and the BuildKit frontend runs the same checks before it exports. `kit-tck runtime --adapter <path>` drives an adapter, an executable with verbs such as `capabilities`, `create`, `exec`, `stop`, `start`, `recreate`, and `rm`.
+**kit-tck:** the conformance suite of the Sandbox Kit Specification v3, with two independent halves, one for a published kit artifact and one for a runtime. The conformance page of the specification repository describes both ([our source record](manuals/docker-sandboxes-101/research/sources/kit-spec-extras.md)). `kit-tck validate <reference>` judges a published artifact against the publishing and OCI layout rules, and the BuildKit frontend runs the same checks before it exports. `kit-tck runtime --adapter <path>` drives an adapter, an executable with verbs such as `capabilities`, `create`, `exec`, `stop`, `start`, `recreate`, and `rm`.
 
 The suite judges what the runtime does through those verbs. An adapter exits 2 when it refuses a request by policy, and any other non-zero code is a failure. A runtime that cannot provide a required capability must therefore refuse the kit.
 
@@ -94,10 +94,10 @@ This edition did not run it. The capture kit built a v3 artifact and pushed it t
 
 ## The agent regression check
 
-For agent runs, the planned check is `docker-agent sessions diff --fail-on-divergence`, which compares two recorded sessions "over the sequence of tool calls, not over the assistant's prose" and stops at the first divergence {{help-agent docker-agent sessions diff}}. The capture kit ran it on recorded sessions (`21-sessions-diff.txt`). Two replays of one run are identical across five turns, and a run that called `shell` first diverges at turn 0 and exits 1. A relative reference such as `-1` needs `--` before it, or the parser reads it as a flag. [The sessions section](#s-session-db-sessions-diff-and-eval) explains the session store.
+For agent runs, the planned check is `docker-agent sessions diff --fail-on-divergence`, which compares the tool calls of two recorded sessions, not the prose of the assistant {{help-agent docker-agent sessions diff}}. It stops at the first divergence. The capture kit ran it on recorded sessions (`21-sessions-diff.txt`). Two replays of one run are identical across five turns, and a run that called `shell` first diverges at turn 0 and exits 1. A relative reference such as `-1` needs `--` before it, or the parser reads it as a flag. [The sessions section](#s-session-db-sessions-diff-and-eval) explains the session store.
 
 ```takeaways
-- Treat a claim as confirmed only when a file under `capture/out/` shows the behaviour.
+- Treat a claim as confirmed only when [a captured run](manuals/docker-sandboxes-101/capture/out) shows the behaviour.
 - Run `sbx diagnose` first and attach `--output github-issue` to any report.
 - Run `kit-tck validate` on a kit you publish, and read its findings by the specification section they name.
 - Keep two recorded sessions per agent and compare them with `sessions diff --fail-on-divergence`.

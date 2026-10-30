@@ -12,20 +12,20 @@ When you finish this section, you can read every top-level field of that record 
 title: the recorded command
 source: capture/out/00-commands.txt
 lang: text
-note: The time is cut, because it changes with every recording and stays between 7 and 9 s (capture/README.md).
+note: The time is cut, because it changes with every recording and stays between 7 and 9 s, as [the kit notes](manuals/reverse-engineering-101/capture/README.md) record.
 ---
 $ rea function fixtures/ledger-arm64-O1 _percent_change --provider ghidra --format json
 [exit 0] (… s) -> 06-function-percent-change.json
 ```
 
-`function` takes a path and a procedure, and it runs the MCP operation `analyze_function` with `{ procedure }` as its parameters. `--provider ghidra` names the engine, and `--format json` and `--filter-output` are read at the executable boundary before the command runs. Without `--format`, the terminal output is TOON, and exit `0` means "The operation completed. Its result may include partial evidence, warnings or unresolved questions." {{cli Output and exit status}}. [Figure](#fig-1-2) follows the call through the system.
+`function` takes a path and a procedure, and it runs the MCP operation `analyze_function` with `{ procedure }` as its parameters. `--provider ghidra` names the engine, and `--format json` and `--filter-output` are read at the executable boundary before the command runs. Without `--format`, the terminal output is TOON, and exit `0` means that the operation finished. The result can still hold partial evidence, warnings, or open questions {{cli Output and exit status}}. [Figure](#fig-1-2) follows the call through the system.
 
 ```figure
 id: fig-1-2
 kind: sequence
 title: one rea function run, step by step
 claim: One command opens the file, binds Ghidra, launches a headless JVM on a private copy, asks one question on a socket, and returns one Evidence record.
-caption: Read top to bottom, one numbered row per step. Rows 1 and 12 come from capture/out/00-commands.txt, the names and the digest from 06-function-percent-change.json, and the file copy name from 05-analyze-arm64-O1.json. The deadlines come from the source at the tag.
+caption: Read top to bottom, one numbered row per step. Rows 1 and 12 come from the command record, and the names and the digest from the function capture. The file copy name comes from the overview capture. The deadlines come from the source at the tag.
 ```
 
 ## From the command to the bridge
@@ -33,7 +33,7 @@ caption: Read top to bottom, one numbered row per step. Rows 1 and 12 come from 
 1. The session parses the Mach-O header, reads the architecture, and hashes the file. The record's `subject` carries the result: `mach-o`, `arm64`, and the SHA-256 that `00-fixtures.txt` lists for `ledger-arm64-O1`.
 2. The registry selects `ghidra`, because the command asked for it, and records `selection_source: "request"`.
 3. The provider builds the analysis profile, a list of versioned contract names such as `function_body_evidence: "complete-inclusive-ranges-v1"`, and hashes it. The digest `3fc72c9b…` in the record is this hash.
-4. The client makes a private runtime root and allocates `bridge.sock`. It copies the file as `target-<sha256[0:12]>.bin` while hashing it again. Then it launches `java` with `ghidra.Ghidra ghidra.app.util.headless.AnalyzeHeadless`, `-import`, `-readOnly`, and `-deleteProject`. The copy is `target-01b5d08b08fb.bin`, and the overview record shows that name as its `document` (capture/out/05-analyze-arm64-O1.json). The startup deadline is 330,000 ms.
+4. The client makes a private runtime root and allocates `bridge.sock`. It copies the file as `target-<sha256[0:12]>.bin` while hashing it again. Then it launches `java` with `ghidra.Ghidra ghidra.app.util.headless.AnalyzeHeadless`, `-import`, `-readOnly`, and `-deleteProject`. The copy is `target-01b5d08b08fb.bin`, and the overview record shows that name as its `document` ([the capture](manuals/reverse-engineering-101/capture/out/05-analyze-arm64-O1.json)). The startup deadline is 330,000 ms.
 5. The client sends `ping`. It accepts the session only when `run_id`, the token, the profile digest, the target SHA-256, and `analysis_complete` all match.
 6. The client writes one JSON line that asks for `analyze_function`. Ghidra runs the analysis and writes one JSON line back.
 7. rea adds the operation's limitation sentences to the answer and stores the result as one Evidence record.
@@ -103,7 +103,7 @@ note: Cut to five of the 25 parameters and the digest.
 
 `raw_result` holds the provider-native dossier under `value` with its own empty `limitations`, and `normalized_result` holds the same dossier as the canonical result. `confidence` is `observed` and `authority` is `shipped-artifact`, the defaults for a static read of the file on disk. `environment` is `null`, because nothing ran.
 
-`limitations` has ten strings: four that every Ghidra operation carries, five for `analyze_function`, and one for macOS about the native decompiler (capture/out/02-capabilities.json, 06-function-percent-change.json). `locations` and `evidence_links` are empty. `relationship_coverage` has the status `complete`, and its one diagnostic says that only resolved Ghidra call references are returned. [Figure](#fig-1-3) lays the 16 fields out.
+`limitations` has ten strings: four that every Ghidra operation carries, five for `analyze_function`, and one for macOS about the native decompiler ([the captures](manuals/reverse-engineering-101/capture/out)). `locations` and `evidence_links` are empty. `relationship_coverage` has the status `complete`, and its one diagnostic says that only resolved Ghidra call references are returned. [Figure](#fig-1-3) lays the 16 fields out.
 
 ```figure
 id: fig-1-3
@@ -161,7 +161,7 @@ The outer `if` is your guard. The inner `if` is not in your source. `native_valu
 
 Both checks are correct, and one is redundant, and only the source tells you which. [Section 4.6](#s-analyze-function-and-pseudocode) and [the lifting lesson](phases/13-tools-and-protocols/34-lifting-to-pseudocode) go deeper.
 
-**References:** the dossier lists two incoming references. One is an `UNCONDITIONAL_CALL` from `0x1000006a0` inside the function Ghidra names `entry` at `0x1000005d0`, 368 bytes long. The other is a `DATA` reference from `0x100008118` with no owning procedure, inside the `__LINKEDIT` segment that the overview lists from `0x100008000` (capture/out/05-analyze-arm64-O1.json). The one outgoing reference is the `CONDITIONAL_JUMP` of `cbz`. `callers` names `entry`, and `callees` is empty, because the function calls nothing. `unresolved_calls` is empty, and `facet_availability` marks all eight facets of the dossier as available.
+**References:** the dossier lists two incoming references. One is an `UNCONDITIONAL_CALL` from `0x1000006a0` inside the function Ghidra names `entry` at `0x1000005d0`, 368 bytes long. The other is a `DATA` reference from `0x100008118` with no owning procedure, inside the `__LINKEDIT` segment that the overview lists from `0x100008000` ([the capture](manuals/reverse-engineering-101/capture/out/05-analyze-arm64-O1.json)). The one outgoing reference is the `CONDITIONAL_JUMP` of `cbz`. `callers` names `entry`, and `callees` is empty, because the function calls nothing. `unresolved_calls` is empty, and `facet_availability` marks all eight facets of the dossier as available.
 
 **Basic blocks:** three, at `0x100000500`, `0x100000504`, and `0x100000514`, with exclusive `end` values. The body range uses inclusive ends, as its contract name `complete-inclusive-ranges-v1` says. Keep the two conventions apart when you compare addresses.
 

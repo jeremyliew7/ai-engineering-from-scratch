@@ -48,7 +48,7 @@ Without `--cpus` and `--memory` a cloud sandbox gets 2 CPUs and 4 GiB {{help-sbx
 | `large` | 8 | 16384 MiB | $0.56 |
 | `xl` | 16 | 32768 MiB | $1.12 |
 
-The blog meters compute per second, and the docs confirm half of that: "Compute isn't billed while it is stopped." {{docs-sbx Use cloud sandboxes}} The $250 credit in the same blog is promotional. An account starts with 10 concurrent sandboxes, 50 stored sandboxes, 100 volumes, 100 secrets, and 3 images in preparation {{docs-sbx-api Account quotas}}.
+The blog meters compute per second, and the docs confirm half of that: a stopped sandbox is not billed for compute {{docs-sbx Use cloud sandboxes}}. The $250 credit in the same blog is promotional. An account starts with 10 concurrent sandboxes, 50 stored sandboxes, 100 volumes, 100 secrets, and 3 images in preparation {{docs-sbx-api Account quotas}}.
 
 ## sbx --cloud run and attach
 

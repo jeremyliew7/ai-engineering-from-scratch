@@ -98,6 +98,6 @@ The help text names the four safety modes on `serve a2a`, `serve chat`, and `ser
 | `help` | Help about any command {{help-agent docker-agent}} | its page is not in the vendored tree | nothing | none |
 | `version` | Print the version and the commit hash {{help-agent docker-agent version}} | none | nothing | [§1.1](#s-sbx-and-docker-agent) |
 
-On the capture machine `docker-agent version` printed `v1.149.0` and `Commit: Homebrew` (research/sources/probes/docker-agent-version.txt).
+On the capture machine `docker-agent version` printed `v1.149.0` and `Commit: Homebrew` ([our source record](manuals/docker-sandboxes-101/research/sources/probes/docker-agent-version.txt)).
 
 Sources: research/sources/help-docker-agent.md (every `docker-agent` help page, docker-agent v1.149.0, Commit: Homebrew); research/sources/docs-docker-agent.md (page features/cli for `getting-started`, `--config-dir`, and `--data-dir`); research/sources/probes/docker-agent-version.txt, docker-agent-toolsets.txt; research/conflicts-register.md rows C48, C59, C60, C63, C64, C65, C66, C68, C75; manual.json (section files and ids)

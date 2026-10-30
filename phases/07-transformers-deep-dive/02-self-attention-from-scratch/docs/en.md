@@ -169,6 +169,10 @@ softmax-attention-scaling
 
 ## Build It
 
+```figure
+iso-machine {"machine":"self-attention"}
+```
+
 ### Step 1: Softmax from scratch
 
 Softmax converts raw logits into probabilities. Subtract the max for numerical stability.

@@ -119,7 +119,7 @@ from: phases/07-transformers-deep-dive/04-positional-encoding/docs/en.md, phases
 | Init std | 0.02 | Linear and Embedding weights |
 | Residual projection scale | 1 / sqrt(2 * num_layers) | out_proj and fc2 |
 | GPT-2 small d_model | 768 | 12 heads, 12 layers, about 124M |
-| KV bytes per token per layer | `2 * d_head * dtype_size` | per head, K and V |
+| KV bytes per token per layer | `2 * n_kv_heads * d_head * dtype_size` | all KV heads, K and V |
 | Compute optimal ratio | 20 | tokens per parameter |
 
 ## Troubleshooting

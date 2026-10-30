@@ -12,12 +12,12 @@ The sandbox product had four lives. The plan's timeline dates a container-based 
 label: the removal note
 source: docs-desktop 4.80.0
 ---
-"The experimental `docker sandbox` plugin has been removed. Migrate to `docker sbx`."
+Docker Desktop removed the experimental `docker sandbox` plugin. Move to `docker sbx`.
 ```
 
 No `docker sbx` command exists in any help tree, and the binary is `sbx` ([conflict C1](#s-ref-sources-and-the-conflicts-register)).
 
-The agent product had three names. It launched as cagent with a blog on 2025-09-18 {{blog 2025-09-18}}, and Desktop 4.49.0 bundled it on 2025-10-23. The Desktop notes for 4.49.0 now read "Docker Agent is now available through Docker Desktop." {{docs-desktop 4.49.0}}, under the current name. The agent docs say "In Docker Desktop versions 4.49 through 4.62, this feature was called cagent." {{docs-agent Installation}}, and the `docker agent` plugin arrived with v1.23.3 on 2026-02-16 {{rel-agent v1.23.3}}.
+The agent product had three names. It launched as cagent with a blog on 2025-09-18 {{blog 2025-09-18}}, and Desktop 4.49.0 bundled it on 2025-10-23. The Desktop notes for 4.49.0 now use the current name, Docker Agent {{docs-desktop 4.49.0}}. The agent docs say that Docker Desktop 4.49 to 4.62 called the feature cagent {{docs-agent Installation}}, and the `docker agent` plugin arrived with v1.23.3 on 2026-02-16 {{rel-agent v1.23.3}}.
 
 Version 1.23.4 restructured the commands three days later, and v1.30.0 finished the rename on 2026-03-09 {{rel-agent v1.30.0}}. The docs date Docker Agent in Desktop to 4.63, while the first release note that names it is 4.64.0 with v1.27.1 ([conflict C49](#s-ref-sources-and-the-conflicts-register)). Desktop 4.81.0 removed the deprecated `cagent` binary on 2026-07-06 {{docs-desktop 4.81.0}}. Desktop 4.94.0 bundles Docker Agent v1.144.0 {{docs-desktop 4.94.0}}, five releases behind the v1.149.0 binary this manual pins. Many Desktop notes state no bundled version at all ([conflict C50](#s-ref-sources-and-the-conflicts-register)).
 
@@ -82,7 +82,7 @@ Advanced Commands:
       --yolo                      Automatically approve all tool calls without prompting
 ```
 
-Beside them, the v0.47.0 tree in `capture/out/01-help-sbx.txt` groups `policy`, `secret`, `template`, and `mcp` under Management Commands, and `network` and `save` are gone. The v1.149.0 tree in `capture/out/01-help-docker-agent.txt` adds `setup`, `doctor`, `models`, `toolsets`, `sessions`, `debug`, `sandbox`, and `serve chat`, which [Part 5](#s-docker-agent-run-new-and-doctor) covers.
+Beside them, the v0.47.0 tree in [the captured sbx help](manuals/docker-sandboxes-101/capture/out/01-help-sbx.txt) groups `policy`, `secret`, `template`, and `mcp` under Management Commands, and `network` and `save` are gone. The v1.149.0 tree in [the captured docker-agent help](manuals/docker-sandboxes-101/capture/out/01-help-docker-agent.txt) adds `setup`, `doctor`, `models`, `toolsets`, `sessions`, `debug`, `sandbox`, and `serve chat`, which [Part 5](#s-docker-agent-run-new-and-doctor) covers.
 
 ## The command map
 
@@ -94,12 +94,12 @@ Beside them, the v0.47.0 tree in `capture/out/01-help-sbx.txt` groups `policy`, 
 | `--pull-template missing`, the default | plugin v0.12.0 | v0.21.0, 2026-03-31 | `--pull always`, `missing`, or `never`, default `always` |
 | `docker sandbox create cagent .` | plugin v0.12.0, blog 2026-03-11 | Desktop 4.80.0 | `sbx create docker-agent .`, and `cagent` remains an alias |
 | `docker sandbox network proxy S --allow-host api.example.com` | legacy docs, blog 2026-02-23 | Desktop 4.80.0 | `sbx policy allow network api.example.com --sandbox S` |
-| `--bypass-host`, `--bypass-cidr` | plugin v0.12.0 | Desktop 4.80.0 | no replacement in the v0.47.0 help, see `capture/out/09-bypass-grep.txt` |
+| `--bypass-host`, `--bypass-cidr` | plugin v0.12.0 | Desktop 4.80.0 | no replacement in the v0.47.0 help, see [the capture](manuals/docker-sandboxes-101/capture/out/09-bypass-grep.txt) |
 | `docker sandbox network log --json` | legacy docs | Desktop 4.80.0 | `sbx policy log S --json` |
 | `docker sandbox save S TAG` into host Docker | plugin v0.12.0, blog 2026-02-23 | Desktop 4.80.0 | `sbx template save S TAG -o FILE` into the sandbox runtime's own store |
 | `docker sandbox exec -d` | plugin v0.12.0 | sbx | `sbx exec -d` is "not supported" |
 | names with `_`, `+`, or `.` | plugin v0.12.0 | v0.43.0, 2026-09-15 | 2 to 63 characters, letters, digits, hyphens, periods, and no periods with `--cloud` |
-| a proxy set by hand at `host.docker.internal:3128` | blogs 2026-02-23 and 2026-05-26 | sbx | nothing: the daemon sets `gateway.docker.internal:3128`, see `capture/out/04-env.txt` |
+| a proxy set by hand at `host.docker.internal:3128` | blogs 2026-02-23 and 2026-05-26 | sbx | nothing: the daemon sets `gateway.docker.internal:3128`, see [the capture](manuals/docker-sandboxes-101/capture/out/04-env.txt) |
 | API keys in `~/.zshrc`, then restart Desktop | tutorials before 2026-07 | v0.35.0, 2026-07-10 | `sbx secret set SERVICE` or `sbx secret import` |
 | `sbx run claude --branch` | blog 2026-05-26, videos | v0.31.0, 2026-05-28 | `sbx run claude --clone` |
 | kit v1 grammar, `schemaVersion: "1"`, `network.allowedDomains` | blog 2026-08-03 | v2 on 2026-09-09, v3 on 2026-09-24 | v2 `spec.yaml` for `sbx kit`, v3 `kit.yaml` with `# syntax=docker/sandbox-kit:3` |
@@ -110,7 +110,7 @@ Beside them, the v0.47.0 tree in `capture/out/01-help-sbx.txt` groups `policy`, 
 | a relative `--command ./helper` secret source | docs before v0.46.0 | v0.46.0, 2026-09-28 | an absolute path outside writable sandbox mounts |
 | Windows 10 | early 2026 | v0.35.0, 2026-07-10 | Windows 11 with Windows Hypervisor Platform |
 | Toolkit gateway at `host.docker.internal:8811`, five manual steps | re:Invent blog, 2025-12-12 | v0.38.0, 2026-08-06 | `sbx mcp add` and `sbx mcp load`, the Toolkit gateway is separate |
-| "one sandbox per workspace" | blog 2026-03-11 | sbx names default to `<agent>-<workdir>` | `--name` for a second sandbox on one directory, see `capture/out/04-second-sandbox.txt` |
+| "one sandbox per workspace" | blog 2026-03-11 | sbx names default to `<agent>-<workdir>` | `--name` for a second sandbox on one directory, see [the capture](manuals/docker-sandboxes-101/capture/out/04-second-sandbox.txt) |
 | `cagent run agent.yaml`, `cagent new`, `cagent exec` | 2025 blogs and talks | v1.23.4, 2026-02-19, and Desktop 4.81.0 | `docker agent run`, `docker agent new`, `docker agent run --exec` |
 | `cagent push`, `cagent pull`, `cagent acp`, `api`, `mcp`, `a2a` | 2025 blogs | v1.23.4 | `docker agent share push` and `pull`, `docker agent serve acp`, `api`, `mcp`, `a2a` |
 | `cagent config`, `feedback`, `build`, `catalog` | 2025 to early 2026 | v1.23.4 | removed, and the catalog is the Hub namespace `agentcatalog/*` |
@@ -122,7 +122,7 @@ Beside them, the v0.47.0 tree in `capture/out/01-help-sbx.txt` groups `policy`, 
 | `docker cp` the agent binary into a sandbox, then `agent run dev-team.yaml` inside | blog 2026-03-11 | the `docker-agent` template | `sbx run docker-agent .` or `docker agent run --sandbox agent.yaml` |
 | `--yolo` | everywhere | still accepted | `--safety autonomous`, of which `--yolo` is the alias |
 | the eval judge is a paid Anthropic model | v1.32.4 help | v1.147.0, 2026-10-05 | default `openai/gpt-5.6-terra`, or any `provider/model` |
-| `--sandbox` "requires Docker Desktop with sandbox support" | v1.32.4 help | sbx | `--sbx` defaults to true, and `--sbx=false` has no target after Desktop 4.80.0 |
+| `--sandbox` needs Docker Desktop with sandbox support | v1.32.4 help | sbx | `--sbx` defaults to true, and `--sbx=false` has no target after Desktop 4.80.0 |
 | mcp-gateway v0.22.0 in the GitHub Action | the action's defaults | the repository is at v0.44.1 | pin the gateway version yourself |
 
 The rows restate the register's stale-advice list S1 to S30 and the plugin rows C107 to C112, which [the sources section](#s-ref-sources-and-the-conflicts-register) prints in full.
@@ -133,7 +133,7 @@ The rename did not touch the directories. `docker-agent --help` still defaults `
 
 The OCI annotation became `io.docker.agent.version` with the old name kept {{rel-agent v1.23.3}}. The Hub image moved from `docker/cagent` to `docker/docker-agent`, and the image keeps `cagent` as a symlink {{rel-agent v1.30.0}}. In `sbx`, `cagent` remains an alias of the `docker-agent` create subcommand {{help-sbx sbx create docker-agent}}.
 
-Sandbox state did not migrate. The plugin kept VM state under `~/.docker/sandboxes/vm/` and an image cache under `~/.docker/sandboxes/image-cache/`, as its own `reset` help says. `sbx` keeps its socket and log under `~/Library/Application Support/com.docker.sandboxes/sandboxes/sandboxd/` (capture/out/02-daemon-status.txt), and no page describes a migration ([conflict C17](#s-ref-sources-and-the-conflicts-register)). No capture lists the leftover directories.
+Sandbox state did not migrate. The plugin kept VM state under `~/.docker/sandboxes/vm/` and an image cache under `~/.docker/sandboxes/image-cache/`, as its own `reset` help says. `sbx` keeps its socket and log under `~/Library/Application Support/com.docker.sandboxes/sandboxes/sandboxd/` ([the capture](manuals/docker-sandboxes-101/capture/out/02-daemon-status.txt)), and no page describes a migration ([conflict C17](#s-ref-sources-and-the-conflicts-register)). No capture lists the leftover directories.
 
 On Desktop 4.94.0, `docker info` still lists the plugin as `sandbox v0.13.0` (`29-docker-plugins.txt`), and each of its commands prints the removal notice:
 

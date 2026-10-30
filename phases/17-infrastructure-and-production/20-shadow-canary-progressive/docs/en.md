@@ -77,7 +77,7 @@ If your stack requires redeploy to rollback, fix that before rolling.
 
 ### Metrics cadence
 
-Canary gates check every 5-15 minutes depending on traffic volume. 1% traffic with 10 req/min gives 50-150 data points per window — enough for latency but noisy for user feedback. 10% gives ~10x more. Progressions should pause long enough to accumulate enough samples at each step.
+Canary gates check every 5-15 minutes depending on traffic volume. 1% of 1,000 req/min (10 req/min to the canary) gives 50-150 data points per 5-15 minute window — enough for latency but noisy for user feedback. 10% gives ~10x more. Progressions should pause long enough to accumulate enough samples at each step.
 
 ### The A/B step is optional
 

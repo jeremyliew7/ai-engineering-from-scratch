@@ -4,7 +4,7 @@ SGLang 0.5.22, from one request on a laptop to a fleet of GPUs, with the judgmen
 
 ## What is in it
 
-- 28 sections in 7 parts, then six reference sections. Part 1 puts SGLang on one page. Part 2 follows one request through the three processes and the scheduler. Part 3 is the KV cache. Part 4 makes each forward pass fast, and Part 5 measures a server. Part 6 spreads one model over many GPUs, and Part 7 operates SGLang and closes with SGLang as the rollout engine of Miles.
+- 29 sections in 7 parts, then seven reference sections. Part 1 installs SGLang, checks the server, and follows one request through it. Part 2 follows one request through the three processes and the scheduler. Part 3 is the KV cache. Part 4 makes each forward pass fast, and Part 5 measures a server. Part 6 spreads one model over many GPUs, and Part 7 operates SGLang and closes with SGLang as the rollout engine of Miles.
 - Every section tells one story: the cost, the obvious fix and why it fails, what SGLang does, what to measure, our position on the default, and a real incident with its link.
 - Every number carries one of four labels: we measured, the code, a field report from engineers outside the SGLang team, or a team or vendor claim.
 - A cover plate, 63 figures drawn with the figure kit from the captures and the code, and charts plotted from the GPU runs.

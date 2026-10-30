@@ -14,7 +14,7 @@ A registry reference behaves like a file. `24-run-ref.txt` runs `localhost:15000
 
 ## --exec, --json, and --last
 
-**Headless run:** `run --exec`, which writes to stdout and opens no TUI. `--json` writes one JSON event per line, and `--last` prints only the final answer {{help-agent docker-agent run}}. The capture runs `capture/fixtures/agents/files.yaml` with the same two messages in each form.
+**Headless run:** `run --exec`, which writes to stdout and opens no TUI. `--json` writes one JSON event per line, and `--last` prints only the final answer {{help-agent docker-agent run}}. The capture runs [the files agent](manuals/docker-sandboxes-101/capture/fixtures/agents/files.yaml) with the same two messages in each form.
 
 ```listing
 title: run --exec --last with two messages
@@ -38,11 +38,11 @@ note: Lines 5, 13, and 24 of the file. The tool_call event is cut after the call
 {"agent_name": "root", "content": "The working directory contains 1 file: README.md (1 line).", "message_id": "<uuid>", "session_id": "<uuid>", "timestamp": "<ts>", "type": "agent_choice"}
 ```
 
-The other event types of the file include `team_info`, `toolset_info`, `tool_call_response`, `token_usage`, and `stream_stopped`. The second turn shows the limit of a headless run. The model asked for `shell` with `wc -l README.md`, and the runtime raised `tool_call_confirmation`. With no terminal to answer it, the tool result was "The user rejected the tool call." The model then used `read_file` (`18-transcript.txt`). [Permissions, --safety, and hooks](#s-permissions-safety-and-hooks) explains why that call asked.
+The other event types of the file include `team_info`, `toolset_info`, `tool_call_response`, `token_usage`, and `stream_stopped`. The second turn shows the limit of a headless run. The model asked for `shell` with `wc -l README.md`, and the runtime raised `tool_call_confirmation`. With no terminal to answer it, the tool result was "The user rejected the tool call." The model then used `read_file` ([the transcript](manuals/docker-sandboxes-101/capture/out/18-transcript.txt)). [Permissions, --safety, and hooks](#s-permissions-safety-and-hooks) explains why that call asked.
 
 ## The model in every recording
 
-The docs call `ai/qwen3` "the model Docker Agent reaches for by default" {{docs-agent Set Up a Model}}. With no Model Runner, `doctor` resolves `auto` to the 8B tag `ai/qwen3:latest` (`16-doctor.txt`). On the recording Mac, two pulls of that tag ended with a digest mismatch after the last 5.03 GB blob (`25-model-pull-latest.txt`). Every agent file of the kit therefore names `ai/qwen3:4b`, the 4B tag of the same repository. It is a thinking model, so it streams a few thousand reasoning tokens before each answer. `--exec` prints them, and the kit cuts them to one line such as `[... 299 lines of model reasoning cut by run.py ...]` (`18-run-exec.txt`).
+The docs call `ai/qwen3` the model that Docker Agent uses by default {{docs-agent Set Up a Model}}. With no Model Runner, `doctor` resolves `auto` to the 8B tag `ai/qwen3:latest` (`16-doctor.txt`). On the recording Mac, two pulls of that tag ended with a digest mismatch after the last 5.03 GB blob (`25-model-pull-latest.txt`). Every agent file of the kit therefore names `ai/qwen3:4b`, the 4B tag of the same repository. It is a thinking model, so it streams a few thousand reasoning tokens before each answer. `--exec` prints them, and the kit cuts them to one line such as `[... 299 lines of model reasoning cut by run.py ...]` (`18-run-exec.txt`).
 
 ## doctor and models
 
@@ -87,7 +87,7 @@ No issues found.
 [exit 0]
 ```
 
-With no runner, `auto` still names `dmr/ai/qwen3:latest`, and the issue line says why nothing can run. With the runner up, `auto` takes the one pulled model, as the provider page says: auto-selection "prefers a locally-installed model" {{docs-agent Docker Model Runner}}. `models list` printed one row, `dmr ai/qwen3:latest`, even with no daemon (`16-models.txt`). `setup` is the interactive fix. Its four paths are a provider key in `~/.config/cagent/.env`, a Model Runner pull, a custom OpenAI-compatible endpoint, and the Claude Code harness {{help-agent docker-agent setup}}.
+With no runner, `auto` still names `dmr/ai/qwen3:latest`, and the issue line says why nothing can run. With the runner up, `auto` takes the one pulled model, as the provider page says: auto-selection prefers a model that is installed locally {{docs-agent Docker Model Runner}}. `models list` printed one row, `dmr ai/qwen3:latest`, even with no daemon (`16-models.txt`). `setup` is the interactive fix. Its four paths are a provider key in `~/.config/cagent/.env`, a Model Runner pull, a custom OpenAI-compatible endpoint, and the Claude Code harness {{help-agent docker-agent setup}}.
 
 ## new
 

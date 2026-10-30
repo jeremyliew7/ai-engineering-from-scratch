@@ -41,7 +41,7 @@ from: phases/12-multimodal-ai/17-video-language-temporal-grounding/docs/en.md, p
 | Factor | Video-LLaMA | Video-LLaVA | Qwen2.5-VL |
 |---|---|---|---|
 | Frames | 16-frame clips at 2 FPS | 8 frames | Dynamic FPS |
-| Compressor | Video Q-former, 32 queries | MLP | TMRoPE per token |
+| Compressor | Video Q-former, 32 queries | MLP | time-aligned M-RoPE per token |
 | Time position | 1D temporal RoPE | Learned temporal embeddings | Absolute timestamp (t, h, w) |
 | Note | Audio branch, ImageBind | Shared image+video encoder | Best open 2025 |
 | Answer to "when" | "early in the clip" | 8-16 frame system | "at 4.2 seconds" |
@@ -168,7 +168,7 @@ from: phases/04-computer-vision/12-video-understanding/docs/en.md, phases/12-mul
 | Inflated model breaks batch norm | Activation scale grows | Divide by `time_kernel` |
 | Joint attention runtime balloons | Quadratic in `T*H*W` | Use divided attention |
 | Uniform sampling misses the action | Loses motion peaks | Use dynamic FPS with a max-frame cap |
-| Answer says "early in the clip" | No absolute time position | Use TMRoPE and JSON output |
+| Answer says "early in the clip" | No absolute time position | Use time-aligned M-RoPE and JSON output |
 | Context overflow on 2h video | 583k tokens at 1 FPS | Pool more or use VideoAgent |
 | Miscounts "how many X" | Counting hallucination | Report counting accuracy separately |
 
@@ -176,7 +176,7 @@ from: phases/04-computer-vision/12-video-understanding/docs/en.md, phases/12-mul
 type: qa
 from: phases/12-multimodal-ai/17-video-language-temporal-grounding/docs/en.md, phases/12-multimodal-ai/18-long-video-million-token/docs/en.md, phases/04-computer-vision/12-video-understanding/docs/en.md, phases/19-capstone-projects/12-video-understanding-pipeline/docs/en.md
 
-- **What does TMRoPE add?** Absolute time per token. It handles uneven dynamic FPS spacing.
+- **What does time-aligned M-RoPE add?** Absolute time per token. It handles uneven dynamic FPS spacing.
 - **Which output format?** Structured JSON with time and event fields.
 - **Which pooling?** 3x3 bilinear for most tasks. 6x6 for agent workflows.
 - **Which path for a 15-minute clip?** Open 72B with native context.

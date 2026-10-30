@@ -67,7 +67,7 @@ Abbreviations: P07 = phases/07-transformers-deep-dive, P19 = phases/19-capstone-
 - init std 0.02: P19/35-gpt-model-assembly/code/main.py:147, 151
 - 1 / sqrt(2 * num_layers): P19/35-gpt-model-assembly/docs/en.md:105
 - d_model 768, 12 heads, 12 layers, 124M: P19/35-gpt-model-assembly/code/main.py:28-30; docs/en.md:13
-- 2 * d_head * dtype_size: P07/12-kv-cache-flash-attention/docs/en.md:32
+- 2 * n_kv_heads * d_head * dtype_size: P07/12-kv-cache-flash-attention/docs/en.md:32
 - 20 tokens per parameter: P07/13-scaling-laws/docs/en.md:53
 
 ## Troubleshooting

@@ -178,3 +178,51 @@ test('HTTP redirects preserve selected projects, query encoding and clean-page c
   assert.equal(head.status, 200);
   assert.equal(await head.text(), '');
 });
+
+test('manual section pages are served at clean nested URLs and nested pages get clean links', async t => {
+  const root = path.join(__dirname, 'manual');
+  const existed = fs.existsSync(root);
+  const dir = path.join(root, 'manual-zz-probe-101');
+  fs.mkdirSync(dir, { recursive: true });
+  t.after(() => {
+    fs.rmSync(dir, { recursive: true, force: true });
+    if (!existed) fs.rmSync(root, { recursive: true, force: true });
+  });
+  fs.writeFileSync(path.join(dir, 'probe.html'), '<a href="manuals.html">Manuals</a>');
+  const server = createServer().listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  t.after(() => server.close());
+  const base = `http://127.0.0.1:${server.address().port}`;
+  const page = await fetch(base + '/manual-zz-probe-101/probe');
+  assert.equal(page.status, 200);
+  assert.equal(await page.text(), '<a href="manuals.html">Manuals</a>');
+  for (const legacy of ['/manual/manual-zz-probe-101/probe.html', '/manual/manual-zz-probe-101/probe']) {
+    const response = await fetch(base + legacy, { redirect: 'manual' });
+    assert.equal(response.status, 308, legacy);
+    assert.equal(response.headers.get('location'), '/manual-zz-probe-101/probe');
+  }
+  assert.equal((await fetch(base + '/manual-zz-probe-101/missing')).status, 404);
+
+  const site = fs.mkdtempSync(path.join(os.tmpdir(), 'aiefs-nested-'));
+  t.after(() => fs.rmSync(site, { recursive: true, force: true }));
+  fs.writeFileSync(path.join(site, 'manuals.html'), '');
+  fs.mkdirSync(path.join(site, 'manual', 'manual-demo-101'), { recursive: true });
+  fs.writeFileSync(path.join(site, 'manual', 'manual-demo-101', 'intro.html'), '<a href="manuals.html">Manuals</a>');
+  cleanSite(site);
+  assert.equal(fs.readFileSync(path.join(site, 'manual', 'manual-demo-101', 'intro.html'), 'utf8'), '<a href="manuals">Manuals</a>');
+});
+
+test('robots.txt lets search and answer crawlers in and lists every sitemap', () => {
+  const robots = fs.readFileSync(path.join(__dirname, 'robots.txt'), 'utf8');
+  const groups = new Map();
+  for (const block of robots.split(/\n\s*\n/)) {
+    const agent = block.match(/^User-agent:\s*(\S+)/m);
+    if (agent) groups.set(agent[1], /^Disallow:\s*\/\s*$/m.test(block) ? 'blocked' : 'allowed');
+  }
+  for (const agent of ['Googlebot', 'Bingbot', 'OAI-SearchBot', 'ChatGPT-User', 'PerplexityBot', 'Claude-SearchBot', 'ClaudeBot', 'Applebot', 'YouBot', 'DuckDuckBot']) {
+    assert.equal(groups.get(agent), 'allowed', agent);
+  }
+  for (const map of ['sitemap.xml', 'sitemap-index.xml', 'sitemap-manuals.xml']) {
+    assert.match(robots, new RegExp(`^Sitemap: https://aiengineeringfromscratch\\.com/${map.replace('.', '\\.')}$`, 'm'));
+  }
+});

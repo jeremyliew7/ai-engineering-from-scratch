@@ -50,7 +50,7 @@ Input sequence structure:
 [START, z_1 tokens, z_2 tokens, z_3 tokens, ..., z_K tokens]
 ```
 
-Position embeddings encode both scale index and spatial position within the scale. Attention is causal in scale order: token at scale $k$, position $(i, j)$ can attend to all tokens at scales $1 \ldots k$ and to tokens at scale $k$ itself that come earlier in whatever intra-scale order is used (VAR uses fixed positional attention with no intra-scale causality — all positions within a scale are predicted in parallel).
+Position embeddings encode both scale index and spatial position within the scale. Attention is causal in scale order and block-wise inside a scale: token at scale $k$, position $(i, j)$ can attend to all tokens at scales $1 \ldots k$, including every position of scale $k$ itself. There is no intra-scale order and no intra-scale causality, so all positions within a scale are predicted in parallel.
 
 Training loss: at each scale $k$, predict the tokens $z_k$ given all prior-scale tokens. Cross-entropy loss on the discrete VQ codes. Same structure as GPT except the "sequence" is now scale-structured.
 

@@ -30,7 +30,7 @@ note: The whole file. The CLI exit status was 1.
 }
 ```
 
-Every failure in rea has this shape: `code`, `category`, `message`, `retryable`, `remediation.action`, and an optional `details` object. The provider is `pwntools-elf`. Its decoder throws `AnalysisCapabilityUnavailableError` when `process.platform` is not `linux` or `process.arch` is not `x64`, before it looks for Python. The message is a constant in the same file. The MCP server lists the tool as unavailable unless the host is Linux x64 and `REA_PWNTOOLS_PYTHON` is an absolute path. The exit status follows the CLI rule: "The operation could not complete." {{cli §Output and exit status}}
+Every failure in rea has this shape: `code`, `category`, `message`, `retryable`, `remediation.action`, and an optional `details` object. The provider is `pwntools-elf`. Its decoder throws `AnalysisCapabilityUnavailableError` when `process.platform` is not `linux` or `process.arch` is not `x64`, before it looks for Python. The message is a constant in the same file. The MCP server lists the tool as unavailable unless the host is Linux x64 and `REA_PWNTOOLS_PYTHON` is an absolute path. The exit status follows the CLI rule for an operation that could not finish {{cli §Output and exit status}}.
 
 The capture kit gave the tool the ELF object because `inspect_binary_layout` is written for ELF. On a Linux x64 host with pwntools 4.15.0 it returns sections, segments, symbols, and relocations. [Section 2.3](#s-rea-capabilities) shows how each operation declares its availability before you call it, and [the reference](#s-ref-errors) lists every error code the captures produced.
 

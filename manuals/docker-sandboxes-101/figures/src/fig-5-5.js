@@ -14,7 +14,7 @@ const rows = [
 module.exports = figure('fig-5-5', {
   height: 482,
   title: 'Three shell calls through the approval order',
-  desc: 'The approval order for the shell calls of capture/fixtures/agents/guarded.yaml, top down. The preempt_yolo hook log-hook.sh runs on every call and returns allow, which is advice only. A deny pattern shell:cmd=rm* blocks rm -rf work/m101-nothing with Tool shell is denied by permissions configuration. An allow pattern shell:cmd=echo* runs echo m101-ok in both modes. The file has no ask patterns. The safety mode then decides pwd, which has the label safe: restricted runs it and prints the capture directory, and strict asks the user, which under exec with no terminal ends as The user rejected the tool call.',
+  desc: 'The approval order for the shell calls of guarded.yaml, top down. The preempt_yolo hook log-hook.sh runs on every call and returns allow, which is advice only. A deny pattern shell:cmd=rm* blocks rm -rf work/m101-nothing with Tool shell is denied by permissions configuration. An allow pattern shell:cmd=echo* runs echo m101-ok in both modes. The file has no ask patterns. The safety mode then decides pwd, which has the label safe: restricted runs it and prints the capture directory, and strict asks the user, which under exec with no terminal ends as The user rejected the tool call.',
 }, f => {
   f.kicker(20, 18, 'shell calls of guarded.yaml, --safety strict and restricted');
   f.kicker(20, 36, '20-strict.ndjson, 20-restricted.ndjson');

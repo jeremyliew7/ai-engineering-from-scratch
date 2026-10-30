@@ -16,7 +16,9 @@ name: translate
 #
 # A push runs only the legs its commit range can change: the phases whose
 # English changed, languages newly made automatic, and interface strings when
-# their source changed. scripts/translate_matrix.py makes the choice and
+# their source changed. It also reruns every automatic leg whose published
+# source hashes no longer match English, so a cancelled or failed run is
+# repaired by the next push. scripts/translate_matrix.py makes the choice and
 # docs/i18n.md lists the rules. Manual runs keep their requested scope.
 #
 # The repo README is hand-authored per language and committed to main (see
@@ -30,7 +32,10 @@ on:
       - "languages.json"
       - "site/ui-strings.json"
       - "scripts/translate_ui_strings.py"
+      - "scripts/translate_lessons.py"
+      - ".github/translate-requirements.txt"
       - "scripts/translate_matrix.py"
+      - "scripts/translation_freshness.py"
       # Publisher fixes must be able to bootstrap a missing translations branch
       # even when no English lesson changed in the same merge.
       - ".github/workflows/translate.yml"
@@ -235,6 +240,9 @@ jobs:
         run: |
           git fetch --depth=1 origin "+refs/heads/translations:refs/remotes/origin/translations"
           node scripts/check_translation_coverage.js --ref origin/translations
+      - name: Report translations that predate their English lesson
+        if: ${{ !cancelled() }}
+        run: python3 scripts/translation_freshness.py --ref origin/translations --summary "$GITHUB_STEP_SUMMARY"
 
   ui-strings:
     # The site's interface strings (navigation, sidebar, checkpoints, panels)

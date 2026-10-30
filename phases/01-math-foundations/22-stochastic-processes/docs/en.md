@@ -121,7 +121,7 @@ Most chains you encounter in ML satisfy both conditions.
 
 **Absorbing states.** A state is absorbing if once you enter it, you never leave ($P[i][i] = 1$). Absorbing Markov chains model processes with terminal states -- a game that ends, a customer who churns, a token sequence that hits the end-of-text token.
 
-**Mixing time.** How many steps until the chain is "close" to the stationary distribution? Formally, the number of steps until the total variation distance from stationarity drops below some threshold. Fast mixing = few steps needed. The spectral gap of $P$ (1 minus the second-largest eigenvalue) controls the mixing time. Larger gap = faster mixing.
+**Mixing time.** How many steps until the chain is "close" to the stationary distribution? Formally, the number of steps until the total variation distance from stationarity drops below some threshold. Fast mixing = few steps needed. For a reversible chain, the spectral gap of $P$ (1 minus the largest eigenvalue magnitude other than the eigenvalue 1) controls the mixing time. Larger gap = faster mixing.
 
 ### Connection to Language Models
 

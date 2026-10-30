@@ -1,6 +1,6 @@
 # Prefix-friendly prompts
 
-> The prefix cache matches tokens from the first one, so one changing token near the start of a prompt costs more than any server setting can save.
+> The prefix cache matches tokens from the first one, so one changing token near the start of a prompt can cost more than server tuning recovers.
 
 A team runs DeepSeek-V4 for long agent sessions on eight GPUs, with hierarchical caching turned on. Their dashboards show `#cached-token: 0` on requests that repeat 100,000 tokens of history. They tune the cache tiers and the write policy. The hit rate barely moves. Then they find a random hash that their relay put into the system prompt of every request.
 
@@ -26,7 +26,9 @@ note: The three summary lines. The fifteen per-request lines above them are cut.
 {"summary": "id-at-end", "median_ttft_ms": 88.2, "min_ttft_ms": 83.7, "max_ttft_ms": 118.1, "median_cached_tokens": 2985, "prompt_tokens": 3028}
 ```
 
-We measured a 28 times longer wait for the first token when the ID sits at the start: 1,255 ms against 45 ms. The same ID at the end cost 43 ms more than the stable prompt. The tokens are almost the same in all three cases. Only their order differs.
+We measured a 28 times longer wait for the first token when the ID sits at the start: 1,255 ms against 45 ms. The run used our Mac with Qwen3-0.6B in 4-bit MLX. The factor depends on the prefill speed of the card. The number of missed tokens does not.
+
+The same ID at the end cost 43 ms more than the stable prompt. The tokens are almost the same in all three cases. Only their order differs.
 
 The cached-token counts explain the times. The stable prompt reused 2,998 of 2,999 tokens, the maximum from [section 3.3](#s-radixcache). The ID at the start matched only the first 5 tokens, the ones that come before the random hex digits. Every token after a change is a different branch of the tree, even when the rest of the prompt is identical.
 
@@ -34,7 +36,7 @@ The cached-token counts explain the times. The stable prompt reused 2,998 of 2,9
 id: fig-3-4
 kind: comparison
 title: the same tokens in three orders
-claim: A random ID at the start of the prompt made 3,029 tokens miss the cache, and the same ID at the end cost about 45 tokens.
+claim: A random ID at the start of the prompt made about 3,027 tokens miss the cache, and the same ID at the end cost about 45 tokens.
 caption: Read each ribbon left to right as the prompt's tokens. Green is reused from the cache, and plum is computed in prefill. From capture/out/cache-experiment.txt.
 ```
 

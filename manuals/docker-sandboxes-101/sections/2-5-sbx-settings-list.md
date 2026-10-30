@@ -6,7 +6,7 @@ Your company routes every connection through a proxy, and your first `sbx run` c
 
 ## One record
 
-**Setting:** a key such as `proxy` with a type, a default, an evaluated value, and a source. `sbx settings list --json` printed 31 records on the recording Mac, each with `key`, `type`, `default`, `value`, `source`, and `description`, and some with `env_var` or `requires_restart`. The source is one of three: "The SOURCE column shows where the value came from (default, envvar, or override)" {{help-sbx sbx settings list}}. The type is `bool`, `int`, `float`, `string`, or `json`, and `sbx settings set KEY VALUE` parses the value by that type {{help-sbx sbx settings set}}. Thirteen of the 31 keys have no `env_var`, among them `proxy`, `mcp.forceLocalGateway`, and `skills.defaultMode`, so the environment cannot set them and only an override can.
+**Setting:** a key such as `proxy` with a type, a default, an evaluated value, and a source. `sbx settings list --json` printed 31 records on the recording Mac, each with `key`, `type`, `default`, `value`, `source`, and `description`, and some with `env_var` or `requires_restart`. The source is one of three values: `default`, `envvar`, or `override` {{help-sbx sbx settings list}}. The type is `bool`, `int`, `float`, `string`, or `json`, and `sbx settings set KEY VALUE` parses the value by that type {{help-sbx sbx settings set}}. Thirteen of the 31 keys have no `env_var`, among them `proxy`, `mcp.forceLocalGateway`, and `skills.defaultMode`, so the environment cannot set them and only an override can.
 
 ```listing
 title: five of the 31 records
@@ -79,9 +79,9 @@ The `proxy` record shows the shape of a value. It takes a URL, a PAC source, `sy
 
 ## Precedence and restart
 
-"Environment variables take precedence over user overrides" {{help-sbx sbx settings set}}, so an exported `DOCKER_SANDBOXES_PROXY` beats `sbx settings set proxy.sandbox`. Above both sits the organization: "Administrator constraints apply to saved overrides. A conflicting value is rejected" {{help-sbx sbx settings set}}. `sbx settings unset KEY` removes the override, and "Administrator policy remains in effect" {{help-sbx sbx settings unset}}. After that "the setting evaluates from its environment variable, remote default, or built-in default" {{help-sbx sbx settings unset}}, and the remote default is a fourth origin that the SOURCE column does not name.
+An environment variable wins over a user override {{help-sbx sbx settings set}}, so an exported `DOCKER_SANDBOXES_PROXY` beats `sbx settings set proxy.sandbox`. Above both sits the organization. Administrator constraints also apply to saved overrides, and the daemon rejects a value that conflicts with them {{help-sbx sbx settings set}}. `sbx settings unset KEY` removes the override, and the administrator policy stays in effect {{help-sbx sbx settings unset}}. After that, the value comes from the environment variable, a remote default, or the built-in default {{help-sbx sbx settings unset}}. The remote default is a fourth origin that the SOURCE column does not name.
 
-"Most changes take effect within about five seconds" {{help-sbx sbx settings}}, and the rest need `sbx daemon restart`. The table marks them in its RESTART column, and its footer says who needs the restart.
+Most changes take effect within about five seconds {{help-sbx sbx settings}}, and the rest need `sbx daemon restart`. The table marks them in its RESTART column, and its footer says who needs the restart.
 
 ```listing
 title: the two notes under the settings table
@@ -119,7 +119,7 @@ note: Nothing is cut.
 }
 ```
 
-The same gap covers commands. The `model.providers` description names `sbx run --model <model> --provider <id>`, and the docs show `sbx run --name <SANDBOX_NAME> --model <MODEL_NAME> --provider <PROVIDER_ID>` {{docs-sbx configuration/models}}, but `sbx run --help` in v0.47.0 lists neither flag. The secret help text names "mounts added later with sbx mount" {{help-sbx sbx secret set}}, and the help tree has no `sbx mount` page. `sbx ssh proxy`, `sbx policy approval`, and `--usb` are named in the sources that [conflict C16](#s-ref-sources-and-the-conflicts-register) lists, and none of them has a help page either. This manual documents what `--help` prints, and [the command table](#s-ref-sbx-commands) is that list.
+The same gap covers commands. The `model.providers` description names `sbx run --model <model> --provider <id>`, and the docs show `sbx run --name <SANDBOX_NAME> --model <MODEL_NAME> --provider <PROVIDER_ID>` {{docs-sbx configuration/models}}, but `sbx run --help` in v0.47.0 lists neither flag. The secret help text mentions mounts that you add later with `sbx mount` {{help-sbx sbx secret set}}, and the help tree has no `sbx mount` page. `sbx ssh proxy`, `sbx policy approval`, and `--usb` are named in the sources that [conflict C16](#s-ref-sources-and-the-conflicts-register) lists, and none of them has a help page either. This manual documents what `--help` prints, and [the command table](#s-ref-sbx-commands) is that list.
 
 ## The kit defaults
 

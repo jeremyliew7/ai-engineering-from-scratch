@@ -2,7 +2,7 @@
 
 > Each term below has one meaning across the manual and names the section that defines it, and the index lists every figure by the claim it makes.
 
-Every term is defined once, in the section the last column names, with the sources that section cites. The meanings below come from the help text, the schema, the kit specification, and the docs named in the Sources line.
+Every term is defined once, in the section the last column names, with the sources that section cites. The meanings below come from the help text, the schema, the kit specification, and the docs that the sources reference lists.
 
 ## Glossary
 

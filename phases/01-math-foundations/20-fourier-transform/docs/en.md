@@ -34,7 +34,7 @@ Given $N$ samples $x[0], x[1], \ldots, x[N-1]$, the Discrete Fourier Transform p
 X[k] = \sum_{n=0}^{N-1} x[n] \, e^{-2\pi i k n/N} \qquad \text{for } k = 0, 1, \ldots, N-1
 ```
 
-Each $X[k]$ is a complex number. Its magnitude $\lvert X[k] \rvert$ tells you the amplitude of frequency $k$. Its phase $\angle X[k]$ tells you the phase offset of that frequency.
+Each $X[k]$ is a complex number. Its magnitude $\lvert X[k] \rvert$ is proportional to the amplitude of frequency $k$. Without normalization, a real sine of amplitude $A$ that falls exactly on bin $k$ gives $\lvert X[k] \rvert = AN/2$, so divide by $N/2$ to read the amplitude. Its phase $\angle X[k]$ tells you the phase offset of that frequency.
 
 The key insight: $e^{-2\pi i k n/N}$ is a rotating phasor at frequency $k$. The DFT computes the correlation between the signal and each of $N$ equally-spaced frequencies. If the signal contains energy at frequency $k$, the correlation is large. If not, it is near zero.
 
@@ -103,7 +103,7 @@ graph TD
     end
 ```
 
-The FFT requires the signal length to be a power of 2. In practice, signals are zero-padded to the next power of 2.
+The radix-2 FFT built here is fastest when the signal length is a power of 2. Whenever a sub-problem has odd length, it falls back to the plain `dft`, so signals are often zero-padded to the next power of 2 for speed. Library FFTs such as `numpy.fft` handle any length with mixed-radix algorithms, but they are fastest on lengths with small prime factors.
 
 ### Spectral analysis
 

@@ -113,7 +113,7 @@ def rlhf_step(theta, ref, w, prompt, rng, eps=0.2, beta=0.1, lr=0.05):
 
 ### Step 4: monitor the KL
 
-Track mean $\mathrm{KL}(\pi_\theta \Vert \pi_{\text{ref}})$ every update. If it creeps past `~5-10` the policy has drifted far from $\pi_{\text{SFT}}$ — lower $\beta$ is rising or reward hacking is starting. This is the top diagnostic in real RLHF.
+Track mean $\mathrm{KL}(\pi_\theta \Vert \pi_{\text{ref}})$ every update. If it creeps past `~5-10` (per-response KL in nats, summed over tokens, the unit TRL logs) the policy has drifted far from $\pi_{\text{SFT}}$: either $\beta$ is too low (raise it to pull the policy back) or reward hacking is starting. This is the top diagnostic in real RLHF.
 
 ### Step 5: the production recipe with TRL
 

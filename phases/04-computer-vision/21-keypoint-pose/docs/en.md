@@ -60,7 +60,7 @@ Why heatmaps work better than direct regression: the network's spatial structure
 
 ### Sub-pixel localisation
 
-Argmax gives integer coordinates. For sub-pixel precision, refine by fitting a parabola to the argmax and its neighbours, or use the well-known offset `(dx, dy) = 0.25 * (heatmap[y, x+1] - heatmap[y, x-1], ...)` direction.
+Argmax gives integer coordinates. For sub-pixel precision, refine by fitting a parabola to the argmax and its neighbours, or shift the argmax toward the higher neighbour with `dx = 0.25 * (heatmap[y, x+1] - heatmap[y, x-1])` and the same for `dy`, as the code does.
 
 ### Part Affinity Fields (PAFs)
 

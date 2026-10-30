@@ -2,7 +2,7 @@
 
 > Every figure of this manual, in order, by the one claim its caption makes.
 
-Each row links to its figure, and the claim is the bold sentence that opens the caption. Measured numbers in a figure come from a file under `capture/out/`, and the caption names that file. GPU numbers name the field report or the code they come from. The colours follow the palette of the front matter:
+Each row links to its figure, and the claim is the `claim:` field of each figure block. Measured numbers in a figure come from our runs [on the Mac](manuals/sglang-101/capture/out) or [on the GPUs](manuals/sglang-101/capture/gpu), and each section links the files it uses. Numbers from a field report name the report. The colours follow the palette of the front matter:
 
 - blue is the SGLang server process: the tokenizer manager, the scheduler, and the detokenizer
 - violet is the model and its forward pass: kernels, attention backends, and CUDA graphs

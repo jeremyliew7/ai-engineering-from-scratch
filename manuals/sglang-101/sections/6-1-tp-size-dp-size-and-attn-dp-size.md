@@ -50,7 +50,7 @@ The code at v0.5.22 does three things with the old spelling {{code}}:
 | `--attn-dp-size 8` | the new spelling, the same layout |
 | `--dp-size 2 --attn-dp-size 4` | raises an error: replicas combined with attention data parallelism are not supported |
 
-The warning names the new flag, and a comment in the code says to remove the old flag after 2026-12-31 {{code}}. Most DeepSeek recipes on the web still use the old spelling. They work today and stop working in a later release.
+The warning names the new flag, and a comment in the code says to remove the old flag after 2026-12-31 {{code}}. Many DeepSeek recipes on the web still use the old spelling. They work today and stop working in a later release.
 
 ## Why attention gets its own data parallel mode
 
@@ -71,7 +71,7 @@ The first change is the one that surprises people. A team that measured TTFT wit
 
 ## Our position
 
-Use tensor parallelism to make the model fit, and nothing more. Add capacity with data parallel copies, inside one server with `--dp-size` or as separate servers behind the gateway in [section 6.4](#s-sgl-model-gateway). Use `--attn-dp-size` equal to `--tp-size` for MLA mixture-of-experts models such as DeepSeek and Kimi, and leave it at 1 for dense GQA models.
+Use tensor parallelism to make the model fit, and nothing more. Add capacity with data parallel copies, inside one server with `--dp-size` or as separate servers behind the gateway in [section 6.4](#s-sgl-model-gateway). Give every copy about the same pool. Our only pair had unequal pools, and it lost at every load. Use `--attn-dp-size` equal to `--tp-size` for MLA mixture-of-experts models such as DeepSeek and Kimi, and leave it at 1 for dense GQA models.
 
 A field report supports the order. A student team tuned DeepSeek-R1 for a competition on H100 and H200 nodes {{field Lowndes 2025-11}}. Plain `--tp 16` gave about 5.9k tokens per second offline. Their best layout, TP4 with DP4, PP2, and attention data parallelism on one H200 node, gave 17,417 tokens per second. Use their numbers as one data point, because the [write-up](https://luca.lowndes.net/blog/sglang-optimisations) explains `--mem-fraction-static` incorrectly.
 
@@ -122,7 +122,7 @@ We expected two copies to serve about twice as much as one. They served less tha
 title: two copies, two very different pools
 source: capture/gpu/out-l4/server-dp2.log
 lang: text
-note: Startup lines and four decode lines from the c64 run of seed 1. Timestamps are cut.
+note: Startup lines, and four decode lines logged at 64 running requests on 2026-10-17 at 07:26. Timestamps are cut.
 ---
 … DP0] Load weight end. elapsed=3.61 s, type=Qwen3ForCausalLM, avail mem=6.59 GB, mem usage=15.28 GB.
 … DP1] Load weight end. elapsed=3.73 s, type=Qwen3ForCausalLM, avail mem=3.17 GB, mem usage=15.28 GB.
@@ -142,11 +142,13 @@ The controller still sent every second request to that copy, because `round_robi
 id: fig-6-1c
 kind: chart
 title: Two copies of the model served less than one
-claim: One L4 reached 270 tokens per second, and the shared pair with --dp-size 2 peaked at 64 and fell to 42.
+claim: One L4 reached 270 tokens per second, and the shared pair with --dp-size 2 peaked at 64 and fell to 42 as its clock fell.
 caption: Output throughput against max concurrency, three seeds per point. Plum is one L4 and rose is --dp-size 2 on two L4s with the shared second card. From capture/gpu/summary/l4.json.
 ```
 
-**We measured** the cost at the tail too. At concurrency 64, the median p99 TTFT of three seeds was 33.4 seconds on one L4 and 391 seconds with two copies. Up to concurrency 4, the two copies were 16 to 41 percent slower, because neither pool was full yet. The loss starts when the small pool fills.
+**We measured** the cost at the tail too. At concurrency 64, the median p99 TTFT of three seeds was 33.4 seconds on one L4 and 391 seconds with two copies. The one-card run was on 2026-10-16 and the pair on 2026-10-17. At 32 and 64 users the pair ran at 765 and 675 MHz, under our clock floor. One card ran at 1,320 and 1,080 MHz, so part of that loss is the clock.
+
+Up to concurrency 4, the two copies were already 16 to 41 percent slower, for a reason we did not isolate. At 1 user the pair took 79.6 ms per token against 60.2 ms, at a higher clock.
 
 The open-loop sweep of [section 5.1](#s-sglang-benchmark-serving) agreed. With requests arriving at a fixed rate, two copies completed at most 0.21 requests per second inside our latency target. One L4 alone completed 0.96.
 
@@ -162,13 +164,15 @@ note: The two pools at startup. The second card was still shared, so its copy ha
 [2026-10-19 00:24:06 DP1] KV Cache is allocated. dtype: torch.bfloat16, #tokens: 2925, K size: 0.20 GB, V size: 0.20 GB
 ```
 
-**We measured** a large gain over round robin, and still a loss against one card. At 64 users the pair gave 114.7 tok/s routed by tokens, against 41.7 with round robin and 250.9 on one L4. At 8 users it gave 92.1 against 64.2 and 112.6. The median TTFT at 64 users fell from 4,763 to 3,977 ms. The median clock at 64 users was 1,020 MHz, against 675 MHz in the round-robin run. So part of the gain can be the card.
+**We measured** a large gain over round robin, and still a loss against one card. The three runs were on 2026-10-19, 2026-10-17, and 2026-10-16.
 
-The other setting is two separate servers behind the gateway in [section 6.4](#s-sgl-model-gateway), each with a weight. We did not measure it. The plain lesson is simpler. Data parallelism adds capacity only when every copy has about the same pool. Check the `#tokens` line of each `DP` rank before you trust the sum.
+At 64 users the pair gave 114.7 tok/s routed by tokens, against 41.7 with round robin and 250.9 on one L4. At 8 users it gave 92.1 against 64.2 and 112.6. The median TTFT at 64 users fell from 4,763 to 3,977 ms. The median clock at 64 users was 1,020 MHz, against 675 MHz in the round-robin run. So part of the gain can be the card.
+
+The other setting is two separate servers behind the gateway in [section 6.4](#s-sgl-model-gateway), each with a weight. We did not measure it. We did not measure a pair with equal pools either. On our unequal pair, `--dp-size 2` lost at every load. We expect data parallelism to add capacity only when every copy has about the same pool. Check the `#tokens` line of each `DP` rank before you trust the sum.
 
 ```takeaways
 - Set --tp-size to the smallest number of GPUs that fits the model and its KV cache.
-- Add capacity with --dp-size copies or with separate servers behind the gateway.
+- Add capacity with --dp-size copies or separate servers only when every copy has about the same pool.
 - Use --attn-dp-size equal to --tp-size for MLA mixture-of-experts models only.
 - Check the #tokens line of every DP rank before you count on --dp-size.
 - Rewrite old recipes from --dp-size N --enable-dp-attention to --attn-dp-size N.
@@ -176,4 +180,4 @@ The other setting is two separate servers behind the gateway in [section 6.4](#s
 - Send requests to node 0 and keep each TP group inside one machine.
 ```
 
-Sources: python/sglang/srt/distributed/parallel_state.py (initialize_model_parallel), python/sglang/srt/distributed/bootstrap.py (_check_tp_memory_balance), capture/gpu/incidents/l4-tp-unbalanced-memory.txt, capture/gpu/out-l4/server-dp2.log, capture/gpu/summary/l4.json, python/sglang/srt/arg_groups/fields/parallel.py, python/sglang/srt/arg_groups/parallel_hook.py (handle_deprecated_dp_attention, handle_data_parallelism), python/sglang/srt/server_args.py, python/sglang/srt/entrypoints/engine.py, and python/sglang/srt/managers/data_parallel_controller.py, all at v0.5.22. capture/out/metrics.txt. Pull request #41818, issue #19953. LMSYS, "SGLang v0.4", 2024-12-04. Luca Lowndes, "SGLang optimisations", 2025-11-07. Ant Group on the LMSYS blog, 2025-09-26.
+Sources: python/sglang/srt/distributed/parallel_state.py (initialize_model_parallel), python/sglang/srt/distributed/bootstrap.py (_check_tp_memory_balance), capture/gpu/incidents/l4-tp-unbalanced-memory.txt, capture/gpu/out-l4/server-dp2.log, capture/gpu/summary/l4.json, python/sglang/srt/arg_groups/fields/parallel.py, python/sglang/srt/arg_groups/parallel_hook.py (handle_deprecated_dp_attention, handle_data_parallelism), python/sglang/srt/server_args.py, python/sglang/srt/entrypoints/engine.py, and python/sglang/srt/managers/data_parallel_controller.py, all at v0.5.22. capture/out/metrics.txt. Pull request #41818, issue #19953. LMSYS, "SGLang v0.4", 2024-12-04. Luca Lowndes, "SGLang optimisations", 2025-11-07. Ant Group on the LMSYS blog, 2025-09-26; capture/gpu/out-l4/server-dp2-tokens.log, capture/gpu/summary/l4.json (load.dp2-tokens).

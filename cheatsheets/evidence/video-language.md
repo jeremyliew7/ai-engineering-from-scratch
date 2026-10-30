@@ -15,8 +15,8 @@ Abbreviations: L17 = phases/12-multimodal-ai/17-video-language-temporal-groundin
 
 ## Video VLM designs (comparison, 6 rows)
 - Frames: 16-frame clips at 2 FPS L17/d:37, Video-LLaVA 8 frames L17/c:114, dynamic FPS L17/c:116
-- Compressor: Video Q-former, 32 queries L17/d:38, MLP L17/c:114, TMRoPE per-token rotation L17/d:56, L17/c:116
-- Time position: 1D temporal RoPE, learned temporal embeddings, TMRoPE: L17/d:29; (t, h, w) absolute timestamp L17/d:51, 55
+- Compressor: Video Q-former, 32 queries L17/d:38, MLP L17/c:114, time-aligned M-RoPE per-token rotation L17/d:56, L17/c:116
+- Time position: 1D temporal RoPE, learned temporal embeddings, time-aligned M-RoPE: L17/d:29; (t, h, w) absolute timestamp L17/d:51, 55
 - Note: audio branch with ImageBind L17/d:39, shared image+video encoder L17/c:114, best open 2025 L17/c:116
 - Answer to "when": "early in the clip", "at 4.2 seconds" L17/d:59, 8-16 frame systems L17/d:47
 - Weakness: fixed clip length L17/d:41, no long video L17/d:47
@@ -97,12 +97,12 @@ Abbreviations: L17 = phases/12-multimodal-ai/17-video-language-temporal-groundin
 - Batch norm and division by time_kernel: CV12/d:207
 - Joint attention quadratic, divided attention: CV12/d:80-81, 91
 - Uniform loses motion peaks, dynamic FPS with max-frame cap: L17/d:63, 103
-- "early in the clip", TMRoPE, JSON output: L17/d:59, 102, 105
+- "early in the clip", time-aligned M-RoPE, JSON output: L17/d:59, 102, 105
 - 2h at 1 FPS 583k, pool more or VideoAgent: L18/d:21, 83
 - Counting hallucination, report separately: C12/d:23, 138
 
 ## Questions (qa, 7)
-- TMRoPE absolute time, dynamic FPS spacing: L17/d:55-57
+- time-aligned M-RoPE absolute time, dynamic FPS spacing: L17/d:55-57
 - Structured JSON with time and event fields: L17/d:105
 - 3x3 bilinear, 6x6 for agent workflows: L17/d:75, 77
 - 15-minute clip, open 72B + native context: L18/d:79

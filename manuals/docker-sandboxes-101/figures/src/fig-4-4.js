@@ -18,7 +18,7 @@ module.exports = figure('fig-4-4', {
   title: 'An environment file becomes a plan, an approval, and a state record',
   desc: 'Top: the captured sbxenv.yaml with its agent, workspace, args, kits, env, lifecycle, and ports keys. An arrow for sbx env plan leads to the plan it printed, eight rows with a plus sign in the margin for each addition, the workspace row that needs approval, the totals line, and the warning that host commands run outside the sandbox. Below, two branches. Left: approval on sbx env create writes the state record under the sbx state directory, and a later plan prints only the rows that moved. Right: the same plan with the env-arg greeting set to servus still prints every row as an addition because nothing was applied.',
 }, f => {
-  f.kicker(20, 18, 'the file (capture/fixtures/env/sbxenv.yaml)');
+  f.kicker(20, 18, 'the file (sbxenv.yaml)');
   const file = f.box({ x: 20, y: 26, w: 600, h: 80, hue: 'green', title: 'sbxenv.yaml', sub: ['schemaVersion 1, name m101-env, agent shell, workspace ., args greeting (default hello),', 'kits ../kits/hello-mixin, env GREETING: ${{ env.args.greeting }},', 'lifecycle initialize echo init, ports sandbox 8080 host 18083'], align: 'left' });
   f.arrow([file.cx, 106], [file.cx, 137], { style: 'call', label: 'sbx env plan ./fixtures/env' });
 

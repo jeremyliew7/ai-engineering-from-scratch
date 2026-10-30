@@ -2,43 +2,43 @@
 
 > Every provider id docker-agent 1.149.0 knows, the credential it reads, the `provider/model` reference form, the DMR endpoint order, the `auto` rule, and the keys that tune a model.
 
-`docker-agent doctor` printed 20 providers with their credential variables on the capture machine, every one `not set` (research/sources/probes/docker-agent-doctor.txt). The docs name 31 ids, and the schema description of `provider` lists the built-in aliases {{schema ProviderConfig}}. The table below is the union, in the order of the doctor output and then of the docs. The doctor prints canonical ids such as `fireworks-ai`, and the legacy ids stay accepted as aliases ([conflict C58](#s-ref-sources-and-the-conflicts-register)).
+`docker-agent doctor` printed 20 providers with their credential variables on the capture machine, every one `not set` ([our source record](manuals/docker-sandboxes-101/research/sources/probes/docker-agent-doctor.txt)). The docs name 31 ids, and the schema description of `provider` lists the built-in aliases {{schema ProviderConfig}}. The table below is the union, in the order of the doctor output and then of the docs. The doctor prints canonical ids such as `fireworks-ai`, and the legacy ids stay accepted as aliases ([conflict C58](#s-ref-sources-and-the-conflicts-register)).
 
 ## The provider ids
 
-| Provider id | Legacy id | Credential | Source |
-|---|---|---|---|
-| `anthropic` | none | `ANTHROPIC_API_KEY`, or `auth.type: workload_identity_federation` | doctor, {{docs-agent Models}} |
-| `openai` | none | `OPENAI_API_KEY` | doctor |
-| `chatgpt` | none | none. A browser sign-in through `docker agent setup`, shown as `CHATGPT_OAUTH_TOKEN` | doctor, {{docs-agent Model Providers}} |
-| `github-copilot` | none | `GITHUB_TOKEN` or `GH_TOKEN`, a PAT with the `copilot` scope | doctor, {{docs-agent Model Providers}} |
-| `google` | none | `GOOGLE_API_KEY` or `GEMINI_API_KEY`. Vertex AI uses `GOOGLE_GENAI_USE_VERTEXAI`, `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION` | doctor, {{docs-agent Models}} |
-| `mistral` | none | `MISTRAL_API_KEY` | doctor |
-| `openrouter` | none | `OPENROUTER_API_KEY` | doctor |
-| `baseten` | none | `BASETEN_API_KEY` | doctor |
-| `ovhcloud` | none | `OVH_AI_ENDPOINTS_ACCESS_TOKEN` | doctor |
-| `groq` | none | `GROQ_API_KEY` | doctor |
-| `fireworks-ai` | `fireworks` | `FIREWORKS_API_KEY` | doctor, {{docs-agent Models}} |
-| `deepseek` | none | `DEEPSEEK_API_KEY` | doctor |
-| `cerebras` | none | `CEREBRAS_API_KEY` | doctor |
-| `togetherai` | `together` | `TOGETHER_API_KEY` | doctor, {{docs-agent Models}} |
-| `huggingface` | none | `HF_TOKEN` | doctor |
-| `moonshotai` | `moonshot` | `MOONSHOT_API_KEY` | doctor, {{docs-agent Models}} |
-| `vercel` | none | `AI_GATEWAY_API_KEY` | doctor |
-| `amazon-bedrock` | none | `AWS_BEARER_TOKEN_BEDROCK`, or the AWS credential chain, which the doctor counts as three more variables | doctor, {{docs-agent Models}} |
-| `opencode` | `opencode-zen` | `OPENCODE_API_KEY` | doctor, {{docs-agent Model Providers}} |
-| `opencode-go` | none | `OPENCODE_API_KEY` | doctor |
-| `dmr` | none | none. A local Docker Model Runner | {{docs-agent Models}} |
-| `ollama` | none | none. An optional `base_url` | {{docs-agent Models}} |
-| `xai` | none | `XAI_API_KEY` | {{docs-agent Models}} |
-| `nebius` | none | `NEBIUS_API_KEY` | {{docs-agent Models}} |
-| `nvidia` | none | `NVIDIA_API_KEY` | {{docs-agent Models}} |
-| `minimax` | none | `MINIMAX_API_KEY` | {{docs-agent Models}} |
-| `cloudflare-workers-ai` | none | `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` | {{docs-agent Models}} |
-| `cloudflare-ai-gateway` | none | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, and `CLOUDFLARE_GATEWAY_ID` | {{docs-agent Models}} |
-| `requesty` | none | `REQUESTY_API_KEY` | {{docs-agent Models}} |
-| `azure` | none | `AZURE_API_KEY` and a `base_url` | {{docs-agent Models}} |
-| a name under `providers` | none | the variable in `token_key` | {{schema ProviderConfig}} |
+| Provider id | Legacy id | Credential |
+| --- | --- | --- |
+| `anthropic` | none | `ANTHROPIC_API_KEY`, or `auth.type: workload_identity_federation` |
+| `openai` | none | `OPENAI_API_KEY` |
+| `chatgpt` | none | none. A browser sign-in through `docker agent setup`, shown as `CHATGPT_OAUTH_TOKEN` |
+| `github-copilot` | none | `GITHUB_TOKEN` or `GH_TOKEN`, a PAT with the `copilot` scope |
+| `google` | none | `GOOGLE_API_KEY` or `GEMINI_API_KEY`. Vertex AI uses `GOOGLE_GENAI_USE_VERTEXAI`, `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION` |
+| `mistral` | none | `MISTRAL_API_KEY` |
+| `openrouter` | none | `OPENROUTER_API_KEY` |
+| `baseten` | none | `BASETEN_API_KEY` |
+| `ovhcloud` | none | `OVH_AI_ENDPOINTS_ACCESS_TOKEN` |
+| `groq` | none | `GROQ_API_KEY` |
+| `fireworks-ai` | `fireworks` | `FIREWORKS_API_KEY` |
+| `deepseek` | none | `DEEPSEEK_API_KEY` |
+| `cerebras` | none | `CEREBRAS_API_KEY` |
+| `togetherai` | `together` | `TOGETHER_API_KEY` |
+| `huggingface` | none | `HF_TOKEN` |
+| `moonshotai` | `moonshot` | `MOONSHOT_API_KEY` |
+| `vercel` | none | `AI_GATEWAY_API_KEY` |
+| `amazon-bedrock` | none | `AWS_BEARER_TOKEN_BEDROCK`, or the AWS credential chain, which the doctor counts as three more variables |
+| `opencode` | `opencode-zen` | `OPENCODE_API_KEY` |
+| `opencode-go` | none | `OPENCODE_API_KEY` |
+| `dmr` | none | none. A local Docker Model Runner |
+| `ollama` | none | none. An optional `base_url` |
+| `xai` | none | `XAI_API_KEY` |
+| `nebius` | none | `NEBIUS_API_KEY` |
+| `nvidia` | none | `NVIDIA_API_KEY` |
+| `minimax` | none | `MINIMAX_API_KEY` |
+| `cloudflare-workers-ai` | none | `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` |
+| `cloudflare-ai-gateway` | none | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, and `CLOUDFLARE_GATEWAY_ID` |
+| `requesty` | none | `REQUESTY_API_KEY` |
+| `azure` | none | `AZURE_API_KEY` and a `base_url` |
+| a name under `providers` | none | the variable in `token_key` |
 
 The doctor lists eleven ids that the docs tables do not count as providers, and the docs list ten that the doctor did not print. A credential can also come from `~/.config/cagent/.env`, from a `credential_helper` command in the user config, from Docker Desktop, or from a 1Password `op://` reference {{docs-agent Secrets}}.
 
@@ -56,17 +56,17 @@ The doctor lists eleven ids that the docs tables do not count as providers, and 
 
 ## The auto rule
 
-`auto` picks the first cloud provider with a configured credential and then a locally pulled Docker Model Runner model {{docs-agent Set up a model}}. On the DMR side it prefers the model named in `model:` when that model is already pulled. Otherwise it takes the first available non-embedding model, instead of asking to pull `ai/qwen3:latest` {{docs-agent Docker Model Runner}}. It never picks a provider defined under `providers` {{docs-agent Provider Definitions}}. `DOCKER_AGENT_DEFAULT_MODEL` sets the model used when none is given {{docs-agent User settings}}. On the capture machine, with no credential and the runner unreachable, the doctor still printed `auto -> dmr/ai/qwen3:latest` and reported one issue (research/sources/probes/docker-agent-doctor.txt).
+`auto` picks the first cloud provider with a configured credential and then a locally pulled Docker Model Runner model {{docs-agent Set up a model}}. On the DMR side it prefers the model named in `model:` when that model is already pulled. Otherwise it takes the first available non-embedding model, instead of asking to pull `ai/qwen3:latest` {{docs-agent Docker Model Runner}}. It never picks a provider defined under `providers` {{docs-agent Provider Definitions}}. `DOCKER_AGENT_DEFAULT_MODEL` sets the model used when none is given {{docs-agent User settings}}. On the capture machine, with no credential and the runner unreachable, the doctor still printed `auto -> dmr/ai/qwen3:latest` and reported one issue ([our source record](manuals/docker-sandboxes-101/research/sources/probes/docker-agent-doctor.txt)).
 
 ## The DMR endpoint
 
-| Step | Endpoint | Source |
-|---|---|---|
-| 1 | `base_url` on the model or the provider, when set | {{docs-agent Docker Model Runner}} |
-| 2 | the endpoint the `docker model` plugin reports. The doctor runs `docker model status --json` through the Desktop context | research/sources/probes/docker-agent-doctor.txt |
-| 3 | the default `http://127.0.0.1:12434/engines/llama.cpp/v1` when the plugin is not found | {{docs-agent Docker Model Runner}}, 03-stack.md note 14 |
-| in a container | `http://model-runner.docker.internal/engines/v1`, with `unload_api: /engines/_unload` on the provider | {{docs-agent Docker Model Runner}} |
-| unload | the `base_url` with the trailing `/v1` replaced by `_unload`, called by the `unload` builtin on `on_agent_switch` | {{docs-agent Docker Model Runner}} |
+| Step | Endpoint |
+| --- | --- |
+| 1 | `base_url` on the model or the provider, when set |
+| 2 | the endpoint the `docker model` plugin reports. The doctor runs `docker model status --json` through the Desktop context |
+| 3 | the default `http://127.0.0.1:12434/engines/llama.cpp/v1` when the plugin is not found |
+| in a container | `http://model-runner.docker.internal/engines/v1`, with `unload_api: /engines/_unload` on the provider |
+| unload | the `base_url` with the trailing `/v1` replaced by `_unload`, called by the `unload` builtin on `on_agent_switch` |
 
 The runner needs no API key, and the API is not authenticated ([conflict C84](#s-ref-sources-and-the-conflicts-register)). The docs state only that the default URL is used when the plugin is not found. The order above puts that default third, after `base_url` and the plugin, as the research file reads it.
 

@@ -30,7 +30,7 @@ permissions:
       - example.com
 ```
 
-`files/workspace/HELLO.md` holds one line, and `sbx kit inspect` reports it as a workspace file with mode 420 (`capture/out/12-inspect.json`). The v2 grammar is the one the built-in agents use, and its normative text lives in `SPEC-v2.md` of `docker/sbx-kits-contrib` {{docs-sbx Top-level fields}}.
+`files/workspace/HELLO.md` holds one line, and `sbx kit inspect` reports it as a workspace file with mode 420 ([the capture](manuals/docker-sandboxes-101/capture/out/12-inspect.json)). The v2 grammar is the one the built-in agents use, and its normative text lives in `SPEC-v2.md` of `docker/sbx-kits-contrib` {{docs-sbx Top-level fields}}.
 
 ## validate and pack
 
@@ -65,27 +65,27 @@ $ zip listing of work/hello-mixin.zip (size, name)
      297  spec.yaml
 ```
 
-For `pack`, "The directory must contain a valid spec.yaml and an optional files/ directory" {{help-sbx sbx kit pack}}. The same ZIP validates with `kind: "zip"` (`capture/out/12-validate-zip.json`). A v3 directory fails both commands, as [the descriptor section](#s-syntax-docker-sandbox-kit-3-and-kit-yaml) showed. [Figure](#fig-4-3) draws the whole path, with the steps the capture kit did not run in dashed boxes.
+For `pack`, the directory must hold a valid `spec.yaml` and can hold a `files/` directory {{help-sbx sbx kit pack}}. The same ZIP validates with `kind: "zip"` ([the capture](manuals/docker-sandboxes-101/capture/out/12-validate-zip.json)). A v3 directory fails both commands, as [the descriptor section](#s-syntax-docker-sandbox-kit-3-and-kit-yaml) showed. [Figure](#fig-4-3) draws the whole path, with the steps the capture kit did not run in dashed boxes.
 
 ```figure
 id: fig-4-3
 kind: flow
 title: from spec.yaml to a signed artifact and into a sandbox
 claim: A v2 kit is validated and packed on the host, signed and pushed with two referrers, verified from the registry, and consumed by create or kit add.
-caption: Read row by row. Solid boxes are captured in capture/out/12-validate.txt, 12-pack.txt, 12-run-kit.txt, 12-kit-add.txt, and 12-kit-add-files.txt. Dashed boxes follow the help text of sbx kit sign, push, verify, and provenance, which were not run.
+caption: Read row by row. Solid boxes come from the validate, pack, run, and kit-add captures. Dashed boxes follow the help text of sbx kit sign, push, verify, and provenance, which were not run.
 ```
 
 ## sign, push --sign, and pull
 
-The capture kit ran none of these three, because it has no registry and no signing identity. The help text is the source. `sbx kit sign` is keyless by default, with an OIDC token from the CI provider or a browser login. "A token is never read from SIGSTORE_ID_TOKEN, so it cannot be chosen by anything that can set an environment variable" {{help-sbx sbx kit sign}}. With `--key` it signs with an unencrypted PEM private key. "For a local directory, a detached signature bundle is written to kit.sig.bundle next to spec.yaml" {{help-sbx sbx kit sign}}.
+The capture kit ran none of these three, because it has no registry and no signing identity. The help text is the source. `sbx kit sign` is keyless by default, with an OIDC token from the CI provider or a browser login. It never reads a token from `SIGSTORE_ID_TOKEN`, so a process that can set an environment variable cannot choose the token {{help-sbx sbx kit sign}}. With `--key` it signs with an unencrypted PEM private key. For a local directory, it writes a detached signature bundle to `kit.sig.bundle` next to `spec.yaml` {{help-sbx sbx kit sign}}.
 
-`sbx kit push DIRECTORY REFERENCE` chooses the artifact form from `schemaVersion`: a ZIP for `"1"`, a tar+gzip layer with the spec in the config blob for `"2"` {{help-sbx sbx kit push}}. "With --sign, the pushed manifest is signed and the Sigstore bundle is attached to the kit as an OCI referrer" {{help-sbx sbx kit push}}. Signed or not, "Every push also attaches a SLSA provenance attestation as an OCI referrer" {{help-sbx sbx kit push}}, and "The provenance is unsigned unless --sign is given" {{help-sbx sbx kit push}}. `--tlog-upload=false` keeps a private kit out of the Rekor log. For `pull`, "The registry must support HTTPS" {{help-sbx sbx kit pull}}.
+`sbx kit push DIRECTORY REFERENCE` chooses the artifact form from `schemaVersion`: a ZIP for `"1"`, a tar+gzip layer with the spec in the config blob for `"2"` {{help-sbx sbx kit push}}. With `--sign`, the push signs the manifest and attaches the Sigstore bundle to the kit as an OCI referrer {{help-sbx sbx kit push}}. Every push also attaches a SLSA provenance attestation as an OCI referrer {{help-sbx sbx kit push}}, and that provenance is signed only with `--sign` {{help-sbx sbx kit push}}. `--tlog-upload=false` keeps a private kit out of the Rekor log. For `pull`, the registry must support HTTPS {{help-sbx sbx kit pull}}.
 
-A published v3 image can be signed by reference with the same command, but "V3 kits shared as source directories or Git references can't be signed" {{docs-sbx Sign and verify kits}}.
+The same command signs a published v3 image by reference. A v3 kit that you share as a source directory or a Git reference cannot be signed {{docs-sbx Sign and verify kits}}.
 
 ## verify, provenance, and the settings that admit a kit
 
-`sbx kit verify` takes `--key PUB` for a key, or `--certificate-identity` with `--certificate-oidc-issuer` for a keyless signature. `--insecure-ignore-tlog` accepts a private keyless signature, and "It has no effect on key-based verification" {{help-sbx sbx kit verify}}. `sbx kit provenance REFERENCE` prints the attestation, and "only attestations that verify and whose subject matches the kit's own digest are reported as VERIFIED" {{help-sbx sbx kit provenance}}.
+`sbx kit verify` takes `--key PUB` for a key, or `--certificate-identity` with `--certificate-oidc-issuer` for a keyless signature. `--insecure-ignore-tlog` accepts a private keyless signature, and the flag changes nothing for a key-based verification {{help-sbx sbx kit verify}}. `sbx kit provenance REFERENCE` prints the attestation, and it reports an attestation as `VERIFIED` only when it verifies and its subject matches the digest of the kit {{help-sbx sbx kit provenance}}.
 
 Six settings decide what a sandbox accepts, all at their defaults on the recording host:
 
@@ -103,11 +103,11 @@ kit.requireSignature                 false                              bool    
 kit.trustedSigners                   [{"identityRegexp":"^.*@docker\…   json     default             JSON array of trusted signer policies (key-base…
 ```
 
-"When `kit.requireSignature` is `true`, `sbx` rejects unsigned kits, signatures that don't match `kit.trustedSigners`, and ZIP kits" {{docs-sbx Require signed kits}}. For `kit.trustedSigners`, "The default policy trusts Docker employee identities ending in `@docker.com`, attested by Google's issuer" {{docs-sbx kit.trustedSigners}}. [The settings table](#s-ref-settings-keys-environment-variables-and-paths) lists the environment variable of each key.
+When `kit.requireSignature` is `true`, `sbx` rejects unsigned kits, signatures that do not match `kit.trustedSigners`, and ZIP kits {{docs-sbx Require signed kits}}. The default `kit.trustedSigners` policy trusts Docker employee identities that end in `@docker.com`, attested by the Google issuer {{docs-sbx kit.trustedSigners}}. [The settings table](#s-ref-settings-keys-environment-variables-and-paths) lists the environment variable of each key.
 
 ## kit add and the builder
 
-`sbx kit add SANDBOX REFERENCE` recreates the container with the mixin appended, "preserving kit-owned volumes (e.g. agent session state) across the swap" {{help-sbx sbx kit add}}. The capture shows the accepted case and the refused one:
+`sbx kit add SANDBOX REFERENCE` recreates the container with the mixin added, and it keeps the volumes that kits own, such as agent session state, across the swap {{help-sbx sbx kit add}}. The capture shows the accepted case and the refused one:
 
 ```listing
 title: kit add accepts env-mixin and refuses hello-mixin
@@ -135,9 +135,9 @@ error: kit "hello-mixin" declares files, which the kit-add recreate flow does no
 [exit 1]
 ```
 
-Sandboxes created before the recreate-aware label are refused with an error {{help-sbx sbx kit add}}, and `long-running@1` cannot be added this way {{rel-sbx v0.47.0}}. `sbx create shell --kit ./fixtures/kits/hello-mixin` applied the same mixin in full: one install command, one workspace file, and one allow rule (`capture/out/12-run-kit.txt`, `12-policy-kit.txt`).
+Sandboxes created before the recreate-aware label are refused with an error {{help-sbx sbx kit add}}, and `long-running@1` cannot be added this way {{rel-sbx v0.47.0}}. `sbx create shell --kit ./fixtures/kits/hello-mixin` applied the same mixin in full: one install command, one workspace file, and one allow rule ([the captures](manuals/docker-sandboxes-101/capture/out)).
 
-Source-form builds of v3 kits "run inside a shared builder sandbox named sbx-kit-builder, created on first use" {{help-sbx sbx kit builder}}. `sbx kit builder status` reports it, and `history` passes through to `docker buildx history`:
+Source-form builds of v3 kits run in a shared builder sandbox named `sbx-kit-builder`, which `sbx` creates on first use {{help-sbx sbx kit builder}}. `sbx kit builder status` reports it, and `history` passes through to `docker buildx history`:
 
 ```listing
 title: the builder before any build

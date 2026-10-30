@@ -2,7 +2,7 @@
 
 > An unknown is a durable record with its own id and revision chain, and an empty list in any result tells you to check coverage.
 
-The `_percent_change` dossier in `capture/out/10-mcp-09-analyze-function-percent-change-O1.json` lists `"callees": []`. An agent reads that line and writes that the function calls nothing. The record supports less than that. It says which calls Ghidra resolved, and rea has a record type for what is still open. When you finish this section, you can read the fields of a ResidualUnknown, open one with `record_unknown`, and say what an empty list proves.
+The `_percent_change` [dossier](manuals/reverse-engineering-101/capture/out/10-mcp-09-analyze-function-percent-change-O1.json) lists `"callees": []`. An agent reads that line and writes that the function calls nothing. The record supports less than that. It says which calls Ghidra resolved, and rea has a record type for what is still open. When you finish this section, you can read the fields of a ResidualUnknown, open one with `record_unknown`, and say what an empty list proves.
 
 ## What an empty list proves
 
@@ -19,13 +19,13 @@ note: Line 1052 and line 1894 of the file. Everything between them is cut.
 "Resolved reference metadata identifies computed, indirect, external, call, jump, and data edges; unresolved targetless flows remain unknown, and function classifications distinguish thunks and externals.",
 ```
 
-The provider documentation states the same limit in one sentence: "Callers/callees contain only resolved functions." {{ghidra Admitted function-analysis semantics}}
+The provider documentation states the same limit: the caller and callee lists hold only functions that Ghidra resolved {{ghidra Admitted function-analysis semantics}}.
 
-The design rule behind every rea tool is shorter still: "Missing coverage is unknown, not absence." {{design Define the contract}}
+The design rule behind every rea tool is shorter still: missing coverage means unknown, not absent {{design Define the contract}}.
 
 **Relationship coverage:** the field `relationship_coverage` of an Evidence record, which states how complete the caller and callee sets are. Its status is `complete`, `partial`, or `unknown`. A `partial` value lists its limitations and can name the limited direction. An `unknown` value gives a reason. When a provider reports no coverage for `procedure_callers` or `procedure_callees`, rea writes `unknown`. A record of any other operation that reports no coverage has `null`.
 
-Provider caveats stay in `limitations` and do not make the coverage partial. The same contract sets the limit of `complete`: "`complete` means that set was returned without a known read limit; it does not claim every possible runtime edge." {{design Define the contract}}
+Provider caveats stay in `limitations` and do not make the coverage partial. The same contract sets the limit of `complete`. It means that rea returned the set without a known read limit. It does not claim every edge that could occur at runtime {{design Define the contract}}.
 
 One part of the dossier does declare its coverage in numbers. The value flow reports whether it was truncated and how many operations, inputs, and edges it omitted. `inspect-evidence-bundle` repeats those numbers for every dossier in a bundle.
 
@@ -49,7 +49,7 @@ note: One of the eight records. The fields before native_dossier are cut.
 }
 ```
 
-A zero here is a count that rea stands behind. An empty array elsewhere is a count with no such statement. The contract says what those fields are for: "`native_dossier.value_flow` independently reports truncation, unavailable or unknown metadata." {{mcp Tool results}}
+A zero here is a count that rea stands behind. An empty array elsewhere is a count with no such statement. The contract says what those fields are for: `native_dossier.value_flow` reports truncation, unavailable metadata, and unknown metadata on its own {{mcp Tool results}}.
 
 Two other empty lists in the capture carry the same lesson. `rea compare` in `14-compare-bundles.json` lists ten records that are in one bundle only. It classifies every one as `unknown` with the conclusion kind `unresolved_branch`, because a bundle has no marker that says it is complete ([compare](#s-compare-and-compare-functions)). The JavaScript summary view in `15-js-app-view-summary.json` reports `"semantic_unknowns": 118` for a six-file application. It marks the semantic coverage `unknown` ([the application graph](#s-analyze-javascript-application)). [Figure](#fig-5-3) puts the three lists side by side.
 
@@ -101,7 +101,7 @@ id: fig-5-2
 kind: structure
 title: a ResidualUnknown and its revision chain
 claim: An unknown keeps its id across revisions, each revision names the digest of the one before, and each change writes its own Evidence record.
-caption: Read left to right. Revision 1 is the unknown that registerFunctionComparisonTool.ts records for the _total comparison in capture/out/10-mcp-21-compare-functions-total.json. The right column shows the fields that an update_unknown call changes.
+caption: Read left to right. Revision 1 is the unknown that registerFunctionComparisonTool.ts records for the _total comparison in the comparison capture. The right column shows the fields that an update_unknown call changes.
 ```
 
 ## Unknowns that rea opens itself

@@ -14,6 +14,9 @@ You get the topic entry from `cheatsheets/topics.yaml`, the source files of the 
   - `debugging`: symptoms, causes, checks and fixes first. Then the tools and the numbers to watch.
   - `manual`: the flags, commands, defaults and incidents of the manual.
   - `project`: what each project builds, how to run it, its inputs and outputs, and the checks that it passes.
+- Write only for the learner. Leave out the work of the repository maintainers: the capture kits and their `run.py`, fixture builds, the site and manual build scripts, audit scripts, `manual.json`, CI workflows and environment variables that only the capture uses.
+- Make every row complete. A task row has the task, the exact command or code and what it does. A troubleshooting row has the symptom, the cause and the fix. Do not leave a cell empty and do not write "-", "TBD" or "..." in a cell. When the sources do not give a cell, leave out the row.
+- Do not write a source line, a "From" line or a lesson path in the body of a block. The page does not show where a block comes from.
 - Every block has a `from` line. List only repository paths that you got in the source files. A path can be a lesson folder, a lesson file, a manual section, a project file or a project folder.
 - Copy every command, flag, function name, field name, file name and default value exactly as it appears in the `from` files of its block. The build checks each one with a literal text match. When you are not sure of an exact string, leave it out.
 - Put code and commands in backticks. Mark each value that the reader replaces with angle brackets, for example `<model>`.

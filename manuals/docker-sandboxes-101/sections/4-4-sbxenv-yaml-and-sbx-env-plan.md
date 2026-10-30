@@ -52,7 +52,7 @@ The keys come from the file reference {{docs-sbx Top-level fields}} and from the
 
 ## The plan
 
-`sbx env plan` reads the file and prints what applying it would set up. "Nothing is applied, approved, or recorded" {{help-sbx sbx env plan}}.
+`sbx env plan` reads the file and prints what applying it would set up. It applies, approves, and records nothing {{help-sbx sbx env plan}}.
 
 ```listing
 title: the first plan for m101-env
@@ -96,23 +96,23 @@ note: The LOAD ENVIRONMENT block is cut.
 
 The plan has the shape of your file, and the margin carries the verdict. Five symbols exist {{help-sbx sbx env}}. `+` adds, `~` changes, and `-` destroys. `>` marks a command that runs again, and `!` marks a resource the environment applied and no longer declares.
 
-A row that is unchanged and already approved is left out. "Literal secret values appear as SHA-256 digests" {{docs-sbx Review an environment plan}}. The `tcp4` protocol was not in the file: published ports default to it since v0.42.0 {{rel-sbx v0.42.0}}. [Figure](#fig-4-4) follows the file through the plan to the state record.
+A row that is unchanged and already approved is left out. A literal secret value appears as its SHA-256 digest {{docs-sbx Review an environment plan}}. The `tcp4` protocol was not in the file: published ports default to it since v0.42.0 {{rel-sbx v0.42.0}}. [Figure](#fig-4-4) follows the file through the plan to the state record.
 
 ```figure
 id: fig-4-4
 kind: flow
 title: an environment file becomes a plan, an approval, and a state record
 claim: sbx env plan turns the file into margin-marked rows, approval on create records them, and a later plan prints only the rows that moved.
-caption: Read top down. The plan rows are capture/out/14-env-plan.txt, and the right branch is 14-env-plan-arg.txt with the greeting argument changed. The left branch after approval follows the help text of sbx env, because the kit never applied the plan.
+caption: Read top down. The plan rows are the env plan capture, and the right branch is the second plan capture, with the greeting argument changed. The left branch after approval follows the help text of sbx env, because the kit never applied the plan.
 ```
 
 ## Host commands and approval
 
-The `lifecycle` block runs on the host, outside the sandbox, with your own privileges. `initialize` runs on every `create` and every `run`, `postCreate` once the sandbox exists, and `preRemove` after you confirm `sbx env rm` {{help-sbx sbx env}}. Commands run through your shell from the project directory, with `workdir` and `timeout` per command. An environment with any of them "asks on every invocation, whether or not this one is what runs them" {{help-sbx sbx env}}, because approving a command also trusts the script it calls. `--skip-host-commands` runs none of them, `--auto-approve` answers yes once, and `sbx settings set env.rememberHostCommands true` asks again only when a command changes.
+The `lifecycle` block runs on the host, outside the sandbox, with your own privileges. `initialize` runs on every `create` and every `run`, `postCreate` once the sandbox exists, and `preRemove` after you confirm `sbx env rm` {{help-sbx sbx env}}. Commands run through your shell from the project directory, with `workdir` and `timeout` per command. An environment with any of them asks on every invocation, even one that does not run them {{help-sbx sbx env}}. The reason is that approving a command also trusts the script it calls. `--skip-host-commands` runs none of them, `--auto-approve` answers yes once, and `sbx settings set env.rememberHostCommands true` asks again only when a command changes.
 
 ## The state record and the second plan
 
-"What was approved is recorded per environment under sbx's state directory, not next to the file" {{help-sbx sbx env}}, "so a later invocation asks only about what moved" {{help-sbx sbx env}}. The exact path was not captured, because the kit ran `plan` and never `create`. The second capture changed one input instead:
+`sbx` records what you approved for each environment in its state directory, not next to the file {{help-sbx sbx env}}. A later invocation asks only about what changed {{help-sbx sbx env}}. The exact path was not captured, because the kit ran `plan` and never `create`. The second capture changed one input instead:
 
 ```listing
 title: the same file with one argument changed
@@ -129,13 +129,13 @@ $ sbx env plan --env-arg greeting=servus ./fixtures/env
 
 Every row is still `+`, because nothing was applied. After a `create`, the same edit prints `~ GREETING: hello -> servus` and nothing else, in the form the help text shows for a changed kit argument {{help-sbx sbx env}}. Changes to workspaces, kits, ports, secrets, bindings, and `sandboxOptions` wait for the next create. New `env` values reach the next session {{docs-sbx Update an environment}}.
 
-Several `PATH` arguments deep-merge in order, "later files override earlier ones" {{help-sbx sbx env create}}, and lists such as `ports` concatenate rather than override. With no `PATH`, a `.sbxenv.yaml` in your home directory merges underneath as a base layer {{help-sbx sbx env create}}. A hidden `.sbxenv.yaml` in the project is no longer read.
+Several `PATH` arguments deep-merge in order, and a later file wins over an earlier one {{help-sbx sbx env create}}, and lists such as `ports` concatenate rather than override. With no `PATH`, a `.sbxenv.yaml` in your home directory merges underneath as a base layer {{help-sbx sbx env create}}. A hidden `.sbxenv.yaml` in the project is no longer read.
 
 ## rm, the read-only file, and --cloud
 
-`sbx env rm` removes the sandbox and the secrets provisioned at its scope. Bindings stay, since they are user-wide, so "pass --prune-bindings to also remove the bindings this environment declares" {{help-sbx sbx env rm}}. The file itself is bound read-only inside the sandbox, because an agent that can edit it decides what the next plan asks about. `sandboxOptions.writableEnvFiles: true` lifts that {{help-sbx sbx env}}.
+`sbx env rm` removes the sandbox and the secrets provisioned at its scope. Bindings stay, because they belong to the user. To remove the bindings that this environment declares too, pass `--prune-bindings` {{help-sbx sbx env rm}}. The file itself is bound read-only inside the sandbox, because an agent that can edit it decides what the next plan asks about. `sandboxOptions.writableEnvFiles: true` lifts that {{help-sbx sbx env}}.
 
-With `--cloud`, "workspace, additionalWorkspaces and clone name host directories, which a cloud sandbox cannot mount" {{help-sbx sbx env}}, and host port bindings, MCP definitions, and dynamic secret sources are rejected before any host command runs. [The cloud section](#s-sbx-cloud-run-move-and-ttl) shows what remains.
+With `--cloud`, `workspace`, `additionalWorkspaces`, and `clone` are refused, because they name host directories that a cloud sandbox cannot mount {{help-sbx sbx env}}. Also, host port bindings, MCP definitions, and dynamic secret sources are rejected before any host command runs. [The cloud section](#s-sbx-cloud-run-move-and-ttl) shows what remains.
 
 ```takeaways
 - Expect `sbxenv.yaml` to be read-only inside the sandbox, and set `writableEnvFiles` only when an agent must edit it.

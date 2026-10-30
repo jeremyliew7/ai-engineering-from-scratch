@@ -14,7 +14,9 @@ SGLang routes requests in two places, with different defaults.
 
 **In front of servers:** `sgl-model-gateway` is a separate Rust program that routes to many SGLang servers. It was named `sgl-router` until pull request [#14312](https://github.com/sgl-project/sglang/pull/14312) renamed it on 2025-12-05, for "less confusion". Its default policy is `cache_aware` {{code}}.
 
-A field report shows the difference. Jarvislabs wrote that "SGLang's default routing deals each request to the next GPU in line, blind to where a conversation's cache lives" {{field Jarvislabs 2026-08}}. On their traffic, 23 percent of input tokens were computed again. One request header that pinned each conversation to one GPU raised their cache hit rate from 64.7 to 92.1 percent and halved median TTFT. Their [post](https://jarvislabs.ai/blog/managed-endpoints) does not name the component that did the round robin. The in-server default matches their description.
+A field report shows the difference. Jarvislabs found that the default routing sends each request to the next GPU in turn. It does not look at where the cache of a conversation is {{field Jarvislabs 2026-08}}.
+
+On their traffic, 23 percent of input tokens were computed again. One request header that pinned each conversation to one GPU raised their cache hit rate from 64.7 to 92.1 percent and halved median TTFT. Their [post](https://jarvislabs.ai/blog/managed-endpoints) does not name the component that did the round robin. The in-server default matches their description.
 
 ## How cache_aware picks a server
 

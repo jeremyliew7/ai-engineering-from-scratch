@@ -2,7 +2,7 @@
 
 > SGLang sizes the KV pool once at startup from a snapshot of free memory, so a machine that changes after startup can kill the whole server.
 
-Our first SGLang server on the capture Mac ran for four minutes. Then a benchmark at 32 concurrent requests crashed it with a Metal out-of-memory error, and every process of the server exited. The KV pool at that moment was 95 percent empty. The memory had gone to the pool, and the next prefill had nowhere to run.
+One of our first SGLang servers on the capture Mac ran for four minutes. Then a benchmark at 32 concurrent requests crashed it with a Metal out-of-memory error, and every process of the server exited. The KV pool at that moment was 95 percent empty. The memory had gone to the pool, and the next prefill had nowhere to run.
 
 When you finish this section, you can read how SGLang divides memory at startup and predict when that division fails. You can also set `--mem-fraction-static` on purpose.
 
@@ -40,7 +40,7 @@ RuntimeError: [METAL] Command buffer execution failed: Insufficient Memory (0000
 [2026-10-16 13:43:02] kill_process_tree called: parent_pid=81559, include_parent=True, pid=81559
 ```
 
-Read `token usage: 0.05` first. Thirty-two requests held 16,095 tokens, which is 5 percent of a 312,581-token pool. The pool reserved 34 GB and used under 2 GB of it. The activations of the next forward pass needed memory outside the pool, and the operating system had none left. One failed command buffer took down the scheduler, and the server killed its whole process tree.
+Read `token usage: 0.05` first. Thirty-two requests held 16,095 tokens, which is 5 percent of a 312,581-token pool. The pool reserved 33 GB and used under 2 GB of it. The activations of the next forward pass needed memory outside the pool, and the operating system had none left. One failed command buffer took down the scheduler, and the server killed its whole process tree.
 
 ```figure
 id: fig-3-2
@@ -60,7 +60,7 @@ After the weights load, SGLang measures free memory again. The KV budget is the 
 
 The MLX backend on Apple silicon uses a simpler rule {{code}}. It takes the smaller of two numbers. The first is the fraction of the Metal working set, minus memory already in use. The second is the fraction of system memory available right now. The second term is the snapshot that changed between our two runs.
 
-One public tuning write-up describes the fraction the other way round, as weights plus buffers, with the KV cache in the remainder. The code says the opposite: the static share holds the weights and the KV pool.
+Read the fraction as the share for the weights and the KV pool together. That is what the code does.
 
 ## The default assumes the machine belongs to SGLang
 
@@ -91,7 +91,7 @@ note: Lines cut from the startup of the default GPU configuration, Qwen3-30B-A3B
 
 The first line is the capacity. `nvidia-smi` reports no memory size for the GB10, so SGLang takes the total from PyTorch.
 
-The second line is free memory, and here the code is careful. On a device that shares system memory, `torch.cuda.mem_get_info()` counts the file cache of the kernel as used. In our first recording, on a day with a large file cache, our kit read 67.7 GiB free that way. SGLang checks whether the device is integrated, and then it reads the available memory of the operating system instead {{code}}. That number counts cache that the kernel can free, and it read 113.55 GB at the same start. After a reboot, the two numbers agreed: 112.1 GiB from PyTorch and 112.59 GB from SGLang.
+The second line is free memory, and here the code is careful. On a device that shares system memory, `torch.cuda.mem_get_info()` counts the file cache of the kernel as used. On a day with a large file cache, that reading can be far below what the machine can give. SGLang checks whether the device is integrated, and then it reads the available memory of the operating system instead {{code}}. That number counts cache that the kernel can free. In our recording after a reboot, the two numbers agreed: 112.1 GiB from PyTorch and 112.59 GB from SGLang.
 
 The cost of that choice is that the pool size moves with the rest of the machine. Six BF16 starts used the same command and the same weights:
 
@@ -104,11 +104,11 @@ The cost of that choice is that the pool size moves with the rest of the machine
 | no overlap | 113.37 GB | 57.92 GB | 233,822 |
 | EAGLE-3, with a draft model | 113.45 GB | 57.49 GB | 216,775 |
 
-The weights did not change, yet their measured size went from 54.78 GB to 57.92 GB. SGLang measures them as the drop in available memory, and the kernel cache changed during each load. Among the five starts without a draft model, the pool differs by 14 percent. A day earlier, the same six starts put the outlier on the no-overlap server, with 261,113 tokens. The outlier moved, so the cause is the machine, not the flag. On unified memory, a pool size from one start is an estimate for the next start, not a constant.
+The weights did not change, yet their measured size went from 54.78 GB to 57.92 GB. SGLang measures them as the drop in available memory, and the kernel cache changed during each load. Among the five starts without a draft model, the pool differs by 14 percent. The flags do not explain the spread, because the same weights measured 3 GB apart. On unified memory, a pool size from one start is an estimate for the next start, not a constant.
 
 ## A pool that other programs see
 
-On a GB10, the KV pool is tens of GB, and SGLang allocates it in a few seconds. Every other program on the machine sees that memory go. Our GB10 also ran a memory guard daemon for its other users. It stops the process that grows fastest when free memory gets low. It stopped our scheduler three times, each time just after the weights loaded:
+On a GB10, the KV pool is tens of GB, and SGLang allocates it in a few seconds. Every other program on the machine sees that memory go. Our GB10 also ran a memory guard daemon for its other users. It stops the process that grows fastest when free memory gets low. It stopped our scheduler three times during startup:
 
 ```listing
 title: the memory guard stops the scheduler
@@ -120,7 +120,7 @@ note: The first two lines of the guard log for our runs on the GB10.
 2026-10-16T12:53:16+00:00 2026/10/16 12:53:16 guardian pause: Paused sglang::schedul (pid 2983880, rohit): it grew 36.7 GiB in 5s with 34.2 GiB left. Resume or stop it from the app.
 ```
 
-SGLang logged no error. From the server side, startup stopped after `Load weight end` and never reached the health check. The guard was correct by its own rule: the scheduler was the fastest-growing process. Seconds later the guard logged "Back to normal", because the pool was complete. We agreed with the owner of the machine to stop the guard for the time of our runs.
+We did not keep the server logs of those three starts. The guard log shows the scheduler growing by 36.7 GiB in 5 seconds, which is the size of a KV pool allocation. The guard was correct by its own rule: the scheduler was the fastest-growing process. Seconds later the guard logged "Back to normal", because the pool was complete. We agreed with the owner of the machine to stop the guard for the time of our runs.
 
 The NVIDIA driver also reports memory errors at startup. The kernel log of the GB10 holds bursts of this line:
 
@@ -133,9 +133,17 @@ note: The last line of the file. The lines above it count the bursts per minute.
 NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
 ```
 
-Six bursts match a `KV Cache is allocated` line of the kit to the minute. They are at 14:36, 14:55, 15:04, 15:30, 15:47, and 15:58. Every one of those servers became healthy and finished its benchmarks. The start with a 4,096-token pool logged no burst. The other bursts came from our test and sweep servers.
+The bursts are dated 2026-10-16, the day of our first test and sweep starts on the GB10. We did not keep the server logs of that day, so we cannot match each burst to one start. Every server in our later captures became healthy and finished its benchmarks.
 
 **Our position:** on unified memory, the KV pool is memory that the whole machine gives up. Pass `--mem-fraction-static` on purpose, and tell the other users of the machine before you start. Do not alert on the driver line alone. Alert when a server does not become healthy.
+
+### Memory outside the fraction
+
+The fraction does not bound all the memory that SGLang takes at startup. One user served a 27B model with SGLang on a DGX Spark. The user reported 25 to 40 GB of short-lived allocations outside the memory accounting of SGLang. The FlashInfer autotuner and the CUDA graph capture made them. Run directly on the host, the server froze the machine, and it needed a power cycle. The user then ran it in a container with a memory cap and `--mem-fraction-static 0.50`.
+
+That is a field report from before v0.5.22, and it does not name its SGLang version. Treat it as a warning, not as a fact about v0.5.22. We did not measure it ourselves. Our guard log above shows a fast growth at startup, but it does not separate the pool from the other allocations.
+
+On a GB10 that other programs share, start SGLang in a container with a memory limit. Start below the fraction of 0.7 that our kit used. Log the free memory of the machine once a second during startup. Raise the fraction only after you saw the peak.
 
 ## Our position: set the fraction yourself on any shared machine
 
@@ -152,7 +160,7 @@ note: One startup line from the default kit configuration.
 
 The budget is now 19.39 GB, which is 0.4 of the 48.49 GB snapshot. The pool still holds 181,574 tokens, far more than 32 requests of 640 tokens need. A smaller pool cost nothing in this workload, because the workload never filled the pool.
 
-We tested the other direction on the GB10. The load sweep of [section 5.1](#s-sglang-benchmark-serving) ran twice, at the kit's fraction of 0.7 and at 0.82, three seeds per point.
+We tested the other direction on the GB10. The load sweep of [section 5.1](#s-sglang-benchmark-serving) ran twice, at the kit's fraction of 0.7 on 2026-10-16 and at 0.82 on 2026-10-17, three seeds per point.
 
 ```listing
 title: a larger pool on the GB10, at its fullest
@@ -174,7 +182,7 @@ claim: Raising the fraction from 0.7 to 0.82 on the GB10 grew the BF16 pool by 6
 caption: Output throughput against max concurrency, three seeds per point. Solid lines are 0.7 and dashed lines are 0.82. Plum is BF16 and green is FP8 with an FP8 KV cache. From capture/gpu/summary/gb10.json.
 ```
 
-The log line explains it. Sixty-four requests held 40,751 tokens, 11 percent of the pool. At 0.7 the highest token usage was 17 percent. The pool was never the limit, so a larger pool had nothing to do. Compare the L4 in [section 4.3](#s-quantization), where the BF16 pool was full at 64 users and FP8 nearly tripled the throughput.
+The log line explains it. Sixty-four requests held 40,751 tokens, 11 percent of the pool. On the kit's server at 0.7, the highest token usage was 18 percent. The pool was never the limit, so a larger pool had nothing to do. Compare the L4 in [section 4.3](#s-quantization), where the BF16 pool was full at 64 users and FP8 nearly tripled the throughput.
 
 The open-loop sweep of [section 5.1](#s-sglang-benchmark-serving) gave the other half of the answer. At 16 requests per second, more than the GB10 serves, requests kept arriving while earlier ones still ran. There the larger pool did matter.
 
@@ -220,6 +228,7 @@ One more caution for Apple silicon. The `kv_cache_memory_usage_gb` metric read 0
 - Lower the fraction when long prompts fail with out-of-memory errors in attention.
 - Compare engines only when both report their KV pool sizes.
 - On a GB10, read the pool size in each startup log, because it changes between starts.
+- On a shared GB10, run SGLang in a memory-capped container with a lower fraction, and log free memory.
 ```
 
-Sources: python/sglang/srt/arg_groups/memory_hook.py (handle_gpu_memory_settings), python/sglang/srt/mem_cache/kv_cache_configurator.py (_profile_available_bytes), python/sglang/srt/hardware_backend/mlx/model_runner.py (_compute_pool_size), python/sglang/srt/arg_groups/fields/schedule.py (mem_fraction_static) at v0.5.22, capture/out/oom-exploratory.log, capture/out/server-default.log, capture/out/metrics.txt, python/sglang/srt/utils/common.py (get_available_gpu_memory) at v0.5.22, capture/gpu/out-gb10/server-*.log, capture/gpu/out-gb10/environment.json, capture/gpu/incidents/gb10-memory-guard-pauses.txt, capture/gpu/incidents/gb10-driver-no-memory.txt, issues #39675, #42510, and #6027, the Rawlinson benchmark of 2025-12-05. capture/gpu/out-gb10/server-load-default-kv-max.log, capture/gpu/summary/gb10.json. capture/gpu/out-gb10/server-rate-default-full.log, capture/gpu/out-gb10/server-rate-default-kv-max.log.
+Sources: python/sglang/srt/arg_groups/memory_hook.py (handle_gpu_memory_settings), python/sglang/srt/mem_cache/kv_cache_configurator.py (_profile_available_bytes), python/sglang/srt/hardware_backend/mlx/model_runner.py (_compute_pool_size), python/sglang/srt/arg_groups/fields/schedule.py (mem_fraction_static) at v0.5.22, capture/out/oom-exploratory.log, capture/out/server-default.log, capture/out/metrics.txt, python/sglang/srt/utils/common.py (get_available_gpu_memory) at v0.5.22, capture/gpu/out-gb10/server-*.log, capture/gpu/out-gb10/environment.json, capture/gpu/incidents/gb10-memory-guard-pauses.txt, capture/gpu/incidents/gb10-driver-no-memory.txt, issues #39675, #42510, and #6027, the Rawlinson benchmark of 2025-12-05. capture/gpu/out-gb10/server-load-default-kv-max.log, capture/gpu/summary/gb10.json. capture/gpu/out-gb10/server-rate-default-full.log, capture/gpu/out-gb10/server-rate-default-kv-max.log, capture/gpu/out-gb10/server-default.log, capture/gpu/out-gb10/server-pools.log, basbunarhasan, Qwen3.8-27B at 34-38 tok/s on DGX Spark, open-source one-command setup (SGLang + NVFP4 + DSpark), NVIDIA developer forum (2026-08-15)

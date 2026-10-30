@@ -12,7 +12,7 @@ const lanes = [
 module.exports = figure('fig-1-3', {
   height: 470,
   title: 'One /generate request through the three processes',
-  desc: 'Four lifelines: the client, the tokenizer manager, the scheduler, and the detokenizer. The client posts a five-token prompt. The tokenizer manager sends token ids to the scheduler over ZMQ. The scheduler matches two cached tokens in the radix cache, prefills three, and returns the first token after 889 ms. Eleven decode steps follow, and the detokenizer returns the text, for 950 ms end to end.',
+  desc: 'Four lifelines: the client, the tokenizer manager, the scheduler, and the detokenizer. The client posts a five-token prompt. The tokenizer manager sends token ids to the scheduler over ZMQ. The scheduler matches two cached tokens in the radix cache, prefills three, and returns the first token after 68 ms. Eleven decode steps follow, and the detokenizer returns the text, for 725 ms end to end.',
 }, f => {
   for (const lane of lanes) {
     f.box({ x: lane.x, y: 10, w: lane.w || 150, h: 30, hue: lane.hue, title: lane.name, titleSize: 12, anchor: 'middle' });
@@ -23,10 +23,10 @@ module.exports = figure('fig-1-3', {
     [1, 2, 'event', '5 token ids', 'one ZMQ message'],
     [2, 2, null, 'match_prefix', '2 tokens cached'],
     [2, 2, null, 'prefill', '3 new tokens'],
-    [2, 3, 'event', 'first token', '889 ms after the request'],
-    [2, 3, 'event', '11 more tokens', 'decode steps, 61 ms'],
-    [3, 1, 'event', 'text', 'Paris, and the capital of'],
-    [1, 0, 'reply', '200 OK', 'e2e_latency 0.950 s'],
+    [2, 3, 'event', 'first token', '68 ms after the request'],
+    [2, 3, 'event', '11 more tokens', 'decode steps, 657 ms'],
+    [3, 1, 'event', 'text', 'Paris. The capital of Italy is'],
+    [1, 0, 'reply', '200 OK', 'e2e_latency 0.725 s'],
   ];
   rows.forEach(([from, to, style, label, note], index) => {
     const y = 74 + index * 48;

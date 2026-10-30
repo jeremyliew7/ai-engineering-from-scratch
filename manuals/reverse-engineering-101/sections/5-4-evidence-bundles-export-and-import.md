@@ -26,7 +26,7 @@ note: The request and the text copy of the result are cut.
 }
 ```
 
-The write is canonical and atomic. `writeEvidenceBundle` validates the bundle again and streams canonical JSON parts. `writeTextParts` creates a staging file with `wx` and mode `0600` and syncs it. It then renames the file over the destination when `overwrite` is true, or hard-links it when the destination must not exist. The contract says the same: "Complete bundle exports stream canonical JSON into an atomically published file." {{mcp Tool results}}
+The write is canonical and atomic. `writeEvidenceBundle` validates the bundle again and streams canonical JSON parts. `writeTextParts` creates a staging file with `wx` and mode `0600` and syncs it. It then renames the file over the destination when `overwrite` is true, or hard-links it when the destination must not exist. The contract says the same: a complete bundle export streams canonical JSON into a file that appears in one atomic step {{mcp Tool results}}.
 
 The capture copied the file the server wrote to `11-bundle-O1.json`, with the capture directory masked and a newline added. Its seven arrays hold one artifact, one provider, no environments, no scenarios, no captures, no unknowns, and eight records.
 
@@ -85,7 +85,9 @@ note: The subject and provider of each row, the second row, and the last five ro
         …
 ```
 
-The rows are in `evidence_id` order, so the first row is the `procedure_assembly` record and the `_grade` dossier is the third. A row that is not a dossier reports `native_dossier` as unavailable, with the reason `different-operation`. The eight rows name four `analyze_function` dossiers, `_percent_change`, `_grade`, `_total`, and `_grade_label`, and one record each for `list_procedures`, `procedure_assembly`, `xrefs`, and `list_strings`. Every row carries the same profile digest, `3fc72c9b…`, because one Ghidra session produced them all. The O2 bundle has two rows, the `_total` and `_percent_change` dossiers of the -O2 build (`11-inspect-evidence-bundle-O2.json`). The contract names the filters a summary accepts: "Optional `filters` match exact `evidence_id`, `operation`, `target_sha256`, `analysis_profile_digest` or `procedure_address`." {{mcp Tool results}}
+The rows are in `evidence_id` order, so the first row is the `procedure_assembly` record and the `_grade` dossier is the third. A row that is not a dossier reports `native_dossier` as unavailable, with the reason `different-operation`. The eight rows name four `analyze_function` dossiers, `_percent_change`, `_grade`, `_total`, and `_grade_label`, and one record each for `list_procedures`, `procedure_assembly`, `xrefs`, and `list_strings`. Every row carries the same profile digest, `3fc72c9b…`, because one Ghidra session produced them all. The O2 bundle has two rows, the `_total` and `_percent_change` dossiers of the -O2 build (`11-inspect-evidence-bundle-O2.json`).
+
+The contract names the filters a summary accepts. The optional `filters` match an exact `evidence_id`, `operation`, `target_sha256`, `analysis_profile_digest`, or `procedure_address` {{mcp Tool results}}.
 
 ## evidence-export and evidence-import on the CLI
 
@@ -105,7 +107,7 @@ same JSON content as the MCP export: yes
 
 The one byte of difference is the newline the kit appended to its copy. Strip it, and the copy has 178,397 bytes and the digest `47160c2d`, the digest of the CLI file. The MCP server and the CLI write the same canonical bytes for the same records, which is what the thesis of this section promised.
 
-`rea evidence-import PATH` validates a bundle and reports its counts. On the CLI there is no session, so `imported` and `total` are both the number of records in the file: `{"imported": 8, "unknowns_added": 0, "total": 8}` in `13-evidence-import.json`. The CLI documentation draws the line: "Separate CLI calls consume full saved records." {{cli Import, export and compare Evidence}}
+`rea evidence-import PATH` validates a bundle and reports its counts. On the CLI there is no session, so `imported` and `total` are both the number of records in the file: `{"imported": 8, "unknowns_added": 0, "total": 8}` in `13-evidence-import.json`. The CLI documentation draws the line: separate CLI calls read the full saved records {{cli Import, export and compare Evidence}}.
 
 ## import_evidence_bundle into a live session
 
@@ -124,7 +126,7 @@ note: The request and the text copy of the result are cut.
 }
 ```
 
-Six of eight, and a total of fifteen. The session had closed O1 before, and `close_binary` empties the ledger: "`close_binary` clears them, even when no binary is active." {{mcp Retained application Evidence inputs}} Opening another target or restarting the current target keeps the records.
+Six of eight, and a total of fifteen. The session had closed O1 before, and `close_binary` empties the ledger, even when no binary is open {{mcp Retained application Evidence inputs}}. Opening another target or restarting the current target keeps the records.
 
 So the O1 records were gone when O2 opened. Then `compare_functions` ran twice, with the O1 dossiers of `_percent_change` and `_total` passed inline. The tool records both sides before its own result. Those two O1 records were back in the ledger, so the import added the other six.
 

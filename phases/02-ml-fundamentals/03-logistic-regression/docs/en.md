@@ -86,7 +86,7 @@ Why this works:
 - When $y=0$ and $p$ is close to 0: $\log(1) = 0$, so loss is near 0 (correct, low cost)
 - When $y=0$ and $p$ is close to 1: $\log(0)$ approaches negative infinity, so loss is huge (wrong, high cost)
 
-This loss function is convex for logistic regression, guaranteeing a single global minimum.
+This loss function is convex for logistic regression, so every local minimum is a global minimum and gradient descent cannot get stuck in a bad one. On perfectly separable data the loss keeps falling as the weights grow, so no finite minimum exists; L2 regularization fixes that and makes the minimum unique.
 
 ### Gradient Descent for Logistic Regression
 

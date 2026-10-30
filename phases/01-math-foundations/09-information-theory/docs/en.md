@@ -202,7 +202,7 @@ Properties:
 2. Rank features by MI score.
 3. Keep the top $k$ features.
 
-This works for any relationship between feature and target -- linear, nonlinear, monotonic, or not. Correlation only catches linear relationships. MI catches everything.
+This works for any relationship between feature and target -- linear, nonlinear, monotonic, or not. Pearson correlation only catches linear relationships. MI catches any dependence, but with finite data its estimate needs enough samples and a sensible binning.
 
 | Method | Detects | Computational cost | Handles categorical? |
 |--------|---------|-------------------|---------------------|

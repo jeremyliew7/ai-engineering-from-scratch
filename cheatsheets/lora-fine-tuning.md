@@ -122,7 +122,7 @@ from: phases/11-llm-engineering/08-fine-tuning-lora/outputs/skill-fine-tuning-gu
 | lora_dropout | 0.05 | 0.1 below 5K examples |
 | target_modules | q_proj, v_proj | add more only if quality is low |
 | QLoRA learning rate | 2e-4 | higher than full fine-tuning |
-| LoRA fp16 learning rate | 5e-5 | |
+| LoRA fp16 learning rate | 5e-5 | lower than QLoRA |
 | Full SFT learning rate | 2e-5 | Llama 2 Chat, 15x below pre-training |
 | Epochs | 1-3 | more risks overfitting |
 

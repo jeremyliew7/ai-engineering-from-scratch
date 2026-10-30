@@ -73,7 +73,7 @@ Abbreviations: P12 = phases/12-multimodal-ai. VAR = phases/08-generative-ai/19-v
 - Cosine mask ratio, 1.0 at step 0, none at step T: SO/d:72-76
 - Show-o loss on MASK tokens, text masks only last token: SO/d:44
 - 32000 + 8192 = 40192: CH/d:42
-- 64 * 64 * 8 = 32,768 video tokens, 4 s at 8 FPS, 256x256: EMU/d:33
+- 32 * 32 * 8 = 8,192 video tokens, 4 s at 8 FPS, 256x256: EMU/d:33
 
 ## Numbers to keep (defaults, 8)
 - 8192, 1024 tokens per 512x512: CH/d:36, CH/d:42

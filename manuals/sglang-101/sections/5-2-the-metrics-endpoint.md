@@ -8,9 +8,9 @@ When you finish this section, you can turn the endpoint on and tell a gauge from
 
 ## Turn it on first
 
-The endpoint is off by default. The field `enable_metrics` defaults to `False` at v0.5.22 {{code}}, and without `--enable-metrics` the path `/metrics` returns nothing useful. Our capture server started with the flag, as [section 5.1](#s-sglang-benchmark-serving) shows. After the default experiments, it exported 81 metric families in 603 sample lines that start with `sglang:`.
+The endpoint is off by default. The field `enable_metrics` defaults to `False` at v0.5.22 {{code}}, and without `--enable-metrics` the server does not mount the path `/metrics` at all. Our capture server started with the flag, as [section 5.1](#s-sglang-benchmark-serving) shows. After the default experiments, it exported 81 metric families in 603 sample lines that start with `sglang:`.
 
-**Our position:** start every server with `--enable-metrics`, including the one on your laptop. The cost is a few counters per request. The cost of an incident without history is the whole investigation.
+**Our position:** start every server with `--enable-metrics`, including the one on your laptop. We did not measure its cost, and we expect it to be small next to a decode step. The cost of an incident without history is the whole investigation.
 
 ## Three kinds of series
 
@@ -82,7 +82,7 @@ These six series cover the failures in this manual. Every name below appears in 
 | `inter_token_latency_seconds` | histogram | p99 over 5 min is above your target | prefill batches stall running decodes, as the 1,948 ms gap in section 5.1 showed |
 | `num_queue_reqs` | gauge | above 0 for several minutes | the server is past its knee, and new requests only wait |
 | `token_usage` | gauge | near 1.0 for several minutes | the KV pool is full, and retraction comes next |
-| `num_retracted_reqs` | gauge | above 0 | the scheduler threw out requests and computes them again, see [section 2.3](#s-admission-and-retraction) |
+| `num_retracted_requests_total` | counter | rate above about 1 per minute | the scheduler threw out requests and computes them again, see [section 2.3](#s-admission-and-retraction) |
 | `prefill_effective_tokens_total` | counter | windowed hit rate drops after a deploy | a prompt change broke the prefix, see section 3.4 |
 
 The p99 of a histogram comes from its buckets:

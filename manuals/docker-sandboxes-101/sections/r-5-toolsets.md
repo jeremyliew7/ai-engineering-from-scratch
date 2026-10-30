@@ -2,7 +2,7 @@
 
 > The 27 toolset types of docker-agent 1.149.0, each with the tools it exposes, its options, and what it needs outside the agent file.
 
-`docker-agent toolsets` printed 27 types on 2026-10-08 (research/sources/probes/docker-agent-toolsets.txt), and the `type` enum of the schema holds the same 27 names {{schema Toolset}}. The Tools column comes from the docs page of each type under `tools/`, and `not documented` marks a type with no page. Options are the keys of [R.4](#s-ref-agent-file-keys) that the type reads, with the defaults the docs state. Needs says what the toolset reaches beyond the agent file: nothing, the host shell, the network, a credential, a binary, or Docker. The shared keys `instruction`, `tools`, `readonly`, `model`, `defer`, and `toon` apply to every type and are not repeated {{docs-agent Tool Configuration}}.
+`docker-agent toolsets` printed 27 types on 2026-10-08 ([our source record](manuals/docker-sandboxes-101/research/sources/probes/docker-agent-toolsets.txt)), and the `type` enum of the schema holds the same 27 names {{schema Toolset}}. The Tools column comes from the docs page of each type under `tools/`, and `not documented` marks a type with no page. Options are the keys of [R.4](#s-ref-agent-file-keys) that the type reads, with the defaults the docs state. Needs says what the toolset reaches beyond the agent file: nothing, the host shell, the network, a credential, a binary, or Docker. The shared keys `instruction`, `tools`, `readonly`, `model`, `defer`, and `toon` apply to every type and are not repeated {{docs-agent Tool Configuration}}.
 
 ## The 27 types
 

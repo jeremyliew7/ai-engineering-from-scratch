@@ -15,12 +15,11 @@
     "verified": "2026-10-16"
   },
   "outcomes": [
-    "Start SGLang, send a request, and read every line the scheduler logs about it.",
-    "Compute the KV cache cost of a model, size the pool on purpose, and explain why a server runs out of memory.",
-    "Write prompts that hit the prefix cache, and prove the hit rate with cached_tokens and /metrics.",
-    "Benchmark a server, find the concurrency knee, and report TTFT, TPOT, and throughput together.",
-    "Choose between tensor, data, and expert parallelism and prefill-decode disaggregation from measurements.",
-    "Judge a published SGLang benchmark: its version, its workload, and the mechanism that explains its result."
+    "Install SGLang, serve a model, and get the first answer from both of its APIs in about ten minutes.",
+    "Size the KV pool for your GPU, and fix a server that runs out of memory.",
+    "Tune the server for your traffic: shared prompts, long documents, many users, or FP8.",
+    "Benchmark your own server, and watch it in production with its metrics.",
+    "Choose how to scale to many GPUs, and judge a published benchmark before you trust it."
   ],
   "palette": [
     {
@@ -124,24 +123,28 @@
   "front": "front.md",
   "plate": {
     "figure": "plate-sglang-request",
-    "title": "One request, three processes, one cache",
-    "caption": "A chat request from our capture crosses the three processes. The radix cache served 2,998 of its 2,999 prompt tokens. From capture/out/cache-experiment.txt."
+    "title": "One radix tree on one L4",
+    "caption": "On our L4, the system prompt is one shared node of the radix tree, and each repeat request attaches below it. The repeats had 2,998 of 2,999 tokens cached, and the first token came after 82.5 ms instead of 2,143.9 ms. From capture/gpu/out-l4/cache-experiment.txt and capture/gpu/out-l4/server-default.log."
   },
   "parts": [
     {
       "number": 1,
-      "title": "SGLang on One Page",
-      "thesis": "A serving engine exists to keep an expensive GPU busy on tokens nobody computed before, and every SGLang feature serves that goal.",
-      "summary": "Prefill against decode, the four numbers every server is judged by, and one complete request from our capture.",
+      "title": "Start",
+      "thesis": "Install SGLang, serve a model, check that the server is healthy, and learn the two phases and four numbers behind every request.",
+      "summary": "Install with uv or Docker, the first answer from both APIs, the health checks and startup lines, then prefill against decode and the four numbers.",
       "accent": "blue",
       "sections": [
         {
           "id": "1.1",
-          "file": "sections/1-1-what-a-serving-engine-owns.md"
+          "file": "sections/1-1-install-sglang-and-serve-your-first-model.md"
         },
         {
           "id": "1.2",
-          "file": "sections/1-2-one-request-end-to-end.md"
+          "file": "sections/1-2-check-that-the-server-is-healthy.md"
+        },
+        {
+          "id": "1.3",
+          "file": "sections/1-3-what-the-server-does-with-your-request.md"
         }
       ]
     },
@@ -332,6 +335,10 @@
       {
         "id": "R.6",
         "file": "sections/r-6-figure-index.md"
+      },
+      {
+        "id": "R.7",
+        "file": "sections/r-7-how-this-manual-was-made.md"
       }
     ]
   },

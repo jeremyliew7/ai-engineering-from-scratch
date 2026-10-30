@@ -24,7 +24,7 @@ The manual pins `sbx` v0.47.0 at commit `0411f50e`, released 2026-10-05, and `do
 
 Facts come from seven sources, ranked by authority. When two of them disagree, the higher one wins and the text says so.
 
-| Rank | Source | What the manual takes from it | Cited as |
+| Rank | Source | What the manual takes from it | Source key |
 |---|---|---|---|
 | 1 | the help text of `sbx` 0.47.0 and `docker-agent` 1.149.0, as the binaries print it | every command, flag, default, and path | `help-sbx` or `help-agent` and a command |
 | 2 | `agent-schema.json` at v1.149.0 | every key, type, and default of the agent file | `schema` and a definition |
@@ -34,13 +34,13 @@ Facts come from seven sources, ranked by authority. When two of them disagree, t
 | 6 | Docker blog posts and talks | history and positioning, never a rule | `blog` or `talk` and a date |
 | 7 | the capture kit in `capture/` | every command output, file, and record shown | the capture file name |
 
-Sources 1 to 5 are vendored under `research/sources/`, so the audit checks each quote word for word. Blog posts and talks are not vendored, and their quotes are not checked.
+Sources 1 to 5 are [vendored in the repository](manuals/docker-sandboxes-101/research/sources), so each rule can be checked against its source. The manual states every rule in its own words. Blog posts and talks are not vendored.
 
 The sources disagree in many places. The largest are the kit generations ([conflict C13](#s-ref-sources-and-the-conflicts-register)) and the agent names and template image of each launch path ([C9 and C61](#s-ref-sources-and-the-conflicts-register)). Others are host secrets that `sbx` never injects ([C7](#s-ref-sources-and-the-conflicts-register)) and the two agent binaries on one Mac ([C48](#s-ref-sources-and-the-conflicts-register)). [The sources reference](#s-ref-sources-and-the-conflicts-register) lists every conflict with the ruling this manual prints.
 
 ## The capture kit
 
-The capture kit drives the real `sbx`, `docker-agent`, and `docker` binaries and writes what they print to `capture/out/`. It masks the values that change on every run, uses the Python standard library only, and has three recorded tiers:
+The capture kit drives the real `sbx`, `docker-agent`, and `docker` binaries and writes what they print to [its output folder](manuals/docker-sandboxes-101/capture/out). It masks the values that change on every run, uses the Python standard library only, and has three recorded tiers:
 
 | Tier | What it needs | What it records |
 |---|---|---|
@@ -48,7 +48,7 @@ The capture kit drives the real `sbx`, `docker-agent`, and `docker` binaries and
 | B | `sbx` signed in, the sandboxd daemon, image pulls from Docker Hub, and HTTPS to `example.com` and `mcp.deepwiki.com` | the sandbox lifecycle, ports, `cp`, templates, `--clone`, policy, secrets, MCP, kits, `env plan`, and skills (files 02 to 15) |
 | M | Docker Desktop 4.94.0 with Docker Model Runner on TCP port 12434 and `ai/qwen3:4b` pulled, plus containers, Compose, buildx, and a local registry | agent runs, teams, permissions, sessions, eval, five servers, `share`, Model Runner, Compose, `run --sandbox`, and the v3 kit build (files 17 to 28, 98) |
 
-The kit was recorded on one Mac with macOS 26.2 on Apple silicon. It ran `sbx` v0.47.0, `docker-agent` v1.149.0, Docker Desktop 4.94.0, and Docker Model Runner with `ai/qwen3:4b`. The documented default model, `ai/qwen3:latest`, failed twice to pull on that Mac with a digest mismatch (capture/out/25-model-pull-latest.txt). Every agent file therefore names the 4B tag of the same repository.
+The kit was recorded on one Mac with macOS 26.2 on Apple silicon. It ran `sbx` v0.47.0, `docker-agent` v1.149.0, Docker Desktop 4.94.0, and Docker Model Runner with `ai/qwen3:4b`. The documented default model, `ai/qwen3:latest`, failed twice to pull on that Mac with a digest mismatch ([the capture](manuals/docker-sandboxes-101/capture/out/25-model-pull-latest.txt)). Every agent file therefore names the 4B tag of the same repository.
 
 This kit cannot run offline in CI. `sbx` starts real microVMs from images on Docker Hub after a Docker sign-in, and the agent runs need a model. Where the tools are absent, `python3 capture/run.py --check` prints `skipped` with the reason and exits 0. Tier C needs Cloud Sandboxes, a GitHub token, or a change to `~/.ssh/config`. It is not recorded, and the sections that need it cite the docs.
 
@@ -60,7 +60,7 @@ Most runs of tier M replay a recorded cassette with `--fake`, so a check compare
 
 `$CAPTURE` stands for the capture directory and `$HOME` for the home directory. Values that change on every run appear as tokens such as `<uuid>`, `<hash>`, `<ts>`, and `<port>`. The command lines of tier M leave out `--config-dir`, `--data-dir`, and `--cache-dir`, which point at `capture/work/`.
 
-Citations name a place: {{help-sbx sbx run}} a command in the help text, {{schema AgentConfig}} a definition in the schema, and {{kitspec §3.4}} a section of the kit spec. A docs citation such as {{docs-sbx Network access policies}} names a page or heading, and {{rel-sbx v0.43.0}} names a release. A listing copies lines from a capture file unchanged, and a `…` marks a cut that the note explains.
+Each section records its sources in the manual source, where the audit checks every quote and number. The sections do not show them. The sources reference lists them. A listing copies lines from a capture file unchanged, and a `…` marks a cut that the note explains.
 
 Figures animate on the web, where a Replay button runs the steps again, and print and reduced motion show the final frame.
 
@@ -199,7 +199,7 @@ id: fig-0-1
 kind: sequence
 title: reading a sequence figure in this manual
 claim: Each of the eight arrow styles marks one kind of exchange, and every label is a real command, rule, status, or event name from the capture.
-caption: Read each numbered row from the tail of the arrow to its head, and the note under each label names the style. Rows 1 to 7 come from capture/out/09-blocked.txt, 09-allow.txt, and 09-allowed.txt. Rows 8 and 9 come from 27-inside-run.txt and the cassette 18-files, and row 10 from 04-auto-stop.txt.
+caption: Read each numbered row from the tail of the arrow to its head, and the note under each label names the style. Rows 1 to 7 come from the blocked, allow, and allowed captures. Rows 8 and 9 come from the inside run and the cassette, and row 10 from the auto-stop capture.
 ```
 
 The model call in row 8 passes through the proxy, which [figure](#fig-1-3) draws as a separate hop.

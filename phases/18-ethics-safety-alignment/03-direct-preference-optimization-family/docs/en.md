@@ -53,7 +53,7 @@ What can go wrong:
 
 - The implicit reward gap `beta * (log(pi/pi_ref)_w - log(pi/pi_ref)_l)` is unbounded. A tiny preference can produce an arbitrarily large gap.
 - The loss drives chosen and rejected log-probs in opposite directions. It can push the chosen absolute log-prob down as long as the rejected falls faster. This is the Degraded Chosen Response phenomenon.
-- Out-of-distribution preferences (rare rare pair vs rare rare pair) produce arbitrary implicit rewards.
+- Out-of-distribution preferences (pairs where both responses are rare under the reference policy) produce arbitrary implicit rewards.
 
 ### IPO (Azar et al., 2024)
 

@@ -69,7 +69,7 @@ Standard trackers drop low-confidence detections (< 0.5). ByteTrack keeps them a
 
 ### SAM 2 memory-based tracking
 
-SAM 2 handles video by keeping a **memory bank** of per-instance spatio-temporal features. Given a prompt (click, box, text) on one frame, it encodes the instance into memory. On subsequent frames, the memory is cross-attended against the new frame's features, and the decoder produces a mask for the same instance in the new frame.
+SAM 2 handles video by keeping a **memory bank** of per-instance spatio-temporal features. Given a prompt (click, box, or mask) on one frame, it encodes the instance into memory. On subsequent frames, the memory is cross-attended against the new frame's features, and the decoder produces a mask for the same instance in the new frame.
 
 No Kalman filter, no Hungarian assignment. The association is implicit in the memory-attention operation.
 

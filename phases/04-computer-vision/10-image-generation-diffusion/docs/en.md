@@ -260,7 +260,7 @@ def sample_ddim(model, schedule, shape, steps=50, T=1000, device="cpu", eta=0.0)
     x = torch.randn(shape, device=device)
     alphas_cumprod = schedule["alphas_cumprod"].to(device)
 
-    ts = torch.linspace(T - 1, 0, steps + 1).long()
+    ts = torch.linspace(T - 1, -1, steps + 1).round().long()
     for i in range(steps):
         t = ts[i]
         t_prev = ts[i + 1]
@@ -276,7 +276,7 @@ def sample_ddim(model, schedule, shape, steps=50, T=1000, device="cpu", eta=0.0)
     return x
 ```
 
-`eta=0` is fully deterministic (same noise input always produces the same output). `eta=1` recovers DDPM.
+The schedule ends at `t_prev = -1`, so the last step uses `a_prev = 1.0` and returns the clean `x0_pred` with no leftover noise. `eta=0` is fully deterministic (same noise input always produces the same output). `eta=1` recovers DDPM when the schedule visits every timestep (`steps=T`).
 
 ## Use It
 

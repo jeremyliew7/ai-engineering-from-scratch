@@ -99,6 +99,9 @@ The build scores every poster with these rules. A poster must pass all of them.
 - Every defaults row has a real value. "Not given" and similar text are not values.
 - No thin block: a table or list has at least 2 rows. A code block, a diagram or a flow has at least 3 lines, nodes or steps.
 - No row or bullet appears two times.
+- Learner content only. No capture kit, \`run.py\`, fixture build, build script, audit script, \`manual.json\`, CI workflow or capture environment variable.
+- Every table row is complete. No cell is empty, "-", "TBD" or "...".
+- A diagram has no edge that crosses a node, and no edge label that overlaps a node or another label.
 - The poster fits on 2 printed pages.
 - Per kind:
 ${lines.join('\n')}`;

@@ -7,6 +7,12 @@
   </picture>
 </p>
 
+<p align="center">
+ <a href="https://www.star-history.com/rohitg00/ai-engineering-from-scratch">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=rohitg00/ai-engineering-from-scratch&type=rank&theme=dark" /><source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=rohitg00/ai-engineering-from-scratch&type=rank" /><img alt="رتبه در تاریخچه ستاره‌ها" src="https://api.star-history.com/badge?repo=rohitg00/ai-engineering-from-scratch&type=rank" /></picture> <picture><source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=rohitg00/ai-engineering-from-scratch&type=trending&theme=dark" /><source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=rohitg00/ai-engineering-from-scratch&type=trending" /><img alt="مخزن پرطرفدار امروز در GitHub" src="https://api.star-history.com/badge?repo=rohitg00/ai-engineering-from-scratch&type=trending" /></picture>
+ </a>
+</p>
+
 عملیات داخلی مدل، خط لولهٔ بازیابی و محیط اجرای عامل را پیاده کنید. آن‌ها را بیازمایید، شکست‌ها را بررسی کنید و کد و نتایج ارزیابی را نگه دارید.
 
 **[یادگیری را شروع کنید](https://aiengineeringfromscratch.com/lesson?path=phases/00-setup-and-tooling/01-dev-environment)** · **[یک مسیر انتخاب کنید](#learning-routes)** · **[یک آزمایشگاه را امتحان کنید](#interactive-lab)** · **[یک پروژه بسازید](#project-challenges)** · **[برنامهٔ درسی را مرور کنید](#contents)**

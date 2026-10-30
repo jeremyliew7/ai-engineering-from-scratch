@@ -10,10 +10,10 @@ When you finish this section, you can write `permissions` patterns, pick a `--sa
 label: what permissions are not
 source: docs-agent Permissions
 ---
-"Permissions are enforced client-side. They help prevent accidental operations but should not be relied upon as a security boundary for untrusted agents."
+The client enforces permissions. They stop accidents, but they are not a security boundary for an agent that you do not trust.
 ```
 
-The same page says the `restricted` mode "is defense in depth against unwanted tool calls, not a security boundary" {{docs-agent Permissions}}. For isolation, run the agent in a sandbox, as [docker-agent run --sandbox](#s-docker-agent-run-sandbox-end-to-end) shows.
+The same page says that the `restricted` mode is an extra layer against unwanted tool calls, not a security boundary {{docs-agent Permissions}}. For isolation, run the agent in a sandbox, as [docker-agent run --sandbox](#s-docker-agent-run-sandbox-end-to-end) shows.
 
 ## The guarded agent
 
@@ -65,7 +65,7 @@ permissions:
 | `restricted` | allow | deny | deny |
 | `autonomous` | allow | allow | allow |
 
-`--yolo` is the same as `--safety autonomous` {{help-agent docker-agent run}}. A session that never chooses a mode keeps "the historical default: read-only tools auto-approve, everything else asks" {{docs-agent Permissions}}. That is why the `wc -l` call in [run, new, and doctor](#s-docker-agent-run-new-and-doctor) asked although its label was `safe`, because `shell` carries `readOnlyHint: false`.
+`--yolo` is the same as `--safety autonomous` {{help-agent docker-agent run}}. A session that never chooses a mode keeps the old default: read-only tools run without a prompt, and every other tool asks {{docs-agent Permissions}}. That is why the `wc -l` call in [run, new, and doctor](#s-docker-agent-run-new-and-doctor) asked although its label was `safe`, because `shell` carries `readOnlyHint: false`.
 
 ## Three calls in two modes
 
@@ -102,9 +102,9 @@ note: The third of three lines, one per call of the restricted run.
 {"agent_name": "root", "cwd": "$CAPTURE", "hook_event_name": "pre_tool_use", "safety_policy": "restricted", "session_id": "<uuid>", "tool_input": {"cmd": "rm -rf work/m101-nothing"}, "tool_name": "shell", "tool_use_id": "<call-id>"}
 ```
 
-`log-hook.sh` appends that line to a file and prints `"permission_decision":"allow"`. The stream shows it as `pre_tool_use_pre_yolo` with `"allowed": true` on all three calls, yet `rm` was denied and strict still asked for `pwd`. From a preempting hook, "an allow verdict is advisory" {{schema HookMatcherConfig}}. Its deny or ask would have ended the call.
+`log-hook.sh` appends that line to a file and prints `"permission_decision":"allow"`. The stream shows it as `pre_tool_use_pre_yolo` with `"allowed": true` on all three calls, yet `rm` was denied and strict still asked for `pwd`. From a preempting hook, an allow verdict is only advice {{schema HookMatcherConfig}}. Its deny or ask would have ended the call.
 
-Two more hooks run on every call: `tool_input_transform` and `tool_response_transform` appear in each stream, although no file declares them. `redact_secrets`, `true` by default, installs a builtin on those events {{schema AgentConfig}}. A hook can also run several times at once. When one message asked for three commands, the hook ran three times at once, and two runs appended to the log file together (`capture/README.md`). Write each record in one write.
+Two more hooks run on every call: `tool_input_transform` and `tool_response_transform` appear in each stream, although no file declares them. `redact_secrets`, `true` by default, installs a builtin on those events {{schema AgentConfig}}. A hook can also run several times at once. When one message asked for three commands, the hook ran three times at once. Two runs appended to the log file together ([kit notes](manuals/docker-sandboxes-101/capture/README.md)). Write each record in one write.
 
 ```figure
 id: fig-5-5

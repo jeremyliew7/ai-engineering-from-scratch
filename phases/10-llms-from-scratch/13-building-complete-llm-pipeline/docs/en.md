@@ -9,7 +9,7 @@
 
 ## Learning Objectives
 
-- Compose the eleven prior lessons (tokenizer, data, pre-training, scaling, SFT, RLHF, DPO, CAI, eval, quantization, inference) into a single reproducible pipeline spec
+- Compose the twelve prior lessons (two tokenizer lessons, data, pre-training, scaling, SFT, RLHF, DPO, CAI, eval, quantization, inference) into a single reproducible pipeline spec
 - Define the artifact contract between stages: what each stage consumes, what it produces, and how the next stage verifies the input
 - Build an orchestrator that tracks experiments, hashes artifacts, and gates ship decisions on eval thresholds
 - Design the rollback plan: which artifacts are cheap to re-run, which are expensive, and what a corrupted checkpoint costs

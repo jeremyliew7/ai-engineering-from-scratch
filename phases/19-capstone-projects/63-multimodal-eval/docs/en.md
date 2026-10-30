@@ -108,7 +108,7 @@ Output: the before/after metric table shows retrieval improving from near-random
 
 Each metric maps directly onto a production benchmark:
 
-- **Retrieval.** MS-COCO 5K val, Flickr30K, ImageNet zero-shot are all R@K problems on the same similarity matrix. Replace the synthetic eval with the real files and the function signature is unchanged.
+- **Retrieval.** MS-COCO 5K val and Flickr30K are R@K problems on the same similarity matrix. ImageNet zero-shot uses that matrix too, with one prompt embedding per class, but it reports top-1 classification accuracy, which is R@1 over class prompts. Replace the synthetic eval with the real files and the function signature is unchanged.
 - **VQA.** VQA v2, GQA, OK-VQA use the same exact-match shape (with soft-acc instead of single-answer EM for VQA v2).
 - **BLEU-4.** MS-COCO captioning, NoCaps, Flickr30K captioning all use BLEU-4 plus CIDEr and METEOR. Adding CIDEr is one more function.
 
@@ -141,7 +141,7 @@ python3 -m unittest code/test_main.py
 
 4. Compute mean reciprocal rank (MRR) alongside R@K. MRR is sensitive to where the correct item lands beyond the top K; R@K is sensitive to whether it lands in the top K.
 
-5. Run the eval on the model at five checkpoints during training (step 0, 10, 20, 30, 40, 50) and plot the learning curve. Confirm the metric trajectories track the loss trajectory.
+5. Run the eval on the model at six checkpoints during training (step 0, 10, 20, 30, 40, 50) and plot the learning curve. Confirm the metric trajectories track the loss trajectory.
 
 ## Key Terms
 

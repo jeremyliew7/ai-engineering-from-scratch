@@ -1,6 +1,6 @@
 # Hybrid models and the cache
 
-> Sliding-window and Mamba layers keep state that a token-level tree cannot split at any position, so hybrid models are where SGLang's cache fails today.
+> Sliding-window and Mamba layers keep state that a token-level tree cannot split at any position, so hybrid models are where many reported cache failures sit at v0.5.22.
 
 A team serves a hybrid model that mixes linear-attention layers with full-attention layers. They turn on HiCache and run twenty requests that hit the host tier. All twenty answers are fluent and on topic for a different prompt. The usage block reports full cached tokens, and nothing in the logs warns them.
 
@@ -47,9 +47,9 @@ caption: Read from the root down. Snapshots every 256 decode tokens follow the -
 
 ## What goes wrong, in the issues
 
-Most open cache bugs at v0.5.22 involve hybrid models. These four show the range.
+Many reported cache bugs at v0.5.22 involve hybrid models. We did not run a hybrid model ourselves. These four issues show the range.
 
-1. **A wrong answer from a host-tier hit.** Issue #39830 is the opening story of this section {{issue #39830}}. A hybrid linear-attention model with HiCache gave fluent answers to a different prompt on 20 of 20 host-tier hits. Cold requests and GPU hits were correct. Earlier reports of the same class exist on the GPU path.
+1. **A wrong answer from a host-tier hit.** Issue #39830 is the opening story of this section {{issue #39830}}. A hybrid linear-attention model with HiCache gave fluent answers to a different prompt on 20 of 20 host-tier hits. Cold requests and GPU hits were correct.
 2. **Zero reuse for an identical prompt.** In issue #22935, the match of a repeated prompt ends inside an edge, and the node split creates a node with no Mamba state {{issue #22935}}. The match stops at the last node with state, so the identical prompt reuses nothing.
 3. **A strategy that makes the first token 4.7 times slower.** In issue #37834, an option forced the `no_buffer` strategy {{issue #37834}}. The snapshot sat at a depth that later requests could not reach. On a retrieval workload the hit rate fell from 88.2 to 65.9 percent. The mean time to first token rose from 226 ms to 1,063 ms.
 4. **A default that slowed decode.** Issue #36131 reports a new default that frees SWA slots outside the window {{issue #36131}}. It reduced single-stream decode throughput for hybrid SWA models on DGX Spark and Thor.
@@ -62,7 +62,7 @@ On a full-attention model, a wrong cache hit is rare enough that we leave the ca
 2. **Reuse.** Repeat a prompt and read `#cached-token`. An identical prompt that shows a small count has hit the split problem of issue #22935.
 3. **Latency.** Measure the time to first token with `--mamba-radix-cache-strategy auto` and with the strategy your deployment guide recommends. Keep the faster one only if the hit rate holds.
 
-Then read the open issues for your model family before each upgrade. Between 2026-09-01 and the v0.5.22 tag, 334 commits touched the cache code. On hybrid models, a new release can fix one of these bugs and add another.
+Then read the open issues for your model family before each upgrade. Between 2026-09-01 and the v0.5.22 tag, about 330 commits touched the cache code in `python/sglang/srt/mem_cache`. On hybrid models, a new release can fix one of these bugs and add another.
 
 ```takeaways
 - Read hybrid_swa and hybrid_ssm in the startup log for every new model.
@@ -72,4 +72,4 @@ Then read the open issues for your model family before each upgrade. Between 202
 - Read the open cache issues for your model family before each upgrade.
 ```
 
-Sources: python/sglang/srt/mem_cache/unified_radix_cache.py, python/sglang/srt/mem_cache/unified_cache/components/README.md, python/sglang/srt/arg_groups/fields/exec_.py (mamba_radix_cache_strategy, mamba_track_interval), python/sglang/srt/arg_groups/fields/schedule.py (swa_full_tokens_ratio), python/sglang/srt/arg_groups/model_overrides/deepseek_v4.py, python/sglang/srt/arg_groups/fields/observability.py (kv_canary) at v0.5.22, capture/out/server-default.log, issues #39830, #22935, #37834, and #36131.
+Sources: python/sglang/srt/mem_cache/unified_radix_cache.py, python/sglang/srt/mem_cache/unified_cache/components/README.md, python/sglang/srt/arg_groups/fields/exec_.py (mamba_radix_cache_strategy, mamba_track_interval), python/sglang/srt/arg_groups/fields/schedule.py (swa_full_tokens_ratio), python/sglang/srt/arg_groups/model_overrides/deepseek_v4.py, python/sglang/srt/arg_groups/fields/observability.py (kv_canary) at v0.5.22, capture/out/server-default.log, issues #39830, #22935, #37834, and #36131; the GitHub commit list for path python/sglang/srt/mem_cache since 2026-09-01 at tag v0.5.22 (333 commits, counted 2026-10-22)

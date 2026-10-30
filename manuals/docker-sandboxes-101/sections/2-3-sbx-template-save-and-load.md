@@ -6,13 +6,15 @@ You spent an hour inside `m101-demo` installing a toolchain, and tomorrow a seco
 
 ## What a template holds
 
-**Template:** a saved snapshot of a sandbox's container filesystem, stored as an image: "Templates are saved snapshots of sandboxes that can be reused to create new sandboxes with: sbx run --pull never -t TAG AGENT [WORKSPACE]" {{help-sbx sbx template}}. The docs draw the line between image and kit: "A template contains image content; the agent kit still supplies runtime settings such as credentials and network rules" {{docs-sbx Saving a sandbox as a template}}. Mounted filesystems are not in it, because "A saved template isn't a backup of the whole sandbox" {{docs-sbx Saving a sandbox as a template}}, and that excludes host workspaces and the Docker store at `/var/lib/docker`. Everything else in the container filesystem is in it, including any key an agent wrote to a file. Keep credentials in [sbx secret](#s-sbx-secret-set-import-and-set-custom) and the proxy instead. Agent configuration files such as `/home/agent/.claude/settings.json` "are always recreated when a sandbox is created" {{docs-sbx Limitations}}, so a change there does not survive either.
+**Template:** a saved snapshot of a sandbox's container filesystem, stored as an image. You create new sandboxes from it with `sbx run --pull never -t TAG AGENT [WORKSPACE]` {{help-sbx sbx template}}. The docs draw the line between image and kit. A template holds image content, and the agent kit still supplies the runtime settings, such as credentials and network rules {{docs-sbx Saving a sandbox as a template}}. Mounted filesystems are not in it, because a saved template is not a backup of the whole sandbox {{docs-sbx Saving a sandbox as a template}}.
 
-Every built-in agent starts from `docker/sandbox-templates:<variant>`, and `m101-demo` pulled `docker/sandbox-templates:shell-docker`. Variants with a `-docker` suffix "include Docker Engine for building and running containers inside the sandbox" {{docs-sbx Choose a template}}, which is why `docker version` answers inside `m101-demo`. With `platform.images.useDHI` set, "the default template docker/sandbox-templates:claude-code-docker becomes dhi/sbx-templates:claude-code-docker" {{docs-sbx platform.images.useDHI}}, and the tag stays the same.
+That excludes host workspaces and the Docker store at `/var/lib/docker`. Everything else in the container filesystem is in it, including any key an agent wrote to a file. Keep credentials in [sbx secret](#s-sbx-secret-set-import-and-set-custom) and the proxy instead. Agent configuration files such as `/home/agent/.claude/settings.json` are written again every time a sandbox is created {{docs-sbx Limitations}}, so a change there does not survive either.
+
+Every built-in agent starts from `docker/sandbox-templates:<variant>`, and `m101-demo` pulled `docker/sandbox-templates:shell-docker`. A variant with a `-docker` suffix includes Docker Engine, so you can build and run containers inside the sandbox {{docs-sbx Choose a template}}. That is why `docker version` answers inside `m101-demo`. With `platform.images.useDHI` set, the default template `docker/sandbox-templates:claude-code-docker` changes to `dhi/sbx-templates:claude-code-docker` {{docs-sbx platform.images.useDHI}}, and the tag stays the same.
 
 ## sbx template save
 
-`sbx template save SANDBOX TAG` needs a stopped sandbox. The capture tries it on the running `m101-demo`, reads `cannot save a running sandbox`, stops it, and saves `m101-tpl:v1`. The image "is stored in the sandbox runtime's image store" {{help-sbx sbx template save}}, and that store is separate from the image store of the Docker daemon on the host {{docs-sbx Load a template}}. The 2025 plugin's `docker sandbox save` loaded the image into the host daemon by default, and `--output` was the way to a file, as [conflict C32](#s-ref-sources-and-the-conflicts-register) records.
+`sbx template save SANDBOX TAG` needs a stopped sandbox. The capture tries it on the running `m101-demo`, reads `cannot save a running sandbox`, stops it, and saves `m101-tpl:v1`. The image goes to the image store of the sandbox runtime {{help-sbx sbx template save}}. That store is separate from the image store of the Docker daemon on the host {{docs-sbx Load a template}}. The 2025 plugin's `docker sandbox save` loaded the image into the host daemon by default, and `--output` was the way to a file, as [conflict C32](#s-ref-sources-and-the-conflicts-register) records.
 
 ```listing
 title: a save refused, a stop, and a save
@@ -65,7 +67,7 @@ note: Cut to the record of m101-tpl:v1.
 
 ## Reuse with --pull never -t
 
-Reuse is `sbx run --pull never -t TAG AGENT [WORKSPACE]`, and the help explains the flag: "Use --pull never to use the saved image without trying to pull it from a registry" {{help-sbx sbx template save}}. The capture uses `sbx create --pull never -t m101-tpl:v1 shell --name m101-from-tpl`, reads `Checking image` instead of `Pulling image`, and finds `/opt/marker-from-demo` inside the new sandbox. Name the agent the template was built for, because a Claude template run with `codex` prints a warning that the sandbox "may not work correctly" {{docs-sbx Limitations}}.
+Reuse is `sbx run --pull never -t TAG AGENT [WORKSPACE]`, and the help explains the flag: `--pull never` uses the saved image and does not try a registry {{help-sbx sbx template save}}. The capture uses `sbx create --pull never -t m101-tpl:v1 shell --name m101-from-tpl`, reads `Checking image` instead of `Pulling image`, and finds `/opt/marker-from-demo` inside the new sandbox. Name the agent that the template was built for. A Claude template run with `codex` prints a warning that the sandbox can fail to work correctly {{docs-sbx Limitations}}.
 
 ```listing
 title: a sandbox from the template, with the marker file
@@ -91,18 +93,18 @@ $ sbx exec m101-from-tpl sh -c 'ls -l /opt/marker-from-demo'
 [exit 0]
 ```
 
-`sbx template inspect` is "Cloud-only in v1: requires --cloud" {{help-sbx sbx template inspect}}. The local attempt in the capture exits 1 with a hint to run `docker image inspect -- m101-tpl:v1`. That command reads the host daemon's store, which the runtime does not share, so use `sbx template ls` for a local template. `sbx template rm m101-tpl:v1 --force` prints `Removed: m101-tpl:v1`, and `sbx reset` clears the cached images too.
+`sbx template inspect` works only in the cloud in v1, and it needs `--cloud` {{help-sbx sbx template inspect}}. The local attempt in the capture exits 1 with a hint to run `docker image inspect -- m101-tpl:v1`. That command reads the host daemon's store, which the runtime does not share, so use `sbx template ls` for a local template. `sbx template rm m101-tpl:v1 --force` prints `Removed: m101-tpl:v1`, and `sbx reset` clears the cached images too.
 
 ## Export and load
 
-`--output FILE` on save also writes a tar. `work/m101-tpl.tar` has 24 entries and starts with `blobs/sha256/`, the layout of an OCI image. On the other host, `sbx template load FILE` loads "an image from a tar file into the sandbox runtime's image store" {{help-sbx sbx template load}}, and `sbx run --pull never -t m101-tpl:v1 shell` starts from it. The capture did not load the tar on a second machine, so [figure](#fig-2-2) draws that step from the help text. The same path imports an image you built yourself: `docker image save` writes the tar and `sbx template load` imports it, so the image "doesn't need to be reachable from a registry at sandbox creation time" {{docs-sbx Load a template}}.
+`--output FILE` on save also writes a tar. `work/m101-tpl.tar` has 24 entries and starts with `blobs/sha256/`, the layout of an OCI image. On the other host, `sbx template load FILE` loads the image from the tar file into the image store of the sandbox runtime {{help-sbx sbx template load}}, and `sbx run --pull never -t m101-tpl:v1 shell` starts from it. The capture did not load the tar on a second machine, so [figure](#fig-2-2) draws that step from the help text. The same path imports an image that you built yourself: `docker image save` writes the tar, and `sbx template load` imports it. So no registry needs to serve the image when the sandbox is created {{docs-sbx Load a template}}.
 
 ```figure
 id: fig-2-2
 kind: flow
 title: from a stopped sandbox to a template, a tar, and a new sandbox
 claim: A template moves from a stopped sandbox into the runtime image store, out as a tar, and into a new sandbox with --pull never -t.
-caption: Read left to right, then down. Solid teal arrows are durable writes into a store or a file. The solid ink arrow is the create call, and the dashed olive arrow is a copy you make outside sbx. From capture/out/07-template-save.txt, 07-template-ls.json, 07-template-tar-head.txt, and 07-template-run.txt. The load on another host is not recorded and follows the help text of sbx template load.
+caption: Read left to right, then down. Solid teal arrows are durable writes into a store or a file. The solid ink arrow is the create call, and the dashed olive arrow is a copy you make outside sbx. The solid steps come from the template captures. The load on another host is not recorded and follows the help text of sbx template load.
 ```
 
 In the cloud, `sbx --cloud template load FILE NAME` needs `--cpus` and `--memory-mib` that together name a billable shape {{help-sbx sbx template load}}. The shapes run from micro, 1 vCPU and 2048 MiB, to xl, 16 vCPU and 32768 MiB. `--capture-mode all` adds memory and a microVM checkpoint to the disk capture. Tier C was not recorded, so this manual shows no cloud listing, and [sbx --cloud](#s-sbx-cloud-run-move-and-ttl) cites the help text instead.

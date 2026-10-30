@@ -135,12 +135,12 @@ from: phases/12-multimodal-ai/20-omni-models-thinker-talker/docs/en.md, phases/1
 |---|---|---|
 | Mic to audio tokens | 40-80ms | Streams |
 | Prefill | 100-200ms | Much more at 70B |
-| First Thinker text token | 40ms | |
-| Talker on first text token | 20ms | |
-| First speech tokens commit | 40ms | |
+| First Thinker text token | 40ms | Grows with Thinker size |
+| Talker on first text token | 20ms | At least 15ms in the lesson model |
+| First speech tokens commit | 40ms | Before residual-VQ decode |
 | Residual-VQ decode | 30ms | `rvq_decode = 30` |
 | Speech waveform decode | 50-80ms | `wave_decode = 70` |
-| Total TTFAB | 320-510ms | 600-900ms at 70B |
+| Total TTFAB | 320-490ms | 600-900ms at 70B |
 
 ## Troubleshooting
 type: troubleshooting

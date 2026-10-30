@@ -57,11 +57,13 @@ caption: Read left to right. The numbers are the values of the KVPoll class. Amb
 
 All defaults come from the v0.5.22 code {{code}}. `mooncake_tcp` exists for clusters without RDMA network cards. We did not measure its speed.
 
-Do not send requests straight to a prefill or decode server. The scheduler asserts that a bootstrap room exists, and its error message says "Do not send requests directly to prefill or decode instances; send to the router instead" {{code}}.
+Do not send requests straight to a prefill or decode server. The scheduler asserts that a bootstrap room exists, and its error message tells you to send requests to the router instead {{code}}.
 
 ## Our position
 
 Do not start with disaggregation. Start with one server, then add data parallel copies behind the gateway. Split prefill from decode only after you measured that prefill interference hurts your inter-token latency at the concurrency you serve. Disaggregation adds a second set of failures: the bootstrap step, the RDMA transfer, two timeouts, and a router that must pair servers correctly.
+
+Even for the tail, the gain is a condition, not a default. A 2025 study compared split servers with servers that run both stages. It found that the gain is not guaranteed, and that it depends on the request load and on the path that moves the KV cache. We did not measure this ourselves. Before you keep a split, compare it with the same GPUs run as plain servers, at your real load.
 
 A real incident shows the cost of skipping that measurement. A user ran one prefill and one decode server, each with TP4 ([issue #12591](https://github.com/sgl-project/sglang/issues/12591)). Time to first token was higher than on one TP4 server without disaggregation. The cause was an old Mooncake transfer engine. Upgrading it fixed the problem, and a maintainer also suggested `SGLANG_DISAGGREGATION_QUEUE_SIZE=1` without attention data parallelism. Without the single-server baseline, nobody would have known that disaggregation made things worse.
 
@@ -77,7 +79,7 @@ Novita AI found a different delay with GLM-4.7 on H200 {{field Novita 2026-01}}.
 
 The ratio depends on your traffic. dstack tested gpt-oss-120b on eight H200 GPUs with SGLang disaggregation and tensor parallelism only {{field dstack 2025-09}}. At high concurrency, one prefill server for three decode servers won every metric, for prefill-heavy, decode-heavy, and balanced loads. At low concurrency, three to one and two to two gave a better time to first token. Their [post](https://dstack.ai/blog/benchmarking-pd-ratios/) shows charts without absolute numbers, so use it for the direction only.
 
-At the largest scale, the SGLang team ran DeepSeek on 12 nodes of eight H100 GPUs, with 4 prefill nodes and 9 decode nodes {{team 2025-05}}. They reported 52.3k input and 22.3k output tokens per second per node for 2000-token inputs. The Mooncake team reported Kimi K2 on 128 H200 GPUs with 4 prefill and 12 decode nodes {{team 2025-07}}. They gave decode more nodes so that the KV pool could hold a batch of 480. Both are reports from the teams that built the system.
+At the largest scale, the SGLang team ran DeepSeek on 12 nodes of eight H100 GPUs {{team 2025-05}}. They reported 52.3k input and 22.3k output tokens per second per node for 2000-token inputs. They measured prefill on 4 nodes and decode on 9 nodes, in separate runs. The Mooncake team reported Kimi K2 on 128 H200 GPUs with 4 prefill and 12 decode nodes {{team 2025-07}}. They gave decode more nodes so that the KV pool could hold a batch of 480. Both are reports from the teams that built the system.
 
 ## What happened on two L4s
 
@@ -100,11 +102,11 @@ Mean TTFT (ms):                          0.00
 
 Decode could run only two requests at a time, and 19 more waited for decode memory. Prefill kept producing KV caches for them, and the TCP transfer queue to decode filled. Three minutes into the sweep, the transfer session failed, and it did not come back. Every later request failed its transfer.
 
-The dangerous part came next. Each failed request still returned HTTP 200 through the router, with no text. The benchmark counted 240 successful requests out of 240 and printed a throughput higher than the FP8 server's. Only two numbers gave it away: zero retokenized output tokens and a mean TTFT of 0.00 ms.
+The dangerous part came next. Each failed request still counted as a success through the router, with no text. The benchmark counted 240 successful requests out of 240 at 8 requests per second. It printed 751.85 output tokens per second, higher than the 728.61 of the FP8 server at the same rate. Only two numbers gave it away: zero retokenized output tokens and a mean TTFT of 0.00 ms.
 
 We did not publish those throughput numbers. Our kit now refuses a run in which every request has a TTFT of 0.
 
-We then ran the split the other way round. Decode had the full pool of 24,094 tokens, and prefill had the shared card with 2,925. Up to 8 users, every request came back with text. At 16 users, only 2,048 of 8,192 generated tokens came back as text. At 32 users, every request came back empty, and the kit stopped the sweep.
+We then ran the split the other way round. Decode had the full pool of 24,094 tokens, and prefill had the shared card with 2,925. From 1 to 8 users, every request came back with text. At 16 users, only 2,048 of 8,192 generated tokens came back as text. At 32 users, every request came back empty, and the kit stopped the sweep.
 
 ```listing
 title: the swapped split as it failed
@@ -123,7 +125,7 @@ c32: Total generated tokens: 16384
 c32: Total generated tokens (retokenized): 0 
 ```
 
-The fixed-rate sweep and the original direction failed the same way, at 4 requests per second and at 4 users. We have no measured result for the split under load on this pair of cards, and we do not claim one. Check `Total generated tokens (retokenized)` in every disaggregated benchmark before you read its throughput.
+The original direction failed early in both sweeps. At 2 users only 512 of 2,048 generated tokens came back as text, and at 4 users none did. The fixed-rate sweep lost most of its text from 0.5 requests per second. We have no measured result for the split under load on this pair of cards, and we do not claim one. Check `Total generated tokens (retokenized)` in every disaggregated benchmark before you read its throughput.
 
 ## What to measure
 
@@ -143,4 +145,4 @@ Measure TTFT and inter-token latency on one server first, with the benchmark in 
 - Choose the prefill to decode ratio from your own concurrency, then watch transfer failures.
 ```
 
-Sources: python/sglang/srt/arg_groups/fields/disagg.py, python/sglang/srt/arg_groups/choices.py, python/sglang/srt/environ.py, python/sglang/srt/disaggregation/prefill.py, python/sglang/srt/disaggregation/decode.py, python/sglang/srt/disaggregation/base/conn.py (KVPoll), python/sglang/srt/disaggregation/common/conn.py, python/sglang/srt/disaggregation/mooncake/conn.py, python/sglang/srt/managers/data_parallel_controller.py, python/sglang/srt/observability/metrics_collector.py, sgl-model-gateway/src/routers/http/pd_router.rs and pd_types.rs, and docs/docs/advanced_features/pd_disaggregation.mdx, all at v0.5.22. capture/gpu/incidents/l4-pd-mooncake-tcp-queue.txt, capture/gpu/out-l4/bench-pd-swap.txt. Issues #12591, #9266, #9926, pull request #9803. Novita AI on Hugging Face, 2026-01-22. dstack, "Benchmarking Prefill-Decode ratios", 2025-09-25. LMSYS, 96 H100 deployment, 2025-05-05. The Mooncake team on the LMSYS blog, 2025-07-20.
+Sources: python/sglang/srt/arg_groups/fields/disagg.py, python/sglang/srt/arg_groups/choices.py, python/sglang/srt/environ.py, python/sglang/srt/disaggregation/prefill.py, python/sglang/srt/disaggregation/decode.py, python/sglang/srt/disaggregation/base/conn.py (KVPoll), python/sglang/srt/disaggregation/common/conn.py, python/sglang/srt/disaggregation/mooncake/conn.py, python/sglang/srt/managers/data_parallel_controller.py, python/sglang/srt/observability/metrics_collector.py, sgl-model-gateway/src/routers/http/pd_router.rs and pd_types.rs, and docs/docs/advanced_features/pd_disaggregation.mdx, all at v0.5.22. capture/gpu/incidents/l4-pd-mooncake-tcp-queue.txt, capture/gpu/out-l4/bench-pd-swap.txt. Issues #12591, #9266, #9926, pull request #9803. Novita AI on Hugging Face, 2026-01-22. dstack, "Benchmarking Prefill-Decode ratios", 2025-09-25. LMSYS, 96 H100 deployment, 2025-05-05. The Mooncake team on the LMSYS blog, 2025-07-20, capture/gpu/incidents/l4-pd-summary-lines.txt, Li and others, Revisiting Disaggregated Large Language Model Serving for Performance and Energy Implications, arXiv 2601.08833 (2025-11).

@@ -61,7 +61,7 @@ The bridge walks every defined data item in the program and keeps the ones with 
 label: what an empty result proves
 source: ghidra §Admitted inventory semantics
 ---
-"Packed or undefined literals, including Rust strings, may be absent; an empty result does not prove text is absent."
+Packed or undefined literals, Rust strings among them, can be missing from the list. An empty result does not prove that the text is not in the file.
 ```
 
 `termination` has two values. `missing` means a string type that needs a null byte has none. `present_or_not_required` covers everything else, because Ghidra cannot tell a present terminator from a layout that needs none. `byte_length` counts the terminator: `F` is two bytes.

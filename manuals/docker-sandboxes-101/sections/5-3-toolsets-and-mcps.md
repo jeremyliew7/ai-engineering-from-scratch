@@ -80,7 +80,7 @@ note: The description and the output schema are cut.
 …
 ```
 
-`debug tool FILE TOOL JSON` calls one tool with no model turn, and "Calls have real side effects and bypass other hooks and approval checks" {{help-agent docker-agent debug tool}}. In `20-debug-tool.txt`, `shell` with `{"cmd":"echo m101-direct"}` printed `m101-direct`. Use it to test a tool before any model calls it.
+`debug tool FILE TOOL JSON` calls one tool with no model turn, and the call has real side effects and skips the other hooks and approval checks {{help-agent docker-agent debug tool}}. In `20-debug-tool.txt`, `shell` with `{"cmd":"echo m101-direct"}` printed `m101-direct`. Use it to test a tool before any model calls it.
 
 ## Keys every toolset shares
 
@@ -105,7 +105,7 @@ id: fig-5-3
 kind: flow
 title: what each toolset entry gives the model
 claim: Each `toolsets` entry becomes named tools in the model request: built-in types run in process, and `mcp` goes through a gateway, a child process, or a URL.
-caption: Read each row left to right, from the agent file entry to the tool names in the model request. Solid rows ran in capture/out/18-run-json.ndjson, with names from the tools array of capture/cassettes/18-files.yaml.gz. Dashed rows come from the docs Tool Configuration page and were not run.
+caption: Read each row left to right, from the agent file entry to the tool names in the model request. Solid rows ran in the JSON run capture, with names from the tools array of the cassette. Dashed rows come from the docs Tool Configuration page and were not run.
 ```
 
 ```takeaways

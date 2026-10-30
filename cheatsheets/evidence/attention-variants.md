@@ -59,7 +59,7 @@ Abbreviations: A = phases/07-transformers-deep-dive/15-attention-variants, K = p
 
 ## Numbers to know (defaults, 8)
 - 4096 bytes per token per layer, 80 layers, 8 KV heads: K/d:45, 48
-- 10.4 GB at 32K, GQA 8 KV heads: K/d:45, 49
+- 10 GiB at 32K, GQA 8 KV heads: K/d:45, 49
 - Gemma 3 5:1 SWA:global, window=1024: A/d:46, 155
 - SWA KV drops 128× at 1024 window, 128K context: A/d:44
 - Gemma-3 mix ~6x vs pure full attention: A/c:152

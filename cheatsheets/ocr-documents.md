@@ -114,8 +114,8 @@ from: phases/04-computer-vision/19-ocr-document-understanding/docs/en.md, phases
 - **CTC collapse**: merge repeats, then remove blanks. "h h h _ _ e e l l _ l l o _ _" gives "hello".
 - **CER**: Levenshtein distance divided by the reference length. WER is the same per word.
 - **MaxSim**: $\sum_i \max_j \cos(q_i, p_j)$ over query tokens $q_i$ and page patches $p_j$.
-- **ColPali storage**: 50 pages x 729 patches x 128 dims x 4 bytes = ~18 MB raw, ~4 MB after PQ.
-- **Text-RAG storage**: 50 chunks x 768 dims x 4 bytes = ~150 kB. ColPali is ~30x more.
+- **ColPali storage**: 50 pages x 729 patches x 128 dims x 4 bytes = ~18 MB raw, ~2.3 MB after 8x PQ.
+- **Text-RAG storage**: 50 chunks x 768 dims x 4 bytes = ~150 kB. ColPali is ~120x more raw, ~15x after PQ.
 - **ViDoRe**: ColPali-v1 scores ~80% nDCG@5. Text-RAG scores ~50-60%.
 
 ## Defaults and limits
