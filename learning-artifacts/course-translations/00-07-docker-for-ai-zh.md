@@ -1,15 +1,6 @@
 ---
-type: lesson-translation
-phase: "00"
-lesson: "07"
-translated: 2026-10-11
-translation_method: direct-new-translation
-updated: 2026-10-19
-update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/07-docker-for-ai/docs/en.md
 source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
-source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
-source_sha256: 1ed8ca02231e4ed40b749b07f2728659676a5fe4c7de6ad01b1638b5e1c6b198
 ---
 
 # 面向 AI 的 Docker

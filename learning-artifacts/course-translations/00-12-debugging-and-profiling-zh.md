@@ -1,15 +1,6 @@
 ---
-type: lesson-translation
-phase: "00"
-lesson: "12"
-translated: 2026-10-15
-translation_method: direct-new-translation
-updated: 2026-10-19
-update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/12-debugging-and-profiling/docs/en.md
 source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
-source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
-source_sha256: 2c8060d42a1115002a602a1db7241eb5338a7169661c238163c16c5653136513
 ---
 
 # 调试与性能分析

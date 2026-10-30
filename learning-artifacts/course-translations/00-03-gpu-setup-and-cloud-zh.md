@@ -1,15 +1,6 @@
 ---
-type: lesson-translation
-phase: "00"
-lesson: "03"
-translated: 2026-10-11
-translation_method: direct-new-translation
-updated: 2026-10-30
-update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/03-gpu-setup-and-cloud/docs/en.md
 source_commit: fe6c657dfb8d02cc898fcee7d4cfbf663aae1416
-source_last_commit: cbc761b453add05abffbc86d4ddcf923679f5235
-source_sha256: 913b61e496cff6bba6c95c5121a4fa389793f5ce98ae9b7745c491158428e25a
 ---
 
 # GPU 配置与云计算

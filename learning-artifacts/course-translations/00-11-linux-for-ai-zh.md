@@ -1,15 +1,6 @@
 ---
-type: lesson-translation
-phase: "00"
-lesson: "11"
-translated: 2026-10-11
-translation_method: direct-new-translation
-updated: 2026-10-30
-update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/11-linux-for-ai/docs/en.md
 source_commit: fe6c657dfb8d02cc898fcee7d4cfbf663aae1416
-source_last_commit: cbc761b453add05abffbc86d4ddcf923679f5235
-source_sha256: 07a2808c4707f0ba4290d7c92df72e48cb09fc8a9f6e85222c4b2229b1d314af
 ---
 
 # 面向 AI 的 Linux

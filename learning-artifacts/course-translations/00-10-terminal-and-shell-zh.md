@@ -1,15 +1,6 @@
 ---
-type: lesson-translation
-phase: "00"
-lesson: "10"
-translated: 2026-10-11
-translation_method: direct-new-translation
-updated: 2026-10-30
-update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/10-terminal-and-shell/docs/en.md
 source_commit: fe6c657dfb8d02cc898fcee7d4cfbf663aae1416
-source_last_commit: cbc761b453add05abffbc86d4ddcf923679f5235
-source_sha256: 5febcabad487875619e38bab7b925c05ac61d3f059cbfcb0d7d8a4902fd8e4bf
 ---
 
 # 终端与 Shell

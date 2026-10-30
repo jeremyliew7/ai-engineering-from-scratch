@@ -1,15 +1,6 @@
 ---
-type: lesson-translation
-phase: "00"
-lesson: "08"
-translated: 2026-10-11
-translation_method: direct-new-translation
-updated: 2026-10-19
-update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/08-editor-setup/docs/en.md
 source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
-source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
-source_sha256: e1f15c23a08a69e1f176c11403da0e2580379c1929311754dca686c5cd86dbe6
 ---
 
 # 编辑器配置

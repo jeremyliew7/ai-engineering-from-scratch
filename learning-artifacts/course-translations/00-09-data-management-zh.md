@@ -1,15 +1,6 @@
 ---
-type: lesson-translation
-phase: "00"
-lesson: "09"
-translated: 2026-10-11
-translation_method: direct-new-translation
-updated: 2026-10-19
-update_method: upstream-delta-translation
 source_path: phases/00-setup-and-tooling/09-data-management/docs/en.md
 source_commit: 4b842f93e35f8f3e7f2b825a81ae9b08dc32194c
-source_last_commit: e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9
-source_sha256: 772d99967d3ccde7c765aae10f77622aa3a9db2975a6124d217c307e257dc84a
 ---
 
 # 数据管理
