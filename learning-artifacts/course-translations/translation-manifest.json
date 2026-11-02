@@ -2,7 +2,7 @@
   "translated_on": "2026-10-11",
   "updated_on": "2026-10-30",
   "method": "direct-new-translation-from-current-source",
-  "scope": "00/01-00/12",
+  "scope": "00/01-00/13",
   "source_commit": "fe6c657dfb8d02cc898fcee7d4cfbf663aae1416",
   "source_commit_policy": "Top-level source_commit records the currently verified checkout; per-lesson source_commit and source_last_commit are authoritative. Source and translation SHA-256 hash raw file bytes; source_text_sha256_lf additionally hashes UTF-8 text with LF line endings.",
   "verification": "Full current source compared against recorded source; upstream delta fully accounted for. All fenced code blocks preserved exactly after newline decoding, and hint counts checked per lesson. SHA-256 values updated. Semantic quality assessed by translator, not automatically proven. Maintenance update does not establish full chat delivery.",
@@ -212,8 +212,27 @@
       "source_text_sha256_lf": "2c8060d42a1115002a602a1db7241eb5338a7169661c238163c16c5653136513",
       "upstream_hints": 5,
       "updated_on": "2026-10-19"
+    },
+    {
+      "lesson": "00/13",
+      "title": "面向 AI 工程的 Python",
+      "translated_on": "2026-10-23",
+      "verified_on": "2026-10-23",
+      "source": "phases/00-setup-and-tooling/13-python-for-ai-engineering/docs/en.md",
+      "source_commit": "0d82a1498bb8471dc13f14340eb2a89ac91691b2",
+      "source_last_commit": "e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9",
+      "source_sha256": "f8995bff8d2189e09fc41ec32c9eb6594653e1f19a9053d1c77c7abd8d41b938",
+      "source_text_sha256_lf": "f8995bff8d2189e09fc41ec32c9eb6594653e1f19a9053d1c77c7abd8d41b938",
+      "translation": "00-13-python-for-ai-engineering-zh.md",
+      "translation_sha256": "e406dd998b1b60e359c08ba71c680af1fe925a34415f7b35ed271dc49b791259",
+      "code_blocks": 48,
+      "section_count": 34,
+      "upstream_hints": 5,
+      "status": "direct-translated-structure-verified",
+      "verification": "Full source read and directly translated. All 48 fenced blocks preserved exactly after newline decoding; all 34 original level-2/3 headings, tables, five exercises and hints retained. Separate translator notes added. Structural verification does not establish automatic semantic correctness, chat delivery, or lesson completion."
     }
   ],
   "initial_source_commit": "68bf421db044a906121a3ef0a2eb8ec689d45045",
-  "update_method": "upstream-delta-translation: 45 exercise hints across existing 00/01-00/12 plus two 00/08 editor path corrections; existing translator notes preserved; 2026-10-30: sync upstream changes in 00/03, 00/10 and 00/11"
+  "update_method": "upstream-delta-translation: 45 exercise hints across existing 00/01-00/12 plus two 00/08 editor path corrections; existing translator notes preserved; 2026-10-30: sync upstream changes in 00/03, 00/10 and 00/11",
+  "latest_added_lesson": "00/13"
 }
