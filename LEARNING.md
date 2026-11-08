@@ -20,8 +20,8 @@
 - Learning preferences: 中文分节讲解；环境操作由学习者按引导在 WSL 手动执行，助手可读取本聊天右侧终端核验输出。课后测验一次展示全部题目，学习者集中回答，再逐题反馈。
 - Lesson-end Git workflow: 每学完一节课，集中保存学习记录后检查并提交本课相关变更，无需再次确认；仅暂存本课记录、练习产物及必要配置，排除虚拟环境、密钥和无关改动，遵循仓库提交与验证规则。默认仅本地提交，推送需用户明确要求。
 - Restart: 用户明确选择重新开始全量学习；本轮不继承旧分级成绩、旧完成记录或旧断点。
-- Next lesson: phases/00-setup-and-tooling/13-python-for-ai-engineering
-- Current checkpoint: 2026-10-19，Day7 00/12 Debugging and Profiling 完成（2026-10-15 开始；Day 为学习日编号，不随自然日自动递增）；课后 B、C、D，3/3（100%，独立作答）。完整中文教材已在聊天交付并保存，当前源哈希与 22 个代码块核对一致。已完成 WSL 张量/NaN 检查、pdb 条件断点、日志、分段计时、cProfile、逐行分析、tracemalloc/RSS/显存实验；补学张量索引、设备迁移、item、backward、SGD、梯度累积、detach、Linear、hook 与 no_grad。TensorBoard 实测 lr=0.1 收敛、lr=1.1 发散，分清原始与平滑曲线；VS Code 逐过程验证 backward 不更新参数、step 不重算旧 loss。教材工具完整运行，练习副本的前向除零产生 NaN 损失及四组 NaN 梯度。已纠正参数接近零不等于梯度消失、训练监控应使用验证集；过拟合为表格判断，未运行真实验证集训练或直方图日志。PyTorch 小实验按指导完成，仍需在后续课程独立复写。详见 learning-artifacts/00-12-debugging-and-profiling/README.md。下次按 learn 做两道本课回忆题，再交付 00/13 Python for AI Engineering 的完整中文教材；Phase 0 仍为 Do。
+- Next lesson: phases/01-math-foundations/01-linear-algebra-intuition
+- Current checkpoint: 2026-11-09，Day8 00/13 Python for AI Engineering 主体学习与课后测验完成，2/2（100%，独立作答）；完整中文译文已在聊天交付并保存，源文件与译文哈希均与清单一致。交互学习引用与可变对象、dataclass、迭代器和生成器、异常与上下文管理器、类型标注、文件格式、排序、标准库及 NumPy 广播；练习识别生成器耗尽和测试集信息泄漏。WSL 实际运行课程完整演示，核对 400 条数据、320/80 划分与最后 32 条的批次；百万元素点积单次测得 Python 22.79 ms、NumPy 17.72 ms，差值显示为 2.9e-11，不含数据准备时间。课末代码审查提示已阅读并用生成器案例练习；教材 5 道扩展练习未做，完整工具链尚未独立从零实现。Phase 0 的 13 课及课后测验已完成，阶段综合测验尚未进行；下一课为 01/01 Linear Algebra Intuition。
 - Source snapshot: 1bafaa88bb4668356791150bec3a6d7df38387eb
 - Estimates: 下表采用 ROADMAP.md 各阶段标题的工时，合计 1,128 小时；与其开头及结尾总数不一致，仅作粗略参考，不承诺完课日期。
 
@@ -29,7 +29,7 @@
 
 | Phase | Name | Status | Est. hours |
 |-------|------|--------|------------|
-| 0 | Setup & Tooling | Do | 14 |
+| 0 | Setup & Tooling | Done | 14 |
 | 1 | Math Foundations | Do | 23 |
 | 2 | ML Fundamentals | Do | 21 |
 | 3 | Deep Learning Core | Do | 15 |
@@ -66,6 +66,7 @@
 | 2026-10-10 | 00/10 | 3/3 (100%) | 完成 WSL 管道、作业控制、tmux 三窗格和资源监控；纠正重定向顺序与前台等待误解，确认别名不跨 Shell 同步；SSH/rsync 仅概念练习。 |
 | 2026-10-15 | 00/11 | 3/3 (100%) | 完成 WSL 隐藏文件、脚本权限、进程终止及磁盘缓存排查；澄清解释器读取与直接执行的区别，理解 744、sudo、apt、服务启动、传输方向和 CRLF；远程传输仅概念练习。 |
 | 2026-10-19 | 00/12 | 3/3 (100%, 独立作答) | 完成调试、计时、性能/内存分析、TensorBoard 学习率对照、VS Code 单步和真实 NaN 注入；补学 PyTorch 最小训练流程，纠正权重与梯度、验证集与测试集的混淆；过拟合仅作概念判断。 |
+| 2026-11-09 | 00/13 | 2/2 (100%, 独立作答) | 交互学习 Python 对象、生成器、异常、类型、文件处理与 NumPy 广播；WSL 运行课程演示和百万元素点积对照，审阅代码审查提示；5 道扩展练习未做，完整工具链尚未独立实现。 |
 
 ## Review queue
 
