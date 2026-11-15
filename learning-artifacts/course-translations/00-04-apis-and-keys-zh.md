@@ -61,7 +61,7 @@ export OPENAI_API_KEY="sk-..."
 
 也可以使用 `.env` 文件，但要将其加入 `.gitignore`：
 
-```
+```text
 ANTHROPIC_API_KEY=sk-ant-...
 OPENAI_API_KEY=sk-...
 ```

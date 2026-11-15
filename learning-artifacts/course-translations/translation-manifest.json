@@ -1,9 +1,9 @@
 {
   "translated_on": "2026-10-11",
-  "updated_on": "2026-11-09",
+  "updated_on": "2026-11-15",
   "method": "direct-new-translation-from-current-source",
   "scope": "00/01-00/13, 01/01",
-  "source_commit": "fe6c657dfb8d02cc898fcee7d4cfbf663aae1416",
+  "source_commit": "9a6608f11e6a9adc9649c0db1308267cbb8ef6bb",
   "source_commit_policy": "Top-level source_commit records the currently verified checkout; per-lesson source_commit and source_last_commit are authoritative. Source and translation SHA-256 hash raw file bytes; source_text_sha256_lf additionally hashes UTF-8 text with LF line endings.",
   "verification": "Full current source compared against recorded source; upstream delta fully accounted for. All fenced code blocks preserved exactly after newline decoding, and hint counts checked per lesson. SHA-256 values updated. Semantic quality assessed by translator, not automatically proven. Maintenance update does not establish full chat delivery.",
   "lessons": [
@@ -65,7 +65,7 @@
       "source_commit": "4b842f93e35f8f3e7f2b825a81ae9b08dc32194c",
       "source_sha256": "1d4748fc1dc1b4ff3313ab9af092b9831221e7f7d96c1107b3938a895ee93346",
       "translation": "00-04-apis-and-keys-zh.md",
-      "translation_sha256": "de146596a9259e6c7de6b6b008509f7c8ced51cf56fff0f1855005cbd09964db",
+      "translation_sha256": "9cad3013ac187606bdf5b4a4b7f5167ea34fb6ae04296123927b39302974e948",
       "code_blocks": 7,
       "section_count": 13,
       "status": "upstream-delta-translated-structure-verified",
@@ -73,7 +73,8 @@
       "source_text_sha256_lf": "1d4748fc1dc1b4ff3313ab9af092b9831221e7f7d96c1107b3938a895ee93346",
       "upstream_hints": 3,
       "updated_on": "2026-10-19",
-      "verified_on": "2026-10-19"
+      "verified_on": "2026-10-19",
+      "notes_updated_on": "2026-11-15"
     },
     {
       "lesson": "00/05",
@@ -99,7 +100,7 @@
       "source_commit": "4b842f93e35f8f3e7f2b825a81ae9b08dc32194c",
       "source_sha256": "d83b1b070403cd41624ec9d40c890f74b237a94c922bcd8d2f3758a757bcc719",
       "translation": "00-06-python-environments-zh.md",
-      "translation_sha256": "cec9d3cbf18d6e5ce6b352965d00ad2fa19df8953147c4dff5e1b1639da18e44",
+      "translation_sha256": "8f6c113441b712f616ccc82ccfc350a3a6bcf874d7a843d356200bc90ab25515",
       "code_blocks": 19,
       "section_count": 20,
       "status": "upstream-delta-translated-structure-verified",
@@ -107,7 +108,8 @@
       "source_text_sha256_lf": "d83b1b070403cd41624ec9d40c890f74b237a94c922bcd8d2f3758a757bcc719",
       "upstream_hints": 4,
       "updated_on": "2026-10-19",
-      "verified_on": "2026-10-19"
+      "verified_on": "2026-10-19",
+      "notes_updated_on": "2026-11-15"
     },
     {
       "lesson": "00/07",
@@ -116,7 +118,7 @@
       "source_commit": "4b842f93e35f8f3e7f2b825a81ae9b08dc32194c",
       "source_sha256": "1ed8ca02231e4ed40b749b07f2728659676a5fe4c7de6ad01b1638b5e1c6b198",
       "translation": "00-07-docker-for-ai-zh.md",
-      "translation_sha256": "19a3a1a6a93ce6bc700844c11a896e932fb659592cbdcd921f5308caa38c40a4",
+      "translation_sha256": "7d072bf6ee66878a275c57cbfb9cfb57eef2d903a48f7b1d6784536d33daca3a",
       "code_blocks": 20,
       "section_count": 19,
       "status": "upstream-delta-translated-structure-verified",
@@ -124,7 +126,8 @@
       "source_text_sha256_lf": "1ed8ca02231e4ed40b749b07f2728659676a5fe4c7de6ad01b1638b5e1c6b198",
       "upstream_hints": 4,
       "updated_on": "2026-10-19",
-      "verified_on": "2026-10-19"
+      "verified_on": "2026-10-19",
+      "notes_updated_on": "2026-11-15"
     },
     {
       "lesson": "00/08",
@@ -133,7 +136,7 @@
       "source_commit": "4b842f93e35f8f3e7f2b825a81ae9b08dc32194c",
       "source_sha256": "e1f15c23a08a69e1f176c11403da0e2580379c1929311754dca686c5cd86dbe6",
       "translation": "00-08-editor-setup-zh.md",
-      "translation_sha256": "9e69e8c749dda573a1b7a59264de2292421dbd586330461f1a679e82664c2139",
+      "translation_sha256": "da9662d321f057f231ebdaa1981ca3143ad0bb73d91100ea689c73bd5165d69c",
       "code_blocks": 8,
       "section_count": 17,
       "status": "upstream-delta-translated-structure-verified",
@@ -141,7 +144,8 @@
       "source_text_sha256_lf": "e1f15c23a08a69e1f176c11403da0e2580379c1929311754dca686c5cd86dbe6",
       "upstream_hints": 4,
       "updated_on": "2026-10-19",
-      "verified_on": "2026-10-19"
+      "verified_on": "2026-10-19",
+      "notes_updated_on": "2026-11-15"
     },
     {
       "lesson": "00/09",
@@ -150,7 +154,7 @@
       "source_commit": "4b842f93e35f8f3e7f2b825a81ae9b08dc32194c",
       "source_sha256": "772d99967d3ccde7c765aae10f77622aa3a9db2975a6124d217c307e257dc84a",
       "translation": "00-09-data-management-zh.md",
-      "translation_sha256": "beef5ad065498f526fea66cb331e5e5ac12a7ccd8ccf3963dec057146448e99c",
+      "translation_sha256": "f06ff534581824afee3fc6cf32abcbceea9ebf7af15f9fca90f9072db3ed6104",
       "code_blocks": 14,
       "section_count": 18,
       "status": "upstream-delta-translated-structure-verified",
@@ -158,7 +162,8 @@
       "source_text_sha256_lf": "772d99967d3ccde7c765aae10f77622aa3a9db2975a6124d217c307e257dc84a",
       "upstream_hints": 4,
       "updated_on": "2026-10-19",
-      "verified_on": "2026-10-19"
+      "verified_on": "2026-10-19",
+      "notes_updated_on": "2026-11-15"
     },
     {
       "lesson": "00/10",
@@ -217,19 +222,20 @@
       "lesson": "00/13",
       "title": "面向 AI 工程的 Python",
       "translated_on": "2026-10-23",
-      "verified_on": "2026-10-23",
+      "verified_on": "2026-11-15",
       "source": "phases/00-setup-and-tooling/13-python-for-ai-engineering/docs/en.md",
-      "source_commit": "0d82a1498bb8471dc13f14340eb2a89ac91691b2",
-      "source_last_commit": "e6014b07fd44bc36f2a8e21ca9f64ce9d9309cf9",
-      "source_sha256": "f8995bff8d2189e09fc41ec32c9eb6594653e1f19a9053d1c77c7abd8d41b938",
-      "source_text_sha256_lf": "f8995bff8d2189e09fc41ec32c9eb6594653e1f19a9053d1c77c7abd8d41b938",
+      "source_commit": "9a6608f11e6a9adc9649c0db1308267cbb8ef6bb",
+      "source_last_commit": "690c3bfd3c2a50657aecf8482a1bf2c64e6b1ee4",
+      "source_sha256": "ae258f2f5ac9b2bfd395d285699082537b53e9796368719c3d614e6954bca009",
+      "source_text_sha256_lf": "ae258f2f5ac9b2bfd395d285699082537b53e9796368719c3d614e6954bca009",
       "translation": "00-13-python-for-ai-engineering-zh.md",
-      "translation_sha256": "e406dd998b1b60e359c08ba71c680af1fe925a34415f7b35ed271dc49b791259",
+      "translation_sha256": "b52b14244dde1235e00e49241b5c117e2fae31c11302e2c7d26c7ab04207092e",
       "code_blocks": 48,
       "section_count": 34,
       "upstream_hints": 5,
       "status": "direct-translated-structure-verified",
-      "verification": "Full source read and directly translated. All 48 fenced blocks preserved exactly after newline decoding; all 34 original level-2/3 headings, tables, five exercises and hints retained. Separate translator notes added. Structural verification does not establish automatic semantic correctness, chat delivery, or lesson completion."
+      "verification": "Full source and recorded-source delta checked: added TypeScript language and run command. All 48 fenced blocks preserved; original notes retained. Maintenance does not establish chat delivery.",
+      "updated_on": "2026-11-15"
     },
     {
       "lesson": "01/01",

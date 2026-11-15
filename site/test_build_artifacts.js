@@ -463,9 +463,9 @@ function writeMarkdown(file, { name, description, version }) {
 test('shared site asset families use the expected cache keys on every page', () => {
   const release = '20260822a';
   const styleRelease = '20261015a';
-  const navigationRelease = '20261021a';
+  const navigationRelease = '20261114a';
   const narrationRelease = '20260829a';
-  const homepageRelease = '20261015a';
+  const homepageRelease = '20261114a';
   const pages = [
     'about.html',
     'assessment.html',
@@ -600,7 +600,9 @@ test('build-time SEO manifests cover every readable lesson and expose canonical 
     assert.ok(entry.seoTitle.length <= 60);
     assert.ok(entry.description.length <= 160);
     assert.ok(entry.excerpt.split(/\s+/).length <= 220);
-    assert.match(entry.canonicalUrl, /^https:\/\/aiengineeringfromscratch\.com\/lesson\?path=/);
+    assert.match(entry.canonicalUrl, entry.context.kind === 'course'
+      ? /^https:\/\/aiengineeringfromscratch\.com\/learn\/[a-z0-9-]+\/[a-z0-9-]+$/
+      : /^https:\/\/aiengineeringfromscratch\.com\/lesson\?path=/);
     assert.doesNotMatch(entry.canonicalUrl, /lesson\.html|[&?](?:track|learningPath)=/);
     assert.match(entry.sourceUrl, /^https:\/\/github\.com\/rohitg00\/ai-engineering-from-scratch\//);
     assert.ok(['course', 'certification'].includes(entry.context.kind));
@@ -1426,8 +1428,6 @@ test('repository exposes the four core AI engineering learning paths', () => {
     assert.equal(learningPath.title, title);
     assert.equal(learningPath.lessons.length, lessonCount);
     assert.match(homepage, new RegExp(`>${title}<`, 'i'));
-    assert.match(homepage, new RegExp(`learningPath=${id}`));
-    assert.match(homepage, new RegExp(`learning-paths/${id}\\.json`));
   }
 
   const shaping = learningPaths.find(entry => entry.id === 'shaping-the-build');
@@ -1468,39 +1468,35 @@ test('repository exposes the four core AI engineering learning paths', () => {
 test('homepage preserves live GitHub CTAs and the motion-aware learner marquee', () => {
   const homepage = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
   const headerSource = fs.readFileSync(path.join(__dirname, 'header.js'), 'utf8');
-  const mastheadCta = homepage.match(/<div class="masthead-cta[^"]*"[^>]*>([\s\S]*?)<\/div>\s*<div class="masthead-install/);
-  const mastheadFigure = homepage.match(/\.masthead-figure\s*\{([\s\S]*?)\n    \}/);
+  const mastheadCta = homepage.match(/<div class="masthead-cta[^"]*"[^>]*>([\s\S]*?)<\/div>\s*<nav class="masthead-start[\s\S]*?<\/nav>\s*<div class="masthead-install/);
   const wideMasthead = homepage.match(/@media \(min-width: 1280px\) \{([\s\S]*?)\n    \}\n\n    @media \(min-width: 1440px\)/);
   const learnerStrip = homepage.match(/<section class="learners-strip"[\s\S]*?<\/section>/);
   const learnerStyles = homepage.match(/\/\* Learner organization index \*\/([\s\S]*?)\.masthead-install-caption/);
 
   assert.ok(mastheadCta, 'prominent masthead CTA row is missing');
-  assert.match(mastheadCta[0], /<span>Start the Course<\/span>/);
+  assert.match(mastheadCta[0], /<span id="mastheadStartLabel">Start the Course<\/span>/);
   assert.match(mastheadCta[0], /href="learning-paths\.html"[\s\S]*?<span>Explore Learning Paths<\/span>/);
   assert.doesNotMatch(mastheadCta[0], /Start (?:MCP Engineering|Agent Skills)/i);
   assert.match(
     mastheadCta[0],
-    /<a class="masthead-btn" href="https:\/\/github\.com\/rohitg00\/ai-engineering-from-scratch"[^>]*aria-label="Star ai-engineering-from-scratch on GitHub"[^>]*>[\s\S]*?<span>Star on GitHub<\/span>[\s\S]*?<span class="masthead-btn-count" data-gh-stars="rohitg00\/ai-engineering-from-scratch" data-loading="true">/
+    /<a class="masthead-btn masthead-btn--quiet" href="https:\/\/github\.com\/rohitg00\/ai-engineering-from-scratch"[^>]*aria-label="Star ai-engineering-from-scratch on GitHub"[^>]*>[\s\S]*?<span>Star on GitHub<\/span>[\s\S]*?<span class="masthead-btn-count" data-gh-stars="rohitg00\/ai-engineering-from-scratch" data-loading="true">/
   );
   assert.match(
     mastheadCta[0],
-    /<a class="masthead-btn" href="https:\/\/github\.com\/rohitg00"[^>]*aria-label="Follow Rohit Ghumare on GitHub"[^>]*>[\s\S]*?<span>Follow @rohitg00<\/span>/
+    /<a class="masthead-btn masthead-btn--quiet" href="https:\/\/github\.com\/rohitg00"[^>]*aria-label="Follow Rohit Ghumare on GitHub"[^>]*>[\s\S]*?<span>Follow @rohitg00<\/span>/
   );
   assert.match(homepage, /<script src="header\.js\?v=[^"]+" defer><\/script>/);
   assert.match(headerSource, /\[data-gh-stars="' \+ REPO \+ '"\]/);
   assert.match(headerSource, /fetch\('https:\/\/api\.github\.com\/repos\/' \+ REPO/);
   assert.match(headerSource, /var n = data\.stargazers_count;[\s\S]*?paint\(n\)/);
 
-  assert.ok(mastheadFigure, 'contained masthead figure rule is missing');
-  assert.match(mastheadFigure[0], /width: 100%/);
-  assert.match(mastheadFigure[0], /max-width: 430px/);
-  assert.doesNotMatch(mastheadFigure[0], /position:\s*absolute|right:\s*-/);
+  assert.doesNotMatch(homepage, /data-masthead-figure/);
   assert.match(homepage, /@media \(min-width: 601px\) and \(max-width: 1279px\) \{[\s\S]*?\.manual-masthead\.container\s*\{[\s\S]*?padding-left: clamp\(24px, 2\.5vw, 32px\);[\s\S]*?padding-right: clamp\(24px, 2\.5vw, 32px\);/);
   assert.ok(wideMasthead, 'wide-screen masthead layout is missing');
   assert.match(wideMasthead[0], /grid-template-columns: minmax\(0, 1fr\) minmax\(360px, 400px\)/);
   assert.match(wideMasthead[0], /"title curiosity"/);
-  assert.match(wideMasthead[0], /"install figure"/);
-  assert.match(wideMasthead[0], /\.masthead-figure\s*\{[\s\S]*?position: static;[\s\S]*?grid-area: figure/);
+  assert.match(wideMasthead[0], /"install curiosity"/);
+  assert.match(wideMasthead[0], /\.masthead-install\s*\{\s*grid-area: install;/);
   assert.match(homepage, /\.masthead-cta\s*\{\s*display: grid;\s*grid-template-columns: 1fr/);
 
   assert.ok(learnerStrip, 'institution and company learner strip is missing');
@@ -1541,11 +1537,7 @@ test('homepage uses consistent responsive grids for controls, routes, and curric
   );
   assert.match(
     homepage,
-    /\.course-route-actions\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);[\s\S]*?width: 248px;[\s\S]*?justify-self: end;/
-  );
-  assert.match(
-    homepage,
-    /@media \(max-width: 600px\) \{[\s\S]*?\.course-route-actions\s*\{[\s\S]*?width: 100%;[\s\S]*?justify-self: stretch;[\s\S]*?\.toc-row\s*\{[\s\S]*?grid-template-columns: 3\.5rem minmax\(0, 1fr\) auto;[\s\S]*?\.toc-row \.toc-meta\s*\{[\s\S]*?grid-column: 3;[\s\S]*?grid-row: 1;/
+    /@media \(max-width: 600px\) \{[\s\S]*?\.toc-row\s*\{[\s\S]*?grid-template-columns: 3\.5rem minmax\(0, 1fr\) auto;[\s\S]*?\.toc-row \.toc-meta\s*\{[\s\S]*?grid-column: 3;[\s\S]*?grid-row: 1;/
   );
 });
 
@@ -1569,11 +1561,14 @@ test('shared header keeps its menu at desktop widths without hiding GitHub stars
   const styles = fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8');
   const movableTools = headerSource.match(/function isMovableTool\(child\) \{([\s\S]*?)\n    \}/);
 
-  assert.doesNotMatch(headerSource, /COMPACT_HEADER_QUERY|restoreDesktopTools/);
+  assert.doesNotMatch(headerSource, /restoreDesktopTools/);
+  assert.match(headerSource, /var COMPACT_HEADER_QUERY = '\(max-width: 1180px\)'/);
+  assert.match(headerSource, /var PRIORITY_LABELS = \['catalog', 'learning paths', 'projects', 'practice', 'interviews'\]/);
+  assert.match(headerSource, /function setupTabBar\(\) \{[\s\S]*?document\.querySelector\('\.lesson-layout'\)\) return;/);
   assert.match(headerSource, /nav\.hidden = !open;/);
   assert.match(headerSource, /var NARROW_HEADER_QUERY = '\(max-width: 820px\)'/);
   assert.match(headerSource, /priorityNav\.className = 'header-priority-nav'/);
-  assert.match(headerSource, /label !== 'contents' && label !== 'catalog' && label !== 'learning paths'/);
+  assert.match(headerSource, /PRIORITY_LABELS\.indexOf\(label\) < 0/);
   assert.match(headerSource, /ensureNavigationLink\(nav, 'learning-paths\.html', 'Learning Paths', ''\)/);
   assert.match(headerSource, /if \(isNarrow\) restorePriorityLinks\(\);[\s\S]*?else movePriorityLinksOut\(\)/);
 
@@ -1669,9 +1664,21 @@ test('TTS continuation accepts canonical and legacy lesson routes under one rout
 
   const query = 'path=phases%2F00-setup-and-tooling%2F01-dev-environment&learningPath=software-engineering-fundamentals';
   assert.equal(context.routeKey(origin + '/lesson.html?' + query), context.routeKey(origin + '/lesson?' + query));
+  assert.equal(
+    context.routeKey(origin + '/lesson?' + query),
+    context.routeKey(origin + '/learn/setup-and-tooling/dev-environment?learningPath=software-engineering-fundamentals')
+  );
+  assert.equal(
+    context.routeKey(origin + '/lesson?path=certifications%2Fclaude%2Flessons%2F01-intro'),
+    '/lesson?path=certifications%2Fclaude%2Flessons%2F01-intro'
+  );
   const link = href => ({ href, matches: selector => selector === '.lesson-nav-btn,.continue-link' });
   assert.equal(context.isLessonContinuationLink(link(origin + '/lesson?' + query)), true);
   assert.equal(context.isLessonContinuationLink(link(origin + '/lesson.html?' + query)), true);
+  assert.equal(context.isLessonContinuationLink(link(origin + '/learn/math-foundations/vectors')), true);
+  assert.equal(context.isLessonContinuationLink(link(origin + '/learn/math-foundations/vectors?lang=hi')), true);
+  assert.equal(context.isLessonContinuationLink(link(origin + '/learn/math-foundations')), false);
+  assert.equal(context.isLessonContinuationLink(link('https://example.com/learn/math-foundations/vectors')), false);
   assert.equal(context.isLessonContinuationLink(link(origin + '/certification?id=claude-architect')), false);
 });
 
@@ -2156,6 +2163,27 @@ test('progress v2 migrates quiz completion and keeps workflow checkpoints distin
   assert.equal(fresh.api.getLessonProgress(lesson).quizPassedAt, null);
 });
 
+test('figure toolkit sizes and wraps labels and hides a mover until it starts', () => {
+  const runtime = loadFigureRuntime();
+  const { LF } = runtime.window;
+
+  assert.equal(LF.textWidth('policy check', 10), 72);
+  assert.ok(Math.abs(LF.textWidth('policy check', 10, true) - 64.8) < 1e-9);
+  assert.deepEqual(Array.from(LF.wrapText('answer cites file and line from the top chunk', 10, 120)), ['answer cites file', 'and line from the', 'top chunk']);
+  assert.deepEqual(Array.from(LF.wrapText('unbreakable_identifier_that_is_wider', 10, 60)), ['unbreakable_identifier_that_is_wider']);
+  assert.deepEqual(Array.from(LF.wrapText('', 10, 60)), []);
+  for (const line of LF.wrapText('registers: a in rdi, b in rsi, c in rdx, d in rcx, e in r8, f in r9', 9.5, 150)) {
+    assert.ok(LF.textWidth(line, 9.5) <= 150, line);
+  }
+
+  const dot = runtime.element('circle');
+  assert.equal(LF.hold(dot, 1.2), dot);
+  assert.equal(dot.getAttribute('opacity'), '0');
+  assert.equal(dot.children.length, 1);
+  assert.equal(dot.children[0].getAttribute('begin'), '1.2s');
+  assert.equal(dot.children[0].getAttribute('to'), '1');
+});
+
 test('lesson figure runtime mounts once and disposes its animation frame and control', () => {
   const runtime = loadFigureRuntime();
   const host = runtime.element('div');
@@ -2174,7 +2202,9 @@ test('lesson figure runtime mounts once and disposes its animation frame and con
 
   assert.equal(staticFrames, 1, 'a mounted host must not receive a duplicate SVG loop');
   assert.equal(host.dataset.lfMounted, '1');
-  const control = host.children.find(child => child.className === 'lf-motion-toggle');
+  const tools = host.children.find(child => child.className === 'lf-tools');
+  assert.ok(tools);
+  const control = tools.children.find(child => child.className === 'lf-motion-toggle');
   assert.ok(control);
   assert.equal(control.getAttribute('aria-pressed'), 'false');
   assert.equal(runtime.scheduledFrames.size, 1);
@@ -2218,7 +2248,9 @@ test('reduced motion holds SMIL figures on a meaningful static frame', () => {
 
   assert.equal(staticTime, 1.5);
   assert.ok(pauses >= 1);
-  const control = host.children.find(child => child.className === 'lf-motion-toggle');
+  const tools = host.children.find(child => child.className === 'lf-tools');
+  assert.ok(tools);
+  const control = tools.children.find(child => child.className === 'lf-motion-toggle');
   assert.ok(control);
   assert.equal(control.disabled, true);
   assert.equal(control.textContent, 'Motion reduced');

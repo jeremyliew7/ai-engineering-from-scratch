@@ -3,7 +3,7 @@
 > Autoregressive decoding is serial. Each token waits for the previous one. Speculative decoding breaks the chain: a cheap model drafts N tokens, the expensive model verifies all N in one forward pass. When the draft is right you paid one big forward for N generations.
 
 **Type:** Build
-**Languages:** Python
+**Languages:** Python, Rust
 **Prerequisites:** Phase 7 · 07 (GPT Causal LM), Phase 7 · 12 (KV Cache & Flash Attention)
 **Time:** ~60 minutes
 
@@ -70,7 +70,7 @@ Pros: no second model. Cons: adds trainable parameters; needs a supervised fine-
 
 ### EAGLE — better draft by reusing hidden states
 
-EAGLE-1/2/3 (Li et al., 2024–2025) makes the draft model a tiny transformer (typically 1 layer) that ingests the verifier's last-layer hidden states. Because the draft sees the verifier's feature representation, its predictions correlate strongly with the verifier's output distribution. Acceptance rates climb from ~0.6 (vanilla) to 0.85+.
+EAGLE-1/2/3 (Li et al., 2024–2025) makes the draft model a tiny transformer (typically 1 layer) that ingests the verifier's last-layer hidden states. Because the draft sees the verifier's feature representation, its predictions correlate strongly with the verifier's output distribution. Acceptance rates climb from ~0.6 (vanilla) to 0.85+. These are per-token rates on chat benchmarks, with a draft trained on matching chat data. On mixed production traffic, Phase 17 · 05 plans with 0.6 to 0.8 for EAGLE-3, and domain traffic can be lower.
 
 EAGLE-3 (2025) added tree search over candidate continuations. vLLM and SGLang ship EAGLE-2/3 as the default spec pathway for Llama 3/4 and Qwen 3.
 
@@ -91,6 +91,13 @@ See `code/main.py`. We implement the core speculative-sampling algorithm (reject
 - A "big model" that is a deterministic-softmax over a hand-coded distribution (so we can verify acceptance math analytically).
 - A "draft model" that is a perturbation of the big model.
 - An acceptance / rejection loop that produces the same marginal distribution as direct sampling.
+
+`code/main.rs` is a Rust port with the same functions and demos. It uses only the standard library. The random numbers differ from Python's, but the printed conclusions are the same.
+
+```bash
+python3 code/main.py
+rustc --edition 2021 -O code/main.rs -o /tmp/lesson && /tmp/lesson
+```
 
 ### Step 1: the rejection step
 

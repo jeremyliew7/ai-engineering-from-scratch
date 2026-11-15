@@ -2,7 +2,7 @@
 
 本目录保存 AI Engineering from Scratch 的技能源码，涵盖互动学习、项目实践、认证准备、图解与手册制作，以及课程仓库维护。Skill 是供 AI 助手按需读取的工作流程，可以附带参考资料、模板和脚本；注册技能本身不会启动课程、运行脚本或完成练习。
 
-截至 2026-10-30，本目录有 **18 个技能源码**，本机有对应的 **18 个项目级发现入口**。具体执行规则以各技能的 `SKILL.md` 为准，本地学习流程同时遵循 [AGENTS.md](../AGENTS.md) 和 [AGENTS.override.md](../AGENTS.override.md)。
+截至 2026-11-15，本目录有 **19 个技能源码**，本机有对应的 **19 个项目级发现入口**。具体执行规则以各技能的 `SKILL.md` 为准，本地学习流程同时遵循 [AGENTS.md](../AGENTS.md) 和 [AGENTS.override.md](../AGENTS.override.md)。
 
 ## 从哪里开始
 
@@ -13,6 +13,7 @@
 | 第一次制定通用课程学习计划 | `start-learning` |
 | 不确定自己的基础适合从哪里开始 | `find-your-level` |
 | 想找某个知识点对应的课程 | `course-guide` |
+| 模拟面试、事故场景和面试薄弱项复盘 | `interview-prep` |
 | 检查一个阶段是否掌握 | `check-understanding` |
 | 分阶段动手做一个项目 | `build-project` |
 | 集中学习 MCP、Agent Skills 或逆向工程 | 对应的 `learn-*` 技能 |
@@ -36,7 +37,7 @@
 
 `find-your-level` 用于判断起点，`check-understanding` 用于检验某一阶段，`learn` 则负责持续学习。`course-guide` 主要负责找路，不替代一整课的互动教学。
 
-## 2. 项目、专题与认证：6 个技能
+## 2. 项目、专题、认证与面试：7 个技能
 
 | 技能 | 用途 | 进度文件 |
 |---|---|---|
@@ -47,9 +48,12 @@
 | [claude-certification](claude-certification/SKILL.md) | 选择 Claude 认证准备路线，进行互动教学、实验、诊断、模拟考试和薄弱项复习 | `CLAUDE-CERTIFICATION.md` |
 | [mcpa-certification](mcpa-certification/SKILL.md) | 按仓库的 MCPA 路线学习，执行协议实验、产物验证、诊断和模拟考试 | `MCPA-CERTIFICATION.md` |
 
+| [interview-prep](interview-prep/SKILL.md) | 基于本地题库逐题提问、等待作答、评分与追问，将薄弱项关联到课程；不提前展示答案 | `INTERVIEW-LEARNING.md` |
+
 示例请求：
 
 ```text
+使用 interview-prep，开始一次 AI 工程模拟面试。
 使用 build-project，先列出当前已就绪的项目，让我选择。
 使用 learn-mcp，继续 MCP 专题路线。
 使用 learn-agent-skills，从技能发现与调用开始学习。
@@ -70,10 +74,10 @@
 |---|---|---|
 | [lesson-screen](lesson-screen/SKILL.md) | 上课时在本机浏览器显示课程图、代码轨迹和预测题，也可在同意后为本课制作新图 | 需要 Node.js 20+ 和本机浏览器；不安装额外包。新图按形式约需 5—120 分钟，屏幕点击不作为成绩或实验凭据 |
 | [blueprint-figure](blueprint-figure/SKILL.md) | 静态 SVG 机制图：时序、结构、数据流、对比、时间线、树、状态机、决策和分层，共九类 | 从真实代码、规范或日志取名；附生成脚本，检查字号、重叠、配色和可访问性。数值趋势图应另用绘图工具 |
-| [motion-figure](motion-figure/SKILL.md) | SVG 动画、滑块实验、交互式机制页面及抖动纹理页眉 | 课内图使用课程图形运行时；独立机制页有 HTML 模板。需要验证交互、窄屏和减少动态效果的行为 |
+| [motion-figure](motion-figure/SKILL.md) | SVG 动画、滑块实验、交互式机制页面及抖动纹理页眉 | 课内图使用课程图形运行时；独立机制页有 HTML 模板。需要验证交互、窄屏和减少动态效果的行为；课内图还需 Chrome 与 puppeteer-core 运行几何审计 |
 | [isometric-explainer](isometric-explainer/SKILL.md) | 把流程表现为有工位、有运动部件的等距机器，支持运行、单步、故障与修复 | 先建立可测试的确定性状态模型，再绘制彩色材质、墨线和引线标签；需要模型测试及浏览器截图验证 |
 | [course-style](course-style/SKILL.md) | 本课程的配色、字体、图号、布局、英文写作及无障碍参考 | 主要是规范库，没有独立绘图流程；规则针对本课程风格，不应默认套用于其他品牌或中文写作 |
-| [write-manual](write-manual/SKILL.md) | 为固定版本的协议、工具或运行时编写系统手册，包含来源、采集记录、图解和审计 | 面向约 60—100 页的长篇文档，需要可复核的采集证据；普通短笔记不必采用整套结构 |
+| [write-manual](write-manual/SKILL.md) | 为固定版本的协议、工具或运行时编写系统手册，包含来源、采集记录、图解和审计 | 需要可复核的采集证据、可运行构建示例、逐图渲染检查和两位独立审阅者；实测图从原始记录汇总并展示各次运行，实际运行成本随主题而变 |
 
 示例请求：
 
@@ -125,7 +129,9 @@ Codex CLI 和 IDE 扩展也支持通过 `/skills` 选择，或用 `$技能名` �
 | `.agents/skills/<name>/` | 本地 Codex 的项目级发现入口；当前为指向对应源码目录的 Windows Junction |
 | `.claude/skills/` | 仓库面向 Claude Code 的发现位置，不是本地 Codex 的注册入口 |
 
-本机的 18 个入口都指向本仓库的 `skills/`，不是另外复制的一套源码。修改或同步源码后，入口会读取对应文件；若新增一个技能目录，仍需为它建立发现入口。
+本机的 19 个入口都指向本仓库的 `skills/`，不是另外复制的一套源码。修改或同步源码后，入口会读取对应文件；若新增一个技能目录，仍需为它建立发现入口。
+
+2026-11-15 通过 Codex app-server 的 `initialize` → `initialized` → `skills/list`（`forceReload=true`）复核全部 19 个项目技能，均为 `scope=repo`、`enabled=true`，包括本次获选注册的 `interview-prep`。Junction 目标与源码哈希一致。
 
 2026-10-19 已通过 Codex app-server 的 `skills/list` 复核本次新增的六个技能：`blueprint-figure`、`motion-figure`、`isometric-explainer`、`course-style`、`write-manual`、`learn-reverse-engineering`，均为 `scope=repo`、`enabled=true`。项目级注册让它们能在本仓库中发现；需要其他项目使用时，另行选择注册范围。
 

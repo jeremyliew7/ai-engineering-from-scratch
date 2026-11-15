@@ -131,7 +131,7 @@ conda install pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c nvi
 
 策略如下：
 
-```
+```text
 ai-engineering-from-scratch/
 ├── .venv/                    <-- shared lightweight env for phases 0-3
 ├── phases/
@@ -237,7 +237,7 @@ python train.py           # uses project Python, packages found
 
 Shell 提示符通常会显示环境名称：
 
-```
+```text
 (.venv) $ python train.py
 ```
 

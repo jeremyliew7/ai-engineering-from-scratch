@@ -64,7 +64,7 @@ graph TD
 
 ### AI 中常见的容器模式
 
-```
+```text
 Dev Container
   Full toolkit. Editor support. Jupyter. Debugging tools.
   Used during development and experimentation.
@@ -141,7 +141,7 @@ docker run --rm --gpus all nvidia/cuda:12.4.1-base-ubuntu22.04 nvidia-smi
 
 选对基础镜像能省去大量排错时间。
 
-```
+```text
 nvidia/cuda:12.4.1-devel-ubuntu22.04
   Full CUDA toolkit. Compilers included.
   Use for: building packages that need nvcc (flash-attn, bitsandbytes)

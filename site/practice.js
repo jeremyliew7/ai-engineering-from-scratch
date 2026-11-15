@@ -92,21 +92,6 @@
     }).catch(function () {});
   }
 
-  function bindCopy(root) {
-    $all('.code-copy[data-code]', root).forEach(function (button) {
-      if (button.getAttribute('data-bound')) return;
-      button.setAttribute('data-bound', '1');
-      button.type = 'button';
-      button.addEventListener('click', function () {
-        if (!navigator.clipboard) return;
-        navigator.clipboard.writeText(button.getAttribute('data-code')).then(function () {
-          button.textContent = 'Copied';
-          setTimeout(function () { button.textContent = 'Copy'; }, 1200);
-        }, function () {});
-      });
-    });
-  }
-
   function initIndex(main) {
     var form = $('[data-filters]', main);
     var rows = $all('[data-list] .pr-row', main);
@@ -238,6 +223,12 @@
     var escaped = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     var html = api && api.highlightSyntax ? api.highlightSyntax(escaped, 'python') : escaped;
     return html + '\n';
+  }
+
+  function solutionHtml(code) {
+    var api = window.AIFSLessonMarkdown;
+    if (api && api.renderCodeBlock) return api.renderCodeBlock(code, 'python', { label: 'solution.py' });
+    return '<pre class="pr-solution-code"><code>' + highlight(code) + '</code></pre>';
   }
 
   function lineStart(text, index) {
@@ -373,6 +364,10 @@
               clearTimeout(pending.timer);
               pending.timer = setTimeout(timeout, pending.limit);
             }
+          } else if (message.phase === 'failed') {
+            reset();
+            onStatus('failed');
+            finish({ error: message.message || 'The Python runtime did not start.' });
           } else {
             onStatus(message.phase, message.ms);
           }
@@ -390,6 +385,7 @@
         event.preventDefault();
         finish({ error: 'The Python runtime stopped: ' + (event.message || 'unknown error') });
         reset();
+        onStatus('stopped');
       };
       worker.postMessage({ type: 'boot', pyodide: pyodide });
       onStatus('loading');
@@ -535,6 +531,7 @@
     var dataPromise = null;
     var hintsShown = 0;
     var saveTimer = null;
+    var executing = false;
 
     function data() {
       if (!dataPromise) {
@@ -547,16 +544,20 @@
       return dataPromise;
     }
 
-    function persist(code) {
+    function cancelSave() {
       clearTimeout(saveTimer);
       saveTimer = null;
+    }
+
+    function persist(code) {
+      cancelSave();
       if (!store) return;
       if (code === starter) store.clearCode(id);
       else store.saveCode(id, code);
     }
 
     function save(code) {
-      clearTimeout(saveTimer);
+      cancelSave();
       saveTimer = setTimeout(function () { persist(code); }, 250);
     }
 
@@ -570,7 +571,8 @@
         runtime: 'Starting Python',
         numpy: 'Loading numpy',
         ready: 'Python ready' + (ms ? ' in ' + (ms / 1000).toFixed(1) + ' s' : ''),
-        stopped: 'Python stopped. It restarts on the next run'
+        stopped: 'Python stopped. It restarts on the next run',
+        failed: 'Python did not load. It tries again on the next run'
       }[phase] || '';
       runtimeLabel.textContent = text;
       runtimeLabel.setAttribute('data-phase', phase);
@@ -587,7 +589,8 @@
     }
 
     function execute(kind) {
-      if (runner.busy()) return;
+      if (executing || runner.busy()) return;
+      executing = true;
       var code = editor.value();
       persist(code);
       setBusy(true, kind === 'submit' ? 'Running every check' : 'Running the examples');
@@ -595,8 +598,9 @@
         curve.reset();
         return runner.run({ tests: problem.tests, fixtures: problem.fixtures, support: problem.support, code: code, layers: kind === 'submit' ? [] : ['examples'], limit: problem.limit || limit });
       }).then(function (outcome) {
-        setBusy(false);
+        executing = false;
         if (outcome.busy) return;
+        setBusy(false);
         if (outcome.timeout) {
           results.innerHTML = '<p class="pr-verdict pr-verdict-fail" role="status"><strong>Time limit.</strong> The checks did not finish in ' + Math.round(outcome.limit / 1000) + ' seconds. Look for a loop that does not end, or for work that grows too fast with the input size.</p>';
           if (store) store.record(id, kind, 0, 1);
@@ -617,6 +621,7 @@
         paintStatuses();
         if (kind === 'submit' && report.summary.ok) unlock(true);
       }, function (error) {
+        executing = false;
         setBusy(false);
         results.innerHTML = '<p class="pr-verdict pr-verdict-fail" role="status"><strong>The run did not start.</strong> ' + escapeHtml(error.message) + '</p>';
       });
@@ -627,7 +632,6 @@
       hintList.innerHTML = problem.hints.slice(0, hintsShown).map(function (html, index) {
         return '<li class="pr-hint"><p class="pr-hint-n">Hint ' + (index + 1) + '</p>' + html + '</li>';
       }).join('');
-      bindCopy(hintList);
       renderMath(hintList);
       if (hintsShown >= problem.hints.length) {
         hintButton.hidden = true;
@@ -660,8 +664,7 @@
         lock.setAttribute('data-open', '');
         lockedNote.hidden = true;
         solutionBox.hidden = false;
-        solutionBox.innerHTML = '<h3>Reference solution</h3><pre class="pr-solution-code"><code>' + highlight(solution.solution) + '</code></pre><div class="pr-notes"><h3>Notes</h3>' + solution.notes + '</div>';
-        bindCopy(solutionBox);
+        solutionBox.innerHTML = '<h3>Reference solution</h3>' + solutionHtml(solution.solution) + '<div class="pr-notes"><h3>Notes</h3>' + solution.notes + '</div>';
         renderMath(solutionBox);
         if (fresh) solutionBox.closest('.pr-solution').classList.add('pr-flash');
       }).catch(function () {});
@@ -692,11 +695,13 @@
       var saved = store.loadCode(id);
       if (typeof saved === 'string' && saved.length) editor.set(saved);
       store.open(id, version);
+      paintStatuses();
     }
     runButton.addEventListener('click', function () { execute('run'); });
     submitButton.addEventListener('click', function () { execute('submit'); });
     resetButton.addEventListener('click', function () {
       if (editor.value() !== starter && !window.confirm('Replace your code with the starter? Your current code is lost.')) return;
+      cancelSave();
       editor.set(starter);
       if (store) store.clearCode(id);
     });
@@ -723,7 +728,6 @@
     var main = $('main');
     if (!main) return;
     renderMath(main);
-    bindCopy(main);
     if (main.hasAttribute('data-practice-index')) initIndex(main);
     if (main.hasAttribute('data-practice-problem')) initProblem(main);
     window.addEventListener('pageshow', function (event) {

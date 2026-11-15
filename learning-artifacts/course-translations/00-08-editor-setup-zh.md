@@ -159,7 +159,7 @@ ssh-copy-id user@your-gpu-box-ip
 
 为方便操作，将主机加入 `~/.ssh/config`：
 
-```
+```text
 Host gpu-box
     HostName 203.0.113.50
     User ubuntu

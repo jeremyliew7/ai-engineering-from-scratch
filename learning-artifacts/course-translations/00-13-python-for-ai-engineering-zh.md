@@ -1,6 +1,6 @@
 ---
 source_path: phases/00-setup-and-tooling/13-python-for-ai-engineering/docs/en.md
-source_commit: 0d82a1498bb8471dc13f14340eb2a89ac91691b2
+source_commit: 9a6608f11e6a9adc9649c0db1308267cbb8ef6bb
 ---
 
 # 面向 AI 工程的 Python
@@ -8,7 +8,7 @@ source_commit: 0d82a1498bb8471dc13f14340eb2a89ac91691b2
 > 本课程的大部分代码都使用同一小组 Python 惯用写法。在后续数学和模型课程依赖它们之前，先在这里学会。
 
 **类型：** 构建
-**语言：** Python
+**语言：** Python、TypeScript
 **前置课程：** 开发环境、Python 环境
 **预计用时：** 约 120 分钟
 
@@ -804,6 +804,7 @@ print([round(v, 3) for v in standardize((4.0, 700.0))])
 
 ```bash
 python3 phases/00-setup-and-tooling/13-python-for-ai-engineering/code/main.py
+npx tsx phases/00-setup-and-tooling/13-python-for-ai-engineering/code/main.ts
 ```
 
 ```text

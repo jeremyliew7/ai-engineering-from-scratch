@@ -196,7 +196,20 @@
       if (!seen[kind]) { seen[kind] = true; kinds.push(kind); }
     }
     svg.appendChild(text(MID_X, footY, strideText, view.stride === null ? WARN : INK, 'start', 9.5));
-    if (kinds.length) svg.appendChild(text(MID_X, footY + 11, kinds.join(', '), MUTE, 'start', 8.5));
+    var kindLines = [];
+    var line = '';
+    for (i = 0; i < kinds.length; i++) {
+      var piece = kinds[i] + (i + 1 < kinds.length ? ',' : '');
+      if (line && (line + ' ' + piece).length > 30) {
+        kindLines.push(line);
+        line = piece;
+      } else {
+        line = line ? line + ' ' + piece : piece;
+      }
+    }
+    if (line) kindLines.push(line);
+    for (i = 0; i < kindLines.length; i++) svg.appendChild(text(MID_X, footY + 11 + i * 11, kindLines[i], MUTE, 'start', 8.5));
+    if (kindLines.length > 1) footY += (kindLines.length - 1) * 11;
     var sizeText = view.size === null ? 'size unknown, at least ' + view.lowerBound : 'size ' + view.size;
     svg.appendChild(text(MID_X, footY + 24, sizeText, view.size === null ? WARN : INK, 'start', 9.5));
     var beyond = [];
@@ -235,7 +248,7 @@
       var y = Math.max(TOP + member.o * BYTE + 7, lastY + 11);
       lastY = y;
       svg.appendChild(text(labelX, y, '+' + member.o + ' ' + member.t + ' ' + member.n, statusColor(st), 'start', 9.5));
-      var connector = svgEl('line', { x1: MID_X + MID_STRIP_W + 2, y1: TOP + member.o * BYTE + 4, x2: RIGHT_X - 2, y2: TOP + member.o * BYTE + 4, stroke: statusColor(st), 'stroke-width': '1' });
+      var connector = svgEl('line', { x1: MID_X + MID_STRIP_W + 2, y1: TOP + member.o * BYTE - 1, x2: RIGHT_X - 2, y2: TOP + member.o * BYTE - 1, stroke: statusColor(st), 'stroke-width': '1' });
       if (st === 'no-evidence') connector.setAttribute('stroke-dasharray', '3 3');
       svg.appendChild(connector);
       if (st !== 'match' && st !== 'no-evidence') {

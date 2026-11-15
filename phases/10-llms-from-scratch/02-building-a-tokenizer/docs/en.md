@@ -197,23 +197,23 @@ try:
     )
 except ImportError:
     GPT2_PATTERN = re.compile(
-        r"""'(?:[sdmt]|ll|ve|re)| ?[a-zA-Z]+| ?[0-9]+| ?[^\s\w]+|\s+(?!\S)|\s+"""
+        r"""'(?:[sdmt]|ll|ve|re)| ?[^\W\d_]+| ?\d+| ?(?:[^\s\w]|_)+|\s+(?!\S)|\s+"""
     )
 
 def pre_tokenize(text):
     return [match.group() for match in GPT2_PATTERN.finditer(text)]
 ```
 
-The `regex` module supports Unicode property escapes (`\p{L}` for letters, `\p{N}` for numbers). The standard library `re` module does not, so we fall back to ASCII character classes. For production multilingual tokenizers, install `regex`.
+The `regex` module supports Unicode property escapes (`\p{L}` for letters, `\p{N}` for numbers). The standard library `re` module does not, so the fallback builds the same classes from `\w`: `[^\W\d_]` matches any Unicode letter and `\d` any Unicode digit. For production multilingual tokenizers, install `regex`.
 
 Try it:
 
 ```python
 print(pre_tokenize("Hello, world! Don't stop."))
-# [' Hello', ',', ' world', '!', " Don", "'t", ' stop', '.']
+# ['Hello', ',', ' world', '!', ' Don', "'t", ' stop', '.']
 ```
 
-The leading space stays attached to the word. Contractions split at the apostrophe. Punctuation becomes its own chunk. BPE will never merge tokens across these boundaries.
+The leading space stays attached to the word that follows it. The first word has no space before it, so its chunk is `Hello`. Contractions split at the apostrophe. Punctuation becomes its own chunk. BPE will never merge tokens across these boundaries.
 
 ### Step 3: BPE on Byte Sequences
 

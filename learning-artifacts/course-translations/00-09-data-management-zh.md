@@ -155,7 +155,7 @@ print(f"Full model at: {model_dir}")
 
 **方案 A：.gitignore（最简单）**
 
-```
+```text
 *.bin
 *.safetensors
 *.pt

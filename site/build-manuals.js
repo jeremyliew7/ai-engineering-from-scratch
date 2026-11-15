@@ -7,6 +7,7 @@ const { githubSourceUrl, sourceRepository } = require('./build.js');
 const { localPath, within } = require('./build-projects.js');
 const figkit = require('../manuals/_shared/figkit.js');
 const { validateSvg } = require('../manuals/_shared/svg.js');
+const code = require('./lib/code.js');
 
 const ROOT = path.resolve(__dirname, '..');
 const MANUALS = path.join(ROOT, 'manuals');
@@ -269,6 +270,16 @@ function measuredEvidence(doc, manual) {
   const paths = new Set((sources.match(/capture\/[A-Za-z0-9_./-]*[A-Za-z0-9_-]/g) || []));
   const has = rel => paths.has(rel);
   const folder = prefix => [...paths].some(rel => rel.startsWith(prefix));
+  const labSummaries = text => String(text || '').match(/capture\/lab\/summary\/[A-Za-z0-9_.-]*[A-Za-z0-9_-]/g) || [];
+  const figureCaptions = new Map(doc.blocks.filter(block => block.type === 'figure').map(block => [block.id, block.caption]));
+  const underHeading = new Map();
+  let section = '';
+  for (const block of doc.blocks) {
+    if (block.type === 'heading') section = block.text;
+    if (block.type !== 'figure') continue;
+    if (!underHeading.has(section)) underHeading.set(section, new Set());
+    for (const rel of labSummaries(block.caption).filter(has)) underHeading.get(section).add(rel);
+  }
   let heading = '';
   for (const block of doc.blocks) {
     if (block.type === 'heading') heading = block.text;
@@ -287,6 +298,16 @@ function measuredEvidence(doc, manual) {
     } else if (mac && !l4 && !gb10) rel = folder('capture/out/') ? 'capture/out' : null;
     if (!rel && (l4 || gb10) && folder('capture/gpu/')) rel = 'capture/gpu';
     if (!rel && !l4 && !gb10 && !mac) rel = folder('capture/gpu/') ? 'capture/gpu' : folder('capture/out/') ? 'capture/out' : null;
+    if (!rel && folder('capture/lab/')) {
+      const summaries = [...paths].filter(p => p.startsWith('capture/lab/summary/'));
+      const cited = new Set((block.text.match(/\(#fig-[a-z0-9-]+\)/g) || []).flatMap(link => labSummaries(figureCaptions.get(link.slice(2, -1)))).filter(has));
+      const nearby = underHeading.get(heading) || new Set();
+      if (cited.size === 1) rel = [...cited][0];
+      else if (!cited.size && !mac && nearby.size === 1) rel = [...nearby][0];
+      else if (mac) rel = [...paths].find(p => p.startsWith('capture/lab/') && /mac/i.test(p)) || null;
+      else if (summaries.length === 1) rel = summaries[0];
+      if (!rel) rel = summaries.length ? 'capture/lab/summary' : 'capture/lab';
+    }
     block.evidence = rel ? evidenceUrl(path.join(manual.dir, rel), docLine(doc, block.line)) : null;
   }
 }
@@ -354,37 +375,6 @@ function linkHtml(label, href, where, acc) {
   }
   const view = fs.existsSync(full) && fs.statSync(full).isFile() ? 'blob' : 'tree';
   return `<a href="${escapeHtml(githubSourceUrl(target, view) + (fragment ? `#${fragment}` : ''))}" rel="noopener">${label}</a>`;
-}
-
-function highlightJson(line) {
-  const pattern = /("(?:[^"\\]|\\.)*")(\s*:)?|(-?\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b)|\b(true|false|null)\b/g;
-  let out = '';
-  let last = 0;
-  let match;
-  while ((match = pattern.exec(line))) {
-    out += escapeHtml(line.slice(last, match.index));
-    if (match[1]) out += `<span class="${match[2] ? 'm-tok-key' : 'm-tok-str'}">${escapeHtml(match[1])}</span>${match[2] ? escapeHtml(match[2]) : ''}`;
-    else if (match[3]) out += `<span class="m-tok-num">${match[3]}</span>`;
-    else out += `<span class="m-tok-lit">${match[4]}</span>`;
-    last = pattern.lastIndex;
-  }
-  return out + escapeHtml(line.slice(last));
-}
-
-function highlightLine(line, lang) {
-  if (/^\s*…\s*$/.test(line)) return `<span class="m-tok-dim">${escapeHtml(line)}</span>`;
-  if (lang === 'json' || lang === 'jsonl') return highlightJson(line);
-  if (/^(GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS) \S+ HTTP\/\d(\.\d)?$|^HTTP\/\d(\.\d)? \d{3}.*$/.test(line)) return `<span class="m-tok-meta">${escapeHtml(line)}</span>`;
-  const field = /^(event|data|id|retry):(\s?)(.*)$/.exec(line);
-  if (field) return `<span class="m-tok-meta">${field[1]}:</span>${field[2]}${field[1] === 'data' ? highlightJson(field[3]) : escapeHtml(field[3])}`;
-  const header = /^([A-Za-z][A-Za-z0-9-]*):(\s.*)$/.exec(line);
-  if (header) return `<span class="m-tok-key">${escapeHtml(header[1])}</span>:${escapeHtml(header[2])}`;
-  return highlightJson(line);
-}
-
-function highlight(code, lang) {
-  if (!LISTING_LANGS.has(lang)) return escapeHtml(code);
-  return code.split('\n').map(line => highlightLine(line, lang)).join('\n');
 }
 
 function loadSvg(file, id, where) {
@@ -590,7 +580,7 @@ function blockHtml(block, doc, manual, acc) {
       return `<${tag}>${block.items.map(item => `<li>${inline(item)}</li>`).join('')}</${tag}>`;
     }
     case 'table': return tableHtml(block.head.map(inline), block.rows.map(row => ({ cells: row.map(inline) })));
-    case 'code': return `<pre class="m-code"><code>${highlight(block.code, block.lang)}</code></pre>`;
+    case 'code': return code.render(block.code, block.lang);
     case 'figure': return figureHtml(block);
     case 'palette': return `<table class="m-palette"><tbody>${manual.paletteHtml.map(entry => `<tr data-accent="${entry.hue}"><td><span class="m-swatch"></span><span class="m-kicker">${entry.hue}</span></td><td>${entry.html}</td></tr>`).join('')}</tbody></table>`;
     case 'parts': {
@@ -601,7 +591,7 @@ function blockHtml(block, doc, manual, acc) {
     case 'figure-index': return tableHtml(['Fig.', 'The claim it makes'], [...manual.figures.values()].map(figure => ({ accent: figure.accent, cells: [`<a class="m-xref" href="#${figure.id}">${figure.number}</a>`, figure.claimHtml] })));
     case 'contents': return tocHtml(manual, 'web');
     case 'lab-runs': return labRunsHtml(manual, where);
-    case 'listing': return `<figure class="m-listing"><div class="m-listing-head"><span class="m-listing-title">${inline(block.title)}</span><span>${escapeHtml(block.lang)}</span>${block.sourceFile ? evidenceLink(evidenceUrl(block.sourceFile, where), 'Full log') : ''}</div><pre><code>${highlight(block.code, block.lang)}</code></pre>${block.note ? `<figcaption class="m-listing-note">${inline(block.note)}</figcaption>` : ''}</figure>`;
+    case 'listing': return `<figure class="m-listing">${code.render(block.code, block.lang, { extra: `<span class="m-listing-title">${inline(block.title)}</span>${block.sourceFile ? evidenceLink(evidenceUrl(block.sourceFile, where), 'Full log') : ''}` })}${block.note ? `<figcaption class="m-listing-note">${inline(block.note)}</figcaption>` : ''}</figure>`;
     case 'takeaways': return `<aside class="m-takeaways"><div class="m-box-label">${TAKEAWAYS_LABEL}</div><ul>${block.items.map(item => `<li>${inline(item)}</li>`).join('')}</ul></aside>`;
     case 'rule': return `<aside class="m-rule"><div class="m-box-label">${escapeHtml(block.label)}</div><p>${inline(block.quote)}</p></aside>`;
     default: throw new Error(`${where}: unknown block ${block.type}`);
@@ -714,7 +704,7 @@ function manualArticle(manual, mode) {
   return `<article class="manual">${coverHtml(manual, mode)}${mode === 'print' ? tocHtml(manual, 'print') : ''}${body.join('\n')}\n${colophonHtml(manual)}</article>`;
 }
 
-const SITE_HEADER = '<header class="site-header"><div class="header-inner"><a href="index.html" class="logo"><span class="logo-icon" aria-hidden="true"></span> AI / FROM SCRATCH</a><nav class="header-nav"><a href="index.html#contents">Contents</a><a href="catalog.html">Catalog</a><a href="projects.html">Projects</a><a href="manuals.html">Manuals</a><a href="roadmap.html">Roadmap</a><a href="glossary.html">Glossary</a><a href="about.html">About</a><a href="https://github.com/rohitg00/ai-engineering-from-scratch" target="_blank" rel="noopener" class="header-github"><span>GitHub</span><span class="star-count" data-loading="true">…</span></a></nav><button class="search-toggle" type="button" data-cmd-palette aria-label="Search"><span aria-hidden="true">⌕</span></button><button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" type="button"><span class="theme-icon" id="themeIcon">N</span></button></div></header>';
+const SITE_HEADER = '<header class="site-header"><div class="header-inner"><a href="index.html" class="logo"><span class="logo-icon" aria-hidden="true"></span> AI / FROM SCRATCH</a><nav class="header-nav"><a href="index.html#contents">Contents</a><a href="catalog.html">Catalog</a><a href="projects.html">Projects</a><a href="manuals.html">Manuals</a><a href="roadmap.html">Roadmap</a><a href="glossary.html">Glossary</a><a href="about.html">About</a><a href="https://github.com/rohitg00/ai-engineering-from-scratch" target="_blank" rel="noopener" class="header-github"><span>GitHub</span><span class="star-count" data-loading="true">…</span></a></nav><button class="search-toggle" type="button" data-cmd-palette aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="20" y2="20"/></svg></button><button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" type="button"><span class="theme-icon" id="themeIcon">N</span></button></div></header>';
 
 function highlightsScripts(highlights) {
   if (!highlights) return '';
@@ -815,8 +805,10 @@ function dated(manual) {
   return manual;
 }
 
+function codeCss() { return fs.readFileSync(path.join(SITE, 'code.css'), 'utf8'); }
+
 function pageShell({ title, ogTitle, description, canonical, noindex, card, main, highlights, jsonld = [], rooted = false, self = '' }) {
-  const css = shared('tokens.css') + shared('manual.css') + shared('web.css');
+  const css = shared('tokens.css') + shared('manual.css') + shared('web.css') + codeCss();
   return `<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
@@ -846,6 +838,7 @@ ${main}
 <script src="data.js"></script>
 <script src="content-source.js"></script>
 <script src="header.js" defer></script>
+<script src="code-copy.js" defer></script>
 <script src="cmdpalette.js" defer></script>
 <script>${shared('dither.js')}</script>
 <script>${shared('motion.js')}</script>
@@ -1051,7 +1044,7 @@ function stripMotion(html) {
 }
 
 function printPage(manual) {
-  const css = shared('tokens.css') + shared('manual.css') + shared('print.css');
+  const css = shared('tokens.css') + shared('manual.css') + codeCss() + shared('print.css');
   return `<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
@@ -1123,7 +1116,8 @@ function writePrint(manuals, outDir) {
   }
 }
 
-function main(argv) {
+async function main(argv) {
+  await code.init();
   const args = argv.slice(2);
   const flag = name => args.includes(name);
   const value = name => { const index = args.indexOf(name); return index >= 0 ? args[index + 1] : undefined; };
@@ -1141,12 +1135,10 @@ function main(argv) {
 }
 
 if (require.main === module) {
-  try {
-    main(process.argv);
-  } catch (error) {
+  main(process.argv).catch(error => {
     console.error(`build-manuals: ${error.message}`);
     process.exit(1);
-  }
+  });
 }
 
 module.exports = {

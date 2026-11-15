@@ -3,7 +3,7 @@
 > Training is parallel and FLOP-bound. Inference is serial and memory-bound. Different bottleneck, different tricks.
 
 **Type:** Build
-**Languages:** Python
+**Languages:** Python, Rust
 **Prerequisites:** Phase 7 · 02 (Self-Attention), Phase 7 · 05 (Full Transformer), Phase 7 · 07 (GPT)
 **Time:** ~75 minutes
 
@@ -128,7 +128,7 @@ flash-attention-memory
 iso-machine {"machine":"kv-cache"}
 ```
 
-See `code/main.py`. We implement:
+See `code/main.py`, or its Rust port `code/main.rs`. To run the Rust version: `rustc --edition 2021 -O code/main.rs -o /tmp/lesson && /tmp/lesson`. We implement:
 
 1. A naive $O(N^2)$ incremental decoder.
 2. A $O(N)$ KV-cached decoder.
@@ -176,9 +176,9 @@ def tiled_softmax_dot(q, K, V, tile=4):
 
 Bit-identical output to `softmax(qK) V` in one shot, but at any time the working set is a `tile × d_head` block, not the full `N × d_head`.
 
-### Step 3: compare naive vs cached decoding on 100-token generation
+### Step 3: compare naive vs cached decoding
 
-Count attention operations. Naive: $O(N^2)$ = 5050. Cached: $O(N)$ = 100. The code prints both.
+Count attention operations. Both decoders make the same query-key comparisons: step `t` attends over `t` tokens, so the total is 1 + 2 + ... + N = N(N+1)/2. The code uses N = 10 and prints 55 for each decoder. For a 100-token generation, both make 5050 comparisons. The cache saves the K and V projections. Without a cache, every step computes K and V again for the full prefix, so a 100-token generation computes 5050 token states. With the cache, each token's K and V are computed once, so the same generation computes 100 token states.
 
 ## Use It
 

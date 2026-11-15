@@ -58,6 +58,7 @@ on:
       - "lib/**"
       - "scripts/test_agent_api.js"
       - "scripts/test_agent_wire.js"
+      - "scripts/test_api_state.js"
       - "scripts/serve-agent-site.js"
       - "vercel.json"
       - ".github/workflows/curriculum.yml"
@@ -119,6 +120,7 @@ on:
       - "lib/**"
       - "scripts/test_agent_api.js"
       - "scripts/test_agent_wire.js"
+      - "scripts/test_api_state.js"
       - "scripts/serve-agent-site.js"
       - "vercel.json"
       - ".github/workflows/curriculum.yml"
@@ -172,8 +174,10 @@ jobs:
         run: node --test site/test_lesson_screen.js
       - name: the star note asks engaged readers at most twice
         run: node --test site/test_star_nudge.js
+      - name: assessment attempts survive reloads, expired timers, and a second tab
+        run: node --test site/test_certification_state.js
       - name: the theme menu offers system, light, and dark on every page
-        run: node --test site/test_theme_menu.js
+        run: node --test site/test_theme_menu.js site/test_overlays.js site/test_tts_navigation.js
       - name: lesson walkthrough syncs steps and schedules revisits
         run: node --test site/test_lesson_walkthrough.js
       - name: lesson quizzes are placed once, before the footer, in every language
@@ -189,15 +193,21 @@ jobs:
       - name: my highlights page filters, exports, and stays local
         run: node --test site/test_highlights_page.js
       - name: practice pages hide the solution and progress survives storage faults
-        run: node --test site/test_practice.js site/test_practice_store.js
+        run: node --test site/test_practice.js site/test_practice_store.js site/test_projects_state.js
+      - name: the interview bank follows its contract and its pages fold the answers
+        run: node scripts/interviews/validate.js && node --test scripts/interviews/test_validate.js site/test_interviews.js && node site/build-interviews.js --check
+      - name: code blocks render by kind and copy commands only
+        run: node --test site/test_code_render.js site/test_lesson_code.js
+      - name: llms.txt keeps one discovery section after the summary
+        run: node --test site/test_build_agents.js
       - name: build the static site
-        run: node site/build.js && node site/build-projects.js --strict && node site/build-agents.js
+        run: node site/build.js && node site/build-projects.js --strict && node site/build-agents.js && node site/build-agents.js && test "$(grep -c '^## API and MCP$' site/llms.txt)" = 1
       - name: deployment bundles stay small and preserve runtime assets
         run: |
           npm install --prefix "$RUNNER_TEMP/function-trace" --no-save --no-package-lock @vercel/nft@1.5.0
           NODE_PATH="$RUNNER_TEMP/function-trace/node_modules" node --test scripts/test_function_bundles.js
       - name: public API and MCP contracts
-        run: node --test scripts/test_agent_api.js scripts/test_agent_wire.js
+        run: node --test scripts/test_agent_api.js scripts/test_agent_wire.js scripts/test_api_state.js
       - name: dynamic lesson and certification routes preserve their public contracts
         run: node --test scripts/test_seo_routes.js
       - name: agent-facing discovery surfaces stay complete
@@ -252,6 +262,62 @@ jobs:
         # skipped, not failed. The stdlib lessons run for real, which catches
         # the class of breakage where a lesson cannot import its own module.
         run: python3 scripts/run_lesson_tests.py
+
+  lesson-ports:
+    name: lesson ports compile and run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+        with:
+          persist-credentials: false
+      - name: single-file Rust lessons build without warnings and run
+        run: |
+          for file in $(git ls-files 'phases/*/code/*.rs'); do
+            [ -f "$(dirname "$file")/Cargo.toml" ] && continue
+            echo "::group::$file"
+            rustc --edition 2021 -D warnings -O -o "$RUNNER_TEMP/lesson" "$file"
+            timeout 120 "$RUNNER_TEMP/lesson" > /dev/null
+            echo "::endgroup::"
+          done
+      - uses: julia-actions/setup-julia@4c0cb0fce8556fdb04a90347310e5db8b1f98fb9  # v2
+        with:
+          version: "1"
+      - name: Julia lesson ports run
+        run: |
+          for file in $(git grep -l 'Julia port of .*Julia standard library only' -- 'phases/*/code/*.jl'); do
+            echo "::group::$file"
+            (cd "$RUNNER_TEMP" && timeout 300 julia --startup-file=no "$GITHUB_WORKSPACE/$file" > /dev/null)
+            echo "::endgroup::"
+          done
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff  # v5
+        with:
+          go-version: "1.24"
+          cache: false
+      - name: Go lesson ports format, vet and run
+        run: |
+          for file in $(git grep -l 'Go port of .*Go standard library only' -- 'phases/*/code/*.go'); do
+            echo "::group::$file"
+            test -z "$(gofmt -l "$file")"
+            go vet "$file"
+            (cd "$RUNNER_TEMP" && timeout 120 go run "$GITHUB_WORKSPACE/$file" < /dev/null > /dev/null)
+            echo "::endgroup::"
+          done
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
+        with:
+          node-version: "22"
+      - name: TypeScript lesson ports type-check and run
+        run: |
+          npm install --prefix "$RUNNER_TEMP/ts" --no-save --no-package-lock tsx@4.19.2 typescript@5.6.3 @types/node@22.10.2
+          bin="$RUNNER_TEMP/ts/node_modules/.bin"
+          for file in $(git grep -l 'TypeScript port of .*Node standard library only' -- 'phases/*/code/*.ts'); do
+            echo "::group::$file"
+            "$bin/tsc" --strict --noEmit --target es2022 --module nodenext --moduleResolution nodenext --types node --typeRoots "$RUNNER_TEMP/ts/node_modules/@types" "$file"
+            case "$file" in
+              */code/lab.ts|*/code/experiments/*.ts) ;;
+              *) timeout 120 "$bin/tsx" "$file" > /dev/null ;;
+            esac
+            echo "::endgroup::"
+          done
 
   readme-counts-sync:
     name: README counts auto-fix (main only)
