@@ -63,3 +63,11 @@
 | 00/13 | 面向 AI 工程的 Python | [00-13-python-for-ai-engineering-zh.md](00-13-python-for-ai-engineering-zh.md) | 48 |
 
 00/01—00/11 批次源仓库版本：`68bf421db044a906121a3ef0a2eb8ec689d45045`。
+
+## 2026-11-09 新课
+
+| 课程 | 标题 | Markdown | 原样保留代码块数 |
+|---|---|---|---|
+| 01/01 | 线性代数直觉 | [01-01-linear-algebra-intuition-zh.md](01-01-linear-algebra-intuition-zh.md) | 15 |
+
+直接根据当前英文源文翻译，另附校注。15 个围栏块正文一致；原文两处无语言标签的围栏补为 text。版本及哈希见清单。

@@ -1,8 +1,8 @@
 {
   "translated_on": "2026-10-11",
-  "updated_on": "2026-10-30",
+  "updated_on": "2026-11-09",
   "method": "direct-new-translation-from-current-source",
-  "scope": "00/01-00/13",
+  "scope": "00/01-00/13, 01/01",
   "source_commit": "fe6c657dfb8d02cc898fcee7d4cfbf663aae1416",
   "source_commit_policy": "Top-level source_commit records the currently verified checkout; per-lesson source_commit and source_last_commit are authoritative. Source and translation SHA-256 hash raw file bytes; source_text_sha256_lf additionally hashes UTF-8 text with LF line endings.",
   "verification": "Full current source compared against recorded source; upstream delta fully accounted for. All fenced code blocks preserved exactly after newline decoding, and hint counts checked per lesson. SHA-256 values updated. Semantic quality assessed by translator, not automatically proven. Maintenance update does not establish full chat delivery.",
@@ -230,6 +230,23 @@
       "upstream_hints": 5,
       "status": "direct-translated-structure-verified",
       "verification": "Full source read and directly translated. All 48 fenced blocks preserved exactly after newline decoding; all 34 original level-2/3 headings, tables, five exercises and hints retained. Separate translator notes added. Structural verification does not establish automatic semantic correctness, chat delivery, or lesson completion."
+    },
+    {
+      "lesson": "01/01",
+      "title": "线性代数直觉",
+      "source": "phases/01-math-foundations/01-linear-algebra-intuition/docs/en.md",
+      "source_commit": "cbc761b453add05abffbc86d4ddcf923679f5235",
+      "source_last_commit": "cbc761b453add05abffbc86d4ddcf923679f5235",
+      "source_sha256": "f8bd6e7a8cd337ba0cb2d90a8acddb60b32c58d4dd5d27ae451181772267410c",
+      "source_text_sha256_lf": "f8bd6e7a8cd337ba0cb2d90a8acddb60b32c58d4dd5d27ae451181772267410c",
+      "translation": "01-01-linear-algebra-intuition-zh.md",
+      "translation_sha256": "5e316a8929394dad891787bee93bb0b2b8c08565164f3b8a0fae06decc317672",
+      "code_blocks": 15,
+      "section_count": 25,
+      "status": "translated-code-bodies-verified",
+      "updated_on": "2026-11-09",
+      "verified_on": "2026-11-09",
+      "verification_note": "All 15 fenced block bodies preserved; two untagged fences labeled text. Full source translated with separate corrections. Chat delivery tracked by conversation, not inferred from this file."
     }
   ],
   "initial_source_commit": "68bf421db044a906121a3ef0a2eb8ec689d45045",

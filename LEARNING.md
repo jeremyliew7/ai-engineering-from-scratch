@@ -18,10 +18,11 @@
 - Verified WSL environment: /mnt/d/JeremyLiew/Documents/ResHub/10-Projects/ai-engineering-from-scratch/.venv，Python 3.12.14；sys.executable 指向该环境的 bin/python，sys.prefix 指向该 .venv，sys.base_prefix 为 /home/jeremyliew7/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu。仓库环境已通过课程 beginner --show-later 检查，Python/Git 2/2 必需项与 9 项后续工具均通过。NumPy 2.5.3；Node.js 22.23.3、pnpm 12.8.1 由 WSL 交互式 Bash 的 fnm 初始化；Rust/Cargo 1.98.1、Julia 1.13.1。PyTorch 2.6.0+cu124 实测 CUDA 可用，RTX 4060 Laptop GPU 张量位于 cuda:0，点积结果 14.0。
 - Path migration verified (2026-11-04): 仓库已迁至 D:\JeremyLiew\Documents\ResHub\10-Projects\ai-engineering-from-scratch；WSL 路径为 /mnt/d/JeremyLiew/Documents/ResHub/10-Projects/ai-engineering-from-scratch。已修复 Ubuntu-24.04 的 .venv 激活脚本与命令入口、.bashrc 中的项目自动激活条件，以及 Windows .venv-win 的激活脚本与 NumPy 命令启动器。新开 WSL 交互式 Bash 可自动激活项目环境；两端激活后解释器与环境前缀均指向新目录，NumPy 点积通过；WSL IPython、JupyterLab、torchrun 与 CUDA 点积复验通过。此为环境迁移记录，不改变课程断点与成绩。
 - Learning preferences: 中文分节讲解；环境操作由学习者按引导在 WSL 手动执行，助手可读取本聊天右侧终端核验输出。课后测验一次展示全部题目，学习者集中回答，再逐题反馈。
+- Teaching cadence: 答对后直接推进下一小段，不反复要求说继续；预测与运行环节等待作答。WSL 运行时提供完整可复制命令；lesson-screen 实时同步并沿用统一样式。
 - Lesson-end Git workflow: 每学完一节课，集中保存学习记录后检查并提交本课相关变更，无需再次确认；仅暂存本课记录、练习产物及必要配置，排除虚拟环境、密钥和无关改动，遵循仓库提交与验证规则。默认仅本地提交，推送需用户明确要求。
 - Restart: 用户明确选择重新开始全量学习；本轮不继承旧分级成绩、旧完成记录或旧断点。
-- Next lesson: phases/01-math-foundations/01-linear-algebra-intuition
-- Current checkpoint: 2026-11-09，Day8 00/13 Python for AI Engineering 主体学习与课后测验完成，2/2（100%，独立作答）；完整中文译文已在聊天交付并保存，源文件与译文哈希均与清单一致。交互学习引用与可变对象、dataclass、迭代器和生成器、异常与上下文管理器、类型标注、文件格式、排序、标准库及 NumPy 广播；练习识别生成器耗尽和测试集信息泄漏。WSL 实际运行课程完整演示，核对 400 条数据、320/80 划分与最后 32 条的批次；百万元素点积单次测得 Python 22.79 ms、NumPy 17.72 ms，差值显示为 2.9e-11，不含数据准备时间。课末代码审查提示已阅读并用生成器案例练习；教材 5 道扩展练习未做，完整工具链尚未独立从零实现。Phase 0 的 13 课及课后测验已完成，阶段综合测验尚未进行；下一课为 01/01 Linear Algebra Intuition。
+- Next lesson: phases/01-math-foundations/02-vectors-matrices-operations
+- Current checkpoint: 2026-11-15，Day9 01/01 Linear Algebra Intuition 完成，课后测验 3/3（100%，独立作答）。完整中文译文已交付并保存；六道练习经过讲解或引导完成，WSL 核验 Python/Julia、NumPy、PyTorch 输出；尚未独立从零实现完整向量矩阵库。复习列与行的读取、投影目标直线与残差、点积梯度。详见 learning-artifacts/01-01-linear-algebra-intuition/day9-summary.md。下一课 01/02 Vectors, Matrices & Operations，需先交付完整中文译文。Phase 0 综合测验及 00/13 扩展练习仍待完成。
 - Source snapshot: 1bafaa88bb4668356791150bec3a6d7df38387eb
 - Estimates: 下表采用 ROADMAP.md 各阶段标题的工时，合计 1,128 小时；与其开头及结尾总数不一致，仅作粗略参考，不承诺完课日期。
 
@@ -67,6 +68,8 @@
 | 2026-10-15 | 00/11 | 3/3 (100%) | 完成 WSL 隐藏文件、脚本权限、进程终止及磁盘缓存排查；澄清解释器读取与直接执行的区别，理解 744、sudo、apt、服务启动、传输方向和 CRLF；远程传输仅概念练习。 |
 | 2026-10-19 | 00/12 | 3/3 (100%, 独立作答) | 完成调试、计时、性能/内存分析、TensorBoard 学习率对照、VS Code 单步和真实 NaN 注入；补学 PyTorch 最小训练流程，纠正权重与梯度、验证集与测试集的混淆；过拟合仅作概念判断。 |
 | 2026-11-09 | 00/13 | 2/2 (100%, 独立作答) | 交互学习 Python 对象、生成器、异常、类型、文件处理与 NumPy 广播；WSL 运行课程演示和百万元素点积对照，审阅代码审查提示；5 道扩展练习未做，完整工具链尚未独立实现。 |
+
+| 2026-11-15 | 01/01 | 3/3 (100%, 独立作答) | 完成线性代数概念、引导代码运行与六道练习核验；纠正行列混淆，澄清投影直线与残差、梯度；完整库尚未独立实现。 |
 
 ## Review queue
 
