@@ -21,8 +21,8 @@
 - Teaching cadence: 答对后直接推进下一小段，不反复要求说继续；预测与运行环节等待作答。WSL 运行时提供完整可复制命令；lesson-screen 实时同步并沿用统一样式。
 - Lesson-end Git workflow: 每学完一节课，集中保存学习记录后检查并提交本课相关变更，无需再次确认；仅暂存本课记录、练习产物及必要配置，排除虚拟环境、密钥和无关改动，遵循仓库提交与验证规则。默认仅本地提交，推送需用户明确要求。
 - Restart: 用户明确选择重新开始全量学习；本轮不继承旧分级成绩、旧完成记录或旧断点。
-- Next lesson: phases/01-math-foundations/02-vectors-matrices-operations
-- Current checkpoint: 2026-11-15，Day9 01/01 Linear Algebra Intuition 完成，课后测验 3/3（100%，独立作答）。完整中文译文已交付并保存；六道练习经过讲解或引导完成，WSL 核验 Python/Julia、NumPy、PyTorch 输出；尚未独立从零实现完整向量矩阵库。复习列与行的读取、投影目标直线与残差、点积梯度。详见 learning-artifacts/01-01-linear-algebra-intuition/day9-summary.md。下一课 01/02 Vectors, Matrices & Operations，需先交付完整中文译文。Phase 0 综合测验及 00/13 扩展练习仍待完成。
+- Next lesson: phases/01-math-foundations/03-matrix-transformations
+- Current checkpoint: 2026-11-18，Day10 01/02 Vectors, Matrices & Operations 完成，课后测验 2/2（独立作答）。完整中文译文已在聊天交付并保存。三道练习在引导下完成 WSL 验证。下一课 01/03 Matrix Transformations，先交付完整中文译文。Phase 0 综合测验及 00/13 扩展练习仍待完成。
 - Source snapshot: 1bafaa88bb4668356791150bec3a6d7df38387eb
 - Estimates: 下表采用 ROADMAP.md 各阶段标题的工时，合计 1,128 小时；与其开头及结尾总数不一致，仅作粗略参考，不承诺完课日期。
 
@@ -70,6 +70,8 @@
 | 2026-11-09 | 00/13 | 2/2 (100%, 独立作答) | 交互学习 Python 对象、生成器、异常、类型、文件处理与 NumPy 广播；WSL 运行课程演示和百万元素点积对照，审阅代码审查提示；5 道扩展练习未做，完整工具链尚未独立实现。 |
 
 | 2026-11-15 | 01/01 | 3/3 (100%, 独立作答) | 完成线性代数概念、引导代码运行与六道练习核验；纠正行列混淆，澄清投影直线与残差、梯度；完整库尚未独立实现。 |
+
+| 2026-11-18 | 01/02 | 2/2 (100%, 独立作答) | 能解释广播轴与计算意图，手算代数余子式与伴随矩阵索引；WSL 验证三个 2×2 逆及奇异输入、3×3 逆与 NumPy 对照、3→4→2 网络前向传播。 |
 
 ## Review queue
 
