@@ -85,3 +85,7 @@
 | 01/02 | 向量、矩阵与运算 | [01-02-vectors-matrices-operations-zh.md](01-02-vectors-matrices-operations-zh.md) | 14 |
 
 直接根据当前英文源文完整翻译；所有围栏正文原样保留，无语言标签的围栏补为 text。另附适用条件、输入校验、性能说法及 @ 运算符校注。版本与哈希见清单。
+
+## 2026-11-18 新课
+
+- 01/03 [矩阵变换](01-03-matrix-transformations-zh.md)，保留 18 个原文围栏。
