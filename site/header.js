@@ -239,7 +239,7 @@
     stylesheet.href = 'newsletter.css?v=20260926b';
     document.head.appendChild(stylesheet);
     var script = document.createElement('script');
-    script.src = 'newsletter.js?v=20261114a';
+    script.src = 'newsletter.js?v=20261118a';
     script.async = true;
     script.setAttribute('data-aifs-newsletter', 'true');
     document.head.appendChild(script);
@@ -524,11 +524,11 @@
   }
 
   var BANNER_KEY = 'aifs:banner:dismissed';
-  var BANNER_ID = 'manuals-20261113';
+  var BANNER_ID = 'manuals-20261114';
   var BANNER_HTML = '<div class="site-banner-inner">'
     + '<span class="site-banner-tag">New</span>'
     + '<p class="site-banner-text">'
-    + '<span class="site-banner-long">Detailed manuals for Agent Substrate, vLLM, Miles, SGLang, A2A, Docker Sandboxes and Reverse Engineering. </span>'
+    + '<span class="site-banner-long">Detailed manuals for LangChain, Agent Substrate, vLLM, Miles, SGLang, A2A, Docker Sandboxes and Reverse Engineering. </span>'
     + '<span class="site-banner-short">Detailed manuals. </span>'
     + '<a class="site-banner-link" href="manuals.html">Read the manuals<span aria-hidden="true"> →</span></a>'
     + '</p>'
